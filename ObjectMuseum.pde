@@ -25,6 +25,8 @@ class   ObjectMuseum                            {
 
     List<String>        tagStringList           = new ArrayList<String>();          /*The tags for whit museum object.*/
 
+    boolean             fullBoolean             = false;                            /*Whether this museum object is full or not.*/
+    int                 fullThresholdInt        = -1;
     int                 visitorCurrentInt       = 0;                                /*This museum object current visitor.*/
     int                 visitorTotalInt         = 0;                                /*This museum objecy total visitor.*/
 
@@ -79,7 +81,7 @@ class   ObjectMuseum                            {
         RemoveChildObjectList       (_targetObjectList      );
         SetParentNameAltString      (_parentNameAltString   );
         SetParentObject             (_targetObjectList      );
-        SetParentChildObjectList    (_targetObjectList      );
+        SetChildObjectList          (_targetObjectList      );
 
     }
 
@@ -97,7 +99,7 @@ class   ObjectMuseum                            {
     }
 
     /*A function to add the children of this object into childObjectList.*/
-    List<ObjectMuseum> SetParentChildObjectList(List<ObjectMuseum> _targetObjectList)   {
+    List<ObjectMuseum> SetChildObjectList(List<ObjectMuseum> _targetObjectList)         {
 
         if(childObjectList.size() > 0){ childObjectList.clear(); }                                                                  /*Clear the previous child object array.*/
 
@@ -108,6 +110,24 @@ class   ObjectMuseum                            {
         }
 
         return                  childObjectList;
+
+    }
+
+    /*A function to return object from any object list.*/
+    ObjectMuseum FindObject(
+
+        List<ObjectMuseum>  _targetObjectList       , 
+        String              _nameAltString
+
+    ){
+
+        ObjectMuseum objectMuseum = null;
+        for(int i = 0; i < _targetObjectList.size(); i ++){
+
+            if(_targetObjectList.get(i).nameAltString.equals(_nameAltString)){ objectMuseum = _targetObjectList.get(i); }
+
+        }
+        return objectMuseum;
 
     }
 
@@ -133,4 +153,29 @@ class   ObjectMuseum                            {
 
     }
 
+    /*A function to find this object index in its array list (not parent nor child object list).*/
+    int FindIndexInt(List<ObjectMuseum> _targetObjectList)                              {
+
+        int indexInt            = -1;
+        for(int i = 0; i < _targetObjectList.size(); i ++){
+
+            if(_targetObjectList.get(i).nameAltString.equals(nameAltString)){ indexInt = i; break; }
+
+        }
+
+        return indexInt;
+
+    }
+
+    /*A function to set the threshold to determine whether this museum object is full or not.*/
+    int SetFullThresholdInt(int _fullThresholdInt)                                      {
+
+        fullThresholdInt            = _fullThresholdInt;
+
+        if      (fullThresholdInt   <= visitorCurrentInt)  { fullBoolean = true;  }
+        else if (fullThresholdInt   >  visitorCurrentInt)  { fullBoolean = false; }
+
+        return          fullThresholdInt;
+        
+    }
 };
