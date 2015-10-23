@@ -37,18 +37,18 @@ void setup		(){
 
     );
 
-    for(int i = 0; i < floorObjectList          ; i ++){
+    for(int i = 0; i < floorObjectList.size()           ; i ++){
 
         floorObjectList         .get(i).SetChildObjectList  (roomObjectList);
 
     }
-    for(int i = 0; i < roomObjectList           ; i ++){
+    for(int i = 0; i < roomObjectList.size()            ; i ++){
 
         roomObjectList          .get(i).SetParentObject     (floorObjectList);
         roomObjectList          .get(i).SetChildObjectList  (exhibitionObjectList);
 
     }
-    for(int i = 0; i < exhibitionObjectList     ; i ++){
+    for(int i = 0; i < exhibitionObjectList.size()      ; i ++){
 
         exhibitionObjectList    .get(i).SetParentObject     (roomObjectList);
 

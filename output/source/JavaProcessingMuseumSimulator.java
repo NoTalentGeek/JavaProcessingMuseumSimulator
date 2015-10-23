@@ -4,6 +4,7 @@ import processing.event.*;
 import processing.opengl.*; 
 
 import java.util.*; 
+import java.util.*; 
 
 import java.util.HashMap; 
 import java.util.ArrayList; 
@@ -54,6 +55,23 @@ public void setup		(){
         new ObjectMuseum(new Name("EXH_NED", "Exhibition The Netherlands"         ), "ROM_EUR", "EXH", "TAG_XXX")
 
     );
+
+    for(int i = 0; i < floorObjectList.size()           ; i ++){
+
+        floorObjectList         .get(i).SetChildObjectList  (roomObjectList);
+
+    }
+    for(int i = 0; i < roomObjectList.size()            ; i ++){
+
+        roomObjectList          .get(i).SetParentObject     (floorObjectList);
+        roomObjectList          .get(i).SetChildObjectList  (exhibitionObjectList);
+
+    }
+    for(int i = 0; i < exhibitionObjectList.size()      ; i ++){
+
+        exhibitionObjectList    .get(i).SetParentObject     (roomObjectList);
+
+    }
 
 }
 class   Name                        {
@@ -249,6 +267,37 @@ class   ObjectMuseum                            {
         
     }
 };
+
+
+class ObjectPlayer{
+
+	/*Constructor.*/
+	ObjectPlayer(
+
+		List<ObjectMuseum> 	_floorObjectList		,
+		List<ObjectMuseum> 	_roomObjectList			,
+		List<ObjectMuseum> 	_exhibitionObjectList	,
+		List<ObjectPlayer> 	_playerObjectList		,
+		String 				_exhibitionStartString
+
+	){
+
+		List<ObjectMuseum> floorObjectList 			= _floorObjectList;
+		List<ObjectMuseum> roomObjectList 			= _roomObjectList;
+		List<ObjectMuseum> exhibitionObjectList 	= _exhibitionObjectList;
+		List<ObjectPlayer> playerObjectList 		= _playerObjectList;
+
+		String 			exhibitionCurrentString		= "";
+		List<String> 	exhibitionTargetStringList 	= new ArrayList<String>();
+		List<String> 	exhibitionVisitedStringList	= new ArrayList<String>();
+		List<String> 	exhibitionTagStringList 	= new ArrayList<String>();
+
+		int 			timeCurrentExhibitionInt 	= -1;
+		int 			timeTotalInt 				= -1;
+
+	}
+
+}
   static public void main(String[] passedArgs) {
     String[] appletArgs = new String[] { "JavaProcessingMuseumSimulator" };
     if (passedArgs != null) {
