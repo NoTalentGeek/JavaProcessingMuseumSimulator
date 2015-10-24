@@ -17,9 +17,14 @@ import java.io.IOException;
 
 public class JavaProcessingMuseumSimulator extends PApplet {
 
+/*Determine global variable.s.*/
+List<ObjectMuseum>      floorObjectList         = new ArrayList<ObjectMuseum>();
+List<ObjectMuseum>      roomObjectList          = new ArrayList<ObjectMuseum>();
+List<ObjectMuseum>      exhibitionObjectList    = new ArrayList<ObjectMuseum>();
+
 public void setup		(){
 
-	List<ObjectMuseum>      floorObjectList                 = Arrays.asList(
+	floorObjectList        = Arrays.asList(
 
         new ObjectMuseum(new Name("FLR_001", "First Floor"                        ), "XXX_XXX", "FLR", "TAG_XXX"),
         new ObjectMuseum(new Name("FLR_002", "Second Floor"                       ), "XXX_XXX", "FLR", "TAG_XXX"),
@@ -27,7 +32,7 @@ public void setup		(){
         new ObjectMuseum(new Name("FLR_004", "Fourth Floor"                       ), "XXX_XXX", "FLR", "TAG_XXX")
 
     );
-	List<ObjectMuseum>      roomObjectList                  = Arrays.asList(
+	roomObjectList         = Arrays.asList(
 
         new ObjectMuseum(new Name("ROM_AFK", "Room Afrika"                        ), "FLR_001", "ROM", "TAG_XXX"),
         new ObjectMuseum(new Name("ROM_AME", "Room America"                       ), "FLR_001", "ROM", "TAG_XXX"),
@@ -35,7 +40,7 @@ public void setup		(){
         new ObjectMuseum(new Name("ROM_EUR", "Room Europe"                        ), "FLR_001", "ROM", "TAG_XXX")
 
     );
-	List<ObjectMuseum>      exhibitionObjectList            = Arrays.asList(
+	exhibitionObjectList   = Arrays.asList(
 
         new ObjectMuseum(new Name("EXH_CAO", "Exhibition Cameroon"                ), "ROM_AFK", "EXH", "TAG_XXX"),
         new ObjectMuseum(new Name("EXH_EGY", "Exhibition Egypt"                   ), "ROM_AFK", "EXH", "TAG_XXX"),
@@ -93,11 +98,7 @@ The museum objects within this application are things that can interract with vi
 For example floor, room, and exhibition.*/
 class   ObjectMuseum                            {
 
-    List<ObjectMuseum>  childObjectList         = new ArrayList<ObjectMuseum>();    /*This list contains all object that is sub - ordinate of this object..*/
-
-    List<ObjectMuseum>  floorObjectList         = new ArrayList<ObjectMuseum>();    /*This list contains all possible floor object.*/
-    List<ObjectMuseum>  roomObjectList          = new ArrayList<ObjectMuseum>();    /*This list contains all possible room object.*/
-    List<ObjectMuseum>  exhibitionObjectList    = new ArrayList<ObjectMuseum>();    /*This list contains all possible exhibition object.*/
+    List<ObjectMuseum>  childObjectList         = new ArrayList<ObjectMuseum>();    /*This list contains all possible exhibition object.*/
 
     int                 indexGlobalInt          = -1;                               /*This is an index number of the location of this object in its respective list.*/
     int                 indexLocalInt           = -1;                               /*This is an index number of the location of this object within its parent child object list.*/
@@ -271,11 +272,6 @@ class   ObjectMuseum                            {
 
 class ObjectPlayer{
 
-	List<ObjectMuseum> floorObjectList 			= new ArrayList<ObjectMuseum>();
-	List<ObjectMuseum> roomObjectList 			= new ArrayList<ObjectMuseum>();
-	List<ObjectMuseum> exhibitionObjectList 	= new ArrayList<ObjectMuseum>();
-	List<ObjectPlayer> playerObjectList 		= new ArrayList<ObjectPlayer>();
-
 	String 			exhibitionCurrentString		= "";
 	List<String> 	exhibitionTargetStringList 	= new ArrayList<String>();
 	List<String> 	exhibitionVisitedStringList	= new ArrayList<String>();
@@ -285,22 +281,47 @@ class ObjectPlayer{
 	int 			timeTotalInt 				= -1;
 
 	/*Constructor.*/
-	ObjectPlayer(
+	ObjectPlayer(String	_exhibitionStartString)				{
 
-		List<ObjectMuseum> 	_floorObjectList		,
-		List<ObjectMuseum> 	_roomObjectList			,
-		List<ObjectMuseum> 	_exhibitionObjectList	,
-		List<ObjectPlayer> 	_playerObjectList		,
-		String 				_exhibitionStartString
+		/*PENDING: exhibition move function.*/
+
+	}
+
+	/*A function to find an object from an array.*/
+	public ObjectMuseum FindObject(
+
+		String 				_targetNameAltString	,
+		List<ObjectMuseum> 	_targetObjectList
 
 	){
 
-		floorObjectList			= _floorObjectList;
-		roomObjectList 			= _roomObjectList;
-		exhibitionObjectList 	= _exhibitionObjectList;
-		playerObjectList 		= _playerObjectList;
+		ObjectMuseum objectMuseum = null;
+		for(int i = 0; i < _targetObjectList.size(); i ++){
 
-		/*Pending exhibition move function.*/
+			if(_targetObjectList.get(i).nameAltString.equals(_targetNameAltString)){
+
+				objectMuseum = _targetObjectList.get(i);
+
+			}
+
+		}
+
+		return objectMuseum;
+
+	}
+
+	public String ExhibitionMoveString(String _targetNameAltString)	{
+
+		/*If this player has a parent (means that this is not the first move).
+		PENDING: Missing function to remove this player from the
+			old exhibition (exhibition before this player moved).*/
+		if(exhibitionCurrentString != ""){
+
+			/*PENDING: Remove this player from this exhibition.*/
+
+		}
+
+		return "TEST";
 
 	}
 

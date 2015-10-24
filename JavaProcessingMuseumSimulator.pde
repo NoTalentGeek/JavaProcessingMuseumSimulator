@@ -1,6 +1,11 @@
+/*Determine global variable.s.*/
+List<ObjectMuseum>      floorObjectList         = new ArrayList<ObjectMuseum>();
+List<ObjectMuseum>      roomObjectList          = new ArrayList<ObjectMuseum>();
+List<ObjectMuseum>      exhibitionObjectList    = new ArrayList<ObjectMuseum>();
+
 void setup		(){
 
-	List<ObjectMuseum>      floorObjectList                 = Arrays.asList(
+	floorObjectList        = Arrays.asList(
 
         new ObjectMuseum(new Name("FLR_001", "First Floor"                        ), "XXX_XXX", "FLR", "TAG_XXX"),
         new ObjectMuseum(new Name("FLR_002", "Second Floor"                       ), "XXX_XXX", "FLR", "TAG_XXX"),
@@ -8,7 +13,7 @@ void setup		(){
         new ObjectMuseum(new Name("FLR_004", "Fourth Floor"                       ), "XXX_XXX", "FLR", "TAG_XXX")
 
     );
-	List<ObjectMuseum>      roomObjectList                  = Arrays.asList(
+	roomObjectList         = Arrays.asList(
 
         new ObjectMuseum(new Name("ROM_AFK", "Room Afrika"                        ), "FLR_001", "ROM", "TAG_XXX"),
         new ObjectMuseum(new Name("ROM_AME", "Room America"                       ), "FLR_001", "ROM", "TAG_XXX"),
@@ -16,7 +21,7 @@ void setup		(){
         new ObjectMuseum(new Name("ROM_EUR", "Room Europe"                        ), "FLR_001", "ROM", "TAG_XXX")
 
     );
-	List<ObjectMuseum>      exhibitionObjectList            = Arrays.asList(
+	exhibitionObjectList   = Arrays.asList(
 
         new ObjectMuseum(new Name("EXH_CAO", "Exhibition Cameroon"                ), "ROM_AFK", "EXH", "TAG_XXX"),
         new ObjectMuseum(new Name("EXH_EGY", "Exhibition Egypt"                   ), "ROM_AFK", "EXH", "TAG_XXX"),

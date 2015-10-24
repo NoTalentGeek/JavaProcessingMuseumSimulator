@@ -5,11 +5,7 @@ The museum objects within this application are things that can interract with vi
 For example floor, room, and exhibition.*/
 class   ObjectMuseum                            {
 
-    List<ObjectMuseum>  childObjectList         = new ArrayList<ObjectMuseum>();    /*This list contains all object that is sub - ordinate of this object..*/
-
-    List<ObjectMuseum>  floorObjectList         = new ArrayList<ObjectMuseum>();    /*This list contains all possible floor object.*/
-    List<ObjectMuseum>  roomObjectList          = new ArrayList<ObjectMuseum>();    /*This list contains all possible room object.*/
-    List<ObjectMuseum>  exhibitionObjectList    = new ArrayList<ObjectMuseum>();    /*This list contains all possible exhibition object.*/
+    List<ObjectMuseum>  childObjectList         = new ArrayList<ObjectMuseum>();    /*This list contains all possible exhibition object.*/
 
     int                 indexGlobalInt          = -1;                               /*This is an index number of the location of this object in its respective list.*/
     int                 indexLocalInt           = -1;                               /*This is an index number of the location of this object within its parent child object list.*/
