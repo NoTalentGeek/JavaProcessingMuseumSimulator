@@ -1,34 +1,29 @@
 import java.util.*;
 
+/*Create an internal class to be put in the list for easiness.
+This is because List in Java must be homogenous.*/
 class TagCounter{
 
 	String 	tagNameString = "";
 	int 	tagCounterInt = -1;
-	TagCounter(String _tagNameString, int _tagCounterInt){
 
-		tagNameString = _tagNameString;
-		tagCounterInt = _tagCounterInt;
-
-	}
+	TagCounter(){}
+	void 	SetTagNameStringVoid	(String _tagNameString)	{ tagNameString = _tagNameString; }
+	void 	SetTagCounterIntVoid	(int _tagCounterInt)	{ tagCounterInt = _tagCounterInt; }
+	int 	GetTagCounterInt		(){ return tagCounterInt; }
+	String 	GetTagNameString		(){ return tagNameString; }
 
 }
 
 class ObjectPlayer{
 
-	String 			exhibitionCurrentString		= "";
-	List<String> 	exhibitionTargetStringList 	= new ArrayList<String>();
-	List<String> 	exhibitionVisitedStringList	= new ArrayList<String>();
+	String 				exhibitionCurrentString		= "";
+	List<String> 		exhibitionTargetStringList 	= new ArrayList<String>();
+	List<String> 		exhibitionVisitedStringList	= new ArrayList<String>();
+	List<TagCounter>	exhibitionTagCounterList 	= new ArrayList<TagCounter>();
 
-	/*We need to go deeper,
-	We need to create a list of a list.
-	The second stage list first element will be a String filled with tag name.
-	The second stage list second element will be an int filled with tag counter*/
-	List<List<String>> 
-					exhibitionTagStringList		= new ArrayList<List<String>>();
-
-
-	int 			timeCurrentExhibitionInt 	= -1;
-	int 			timeTotalInt 				= -1;
+	int 				timeCurrentExhibitionInt 	= -1;
+	int 				timeTotalInt 				= -1;
 
 	/*Constructor.*/
 	ObjectPlayer(String	_exhibitionStartString)				{
@@ -69,7 +64,11 @@ class ObjectPlayer{
 
 	}
 
-	String ExhibitionMoveString(String _targetNameAltString)	{
+	ObjectMuseum ExhibitionMoveString(
+
+		String _targetNameAltString
+
+	){
 
 		/*Variable to hold currently visited museum object.*/
 		ObjectMuseum exhibitionCurrentObject 	= null;
@@ -115,11 +114,44 @@ class ObjectPlayer{
 			this source code easier to read.*/
 		for(int i = 0; i < exhibitionCurrentObject.tagStringList.size(), i ++){
 
+			/*Create new tag counter to count how many tags are in the user preference.*/
+			TagCounter 	tagCounter 		= new TagCounter();
+						tagCounter 		.SetTagNameStringVoid(exhibitionCurrentObject.tagStringList.get(i));
 
+			boolean 	newBool			= true;		/*Whether the tag is new to the array or there is already existing one.*/
+            int 		indexInt		= -1;    	/*If there is the corresponding tag already in the array return its index with this variable, otherwise it keeps -1.*/
+
+            /*Iterate through all tag those already gathered to find if there any tag that
+            	is already registered in this player.*/
+            for(int j = 0; j < exhibitionTagCounterList.size(); j ++){
+
+            	if(exhibitionTagCounterList.get(j).GetTagNameString().equals(tagCounter.GetTagNameStringVoid()){
+
+            		newBool 			= false;
+            		indexInt			= j;
+
+            	}
+
+            }
+
+            /*If the tag received is new then set the initial tag value to 1 and
+            	add the tag to the tag counter.*/
+            if 		(newBool == true ){
+
+            	tagCounter 					.SetTagCounterIntVoid(1);
+            	exhibitionTagCounterList 	.add(tagCounter);
+
+            }
+            /*If the tag received is alredy filled in before then increase the tag counter.*/
+            else if (newBool == false){
+
+            	exhibitionTagCounterList.get(indexInt).SetTagCounterIntVoid(tagCounter.GetTagCounterInt() + 1);
+
+            }
 
 		}
 
-		return _targetNameAltString;
+		return exhibitionCurrentObject;
 
 	}
 
