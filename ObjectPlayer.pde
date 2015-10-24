@@ -32,38 +32,72 @@ class ObjectPlayer{
 
 	}
 
+	/*A function to either add the tag or increase the tag value in this player.*/
+	void AddTagCounterVoid(
+
+		ObjectMuseum _exhibitionCurrentObject
+
+	){
+
+		for(int i = 0; i < _exhibitionCurrentObject.tagStringList.size(); i ++){
+
+			/*Create new tag counter to count how many tags are in the user preference.*/
+			TagCounter 	tagCounter 		= new TagCounter();
+						tagCounter 		.SetTagNameStringVoid(_exhibitionCurrentObject.tagStringList.get(i));
+
+			boolean 	newBool			= true;		/*Whether the tag is new to the array or there is already existing one.*/
+            int 		indexInt		= -1;    	/*If there is the corresponding tag already in the array return its index with this variable, otherwise it keeps -1.*/
+
+            /*Iterate through all tag those already gathered to find if there any tag that
+            	is already registered in this player.*/
+            for(int j = 0; j < exhibitionTagCounterList.size(); j ++){
+
+            	if(
+
+            		exhibitionTagCounterList.get(j).GetTagNameString().equals(
+
+            			tagCounter.GetTagNameString()
+
+            		)
+
+            	){
+
+            		newBool 			= false;
+            		indexInt			= j;
+
+            	}
+
+            }
+
+            /*If the tag received is new then set the initial tag value to 1 and
+            	add the tag to the tag counter.*/
+            if 		(newBool == true ){
+
+            	tagCounter 					.SetTagCounterIntVoid(1);
+            	exhibitionTagCounterList 	.add(tagCounter);
+
+            }
+            /*If the tag received is alredy filled in before then increase the tag counter.*/
+            else if (newBool == false){
+
+            	exhibitionTagCounterList.get(indexInt).SetTagCounterIntVoid(tagCounter.GetTagCounterInt() + 1);
+
+            }
+
+		}
+
+	}
+
 	/*A function to add or remove this object from parent child object.*/
 	void AddRemoveChildVoid(boolean _isAdd)					{
 
 		ObjectMuseum exhibitionCurrentObject 				= FindObject(exhibitionCurrentString, exhibitionObjectList);
-		if 		(_isAdd == true )							{ exhibitionCurrentObject.childObjectList.add(this); 	}
-		else if (_isAdd == false)							{ exhibitionCurrentObject.childObjectList.remove(this); }
+		if 		(_isAdd == true )							{ exhibitionCurrentObject.childPlayerObjectList.add(this); 		}
+		else if (_isAdd == false)							{ exhibitionCurrentObject.childPlayerObjectList.remove(this); 	}
 
 	}
 
-	/*A function to find an object from an array.*/
-	ObjectMuseum FindObject(
-
-		String 				_targetNameAltString	,
-		List<ObjectMuseum> 	_targetObjectList
-
-	){
-
-		ObjectMuseum objectMuseum = null;
-		for(int i = 0; i < _targetObjectList.size(); i ++){
-
-			if(_targetObjectList.get(i).nameAltString.equals(_targetNameAltString)){
-
-				objectMuseum = _targetObjectList.get(i);
-
-			}
-
-		}
-
-		return objectMuseum;
-
-	}
-
+	/*A function to move this player into new exhibition and add the tags to the tag coutner list.*/
 	ObjectMuseum ExhibitionMoveString(
 
 		String _targetNameAltString
@@ -112,46 +146,32 @@ class ObjectPlayer{
 		/*PROTOTYPE: Here you need to create a function to add tags into player's preferences.
 		PENDING: After you made the prototype here please make it into a function to make
 			this source code easier to read.*/
-		for(int i = 0; i < exhibitionCurrentObject.tagStringList.size(), i ++){
+		AddTagCounterVoid(exhibitionCurrentObject);
 
-			/*Create new tag counter to count how many tags are in the user preference.*/
-			TagCounter 	tagCounter 		= new TagCounter();
-						tagCounter 		.SetTagNameStringVoid(exhibitionCurrentObject.tagStringList.get(i));
+		return exhibitionCurrentObject;
 
-			boolean 	newBool			= true;		/*Whether the tag is new to the array or there is already existing one.*/
-            int 		indexInt		= -1;    	/*If there is the corresponding tag already in the array return its index with this variable, otherwise it keeps -1.*/
+	}
 
-            /*Iterate through all tag those already gathered to find if there any tag that
-            	is already registered in this player.*/
-            for(int j = 0; j < exhibitionTagCounterList.size(); j ++){
+	/*A function to find an object from an array.*/
+	ObjectMuseum FindObject(
 
-            	if(exhibitionTagCounterList.get(j).GetTagNameString().equals(tagCounter.GetTagNameStringVoid()){
+		String 				_targetNameAltString	,
+		List<ObjectMuseum> 	_targetObjectList
 
-            		newBool 			= false;
-            		indexInt			= j;
+	){
 
-            	}
+		ObjectMuseum objectMuseum = null;
+		for(int i = 0; i < _targetObjectList.size(); i ++){
 
-            }
+			if(_targetObjectList.get(i).nameAltString.equals(_targetNameAltString)){
 
-            /*If the tag received is new then set the initial tag value to 1 and
-            	add the tag to the tag counter.*/
-            if 		(newBool == true ){
+				objectMuseum = _targetObjectList.get(i);
 
-            	tagCounter 					.SetTagCounterIntVoid(1);
-            	exhibitionTagCounterList 	.add(tagCounter);
-
-            }
-            /*If the tag received is alredy filled in before then increase the tag counter.*/
-            else if (newBool == false){
-
-            	exhibitionTagCounterList.get(indexInt).SetTagCounterIntVoid(tagCounter.GetTagCounterInt() + 1);
-
-            }
+			}
 
 		}
 
-		return exhibitionCurrentObject;
+		return objectMuseum;
 
 	}
 

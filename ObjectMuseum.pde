@@ -6,6 +6,7 @@ For example floor, room, and exhibition.*/
 class   ObjectMuseum                            {
 
     List<ObjectMuseum>  childObjectList         = new ArrayList<ObjectMuseum>();    /*This list contains all possible exhibition object.*/
+    List<ObjectPlayer>  childPlayerObjectList   = new ArrayList<ObjectPlayer>(); 
 
     int                 indexGlobalInt          = -1;                               /*This is an index number of the location of this object in its respective list.*/
     int                 indexLocalInt           = -1;                               /*This is an index number of the location of this object within its parent child object list.*/
