@@ -31,7 +31,39 @@ class ObjectPlayer{
 		exhibitionObjectList 	= _exhibitionObjectList;
 		playerObjectList 		= _playerObjectList;
 
-		/*Pending exhibition move function.*/
+		/*PENDING: exhibition move function.*/
+
+	}
+
+	/*A function to find an object from an array.*/
+	ObjectMuseum FindObject(
+
+		String 				_targetNameAltString	,
+		List<ObjectMuseum> 	_targetObjectList
+
+	){
+
+
+
+	}
+
+	String ExhibitionMoveString(
+
+		String				_targetNameAltString	,
+		List<ObjectMuseum>	_floorObjectMuseum		,
+		List<ObjectMuseum>	_roomObjectMuseum		,
+		List<ObjectMuseum> 	_exhibitionObjectMuseum
+
+	){
+
+		/*If this player has a parent (means that this is not the first move).
+		PENDING: Missing function to remove this player from the
+			old exhibition (exhibition before this player moved).*/
+		if(exhibitionCurrentString != ""){
+
+			/*PENDING: Remove this player from this exhibition.*/
+
+		}
 
 	}
 
