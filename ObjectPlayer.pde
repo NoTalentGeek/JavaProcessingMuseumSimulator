@@ -22,6 +22,9 @@ class ObjectPlayer{
 	List<String> 		exhibitionVisitedStringList	= new ArrayList<String>();
 	List<TagCounter>	exhibitionTagCounterList 	= new ArrayList<TagCounter>();
 
+	List<ObjectPlayer>	playerSiblingObjectList 	= new ArrayList<ObjectPlayer>();
+	int 				playerSiblingIndex 			= -1;
+
 	int 				timeCurrentExhibitionInt 	= -1;
 	int 				timeTotalInt 				= -1;
 
@@ -143,10 +146,9 @@ class ObjectPlayer{
 		roomCurrentObject				.visitorTotalInt	++;
 		floorCurrentObject				.visitorTotalInt	++;
 
-		/*PROTOTYPE: Here you need to create a function to add tags into player's preferences.
-		PENDING: After you made the prototype here please make it into a function to make
-			this source code easier to read.*/
-		AddTagCounterVoid(exhibitionCurrentObject);
+		AddTagCounterVoid 				(exhibitionCurrentObject);
+		AddRemoveChildVoid 				(true);
+		/*PENDING: Add function to calculate siblings.*/
 
 		return exhibitionCurrentObject;
 
