@@ -2,6 +2,7 @@
 List<ObjectMuseum>      floorObjectList         = new ArrayList<ObjectMuseum>();
 List<ObjectMuseum>      roomObjectList          = new ArrayList<ObjectMuseum>();
 List<ObjectMuseum>      exhibitionObjectList    = new ArrayList<ObjectMuseum>();
+List<ObjectPlayer>      playerObjectList        = new ArrayList<ObjectPlayer>();
 
 void setup		(){
 

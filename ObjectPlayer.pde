@@ -23,7 +23,7 @@ class ObjectPlayer{
 	List<TagCounter>	exhibitionTagCounterList 	= new ArrayList<TagCounter>();
 
 	List<ObjectPlayer>	playerSiblingObjectList 	= new ArrayList<ObjectPlayer>();
-	int 				playerSiblingIndex 			= -1;
+	int 				playerSiblingIndexInt		= -1;
 
 	int 				timeCurrentExhibitionInt 	= -1;
 	int 				timeTotalInt 				= -1;
@@ -100,6 +100,41 @@ class ObjectPlayer{
 
 	}
 
+	/*A function to return the position of this player in the player sibling list*/
+	int SetPlayerSiblingIndexInt(
+
+		List<ObjectPlayer> _playerSiblingObjectList
+
+	){
+
+		playerSiblingIndexInt = -1;
+		for(int i = 0; i < _playerSiblingObjectList.size(); i ++){ if(_playerSiblingObjectList.get(i) == this){ playerSiblingIndexInt = i; } }
+		return playerSiblingIndexInt;
+
+	}
+
+	/*A function to automatically add other player of which in the same exhibition.*/
+	List<ObjectPlayer> SetSiblingObjectList()				{
+
+		playerSiblingObjectList = new ArrayList<ObjectPlayer>();
+
+		for(int i = 0; i < playerObjectList.size(); i ++){
+
+			if(playerObjectList.get(i).exhibitionCurrentString.equals(exhibitionCurrentString)){
+
+				playerSiblingObjectList.add(playerObjectList.get(i));
+
+			}
+
+		}
+
+		/*Set the new index of this player object.*/
+		playerSiblingIndexInt = SetPlayerSiblingIndexInt(playerSiblingObjectList);
+
+		return playerSiblingObjectList;
+
+	}
+
 	/*A function to move this player into new exhibition and add the tags to the tag coutner list.*/
 	ObjectMuseum ExhibitionMoveString(
 
@@ -148,7 +183,9 @@ class ObjectPlayer{
 
 		AddTagCounterVoid 				(exhibitionCurrentObject);
 		AddRemoveChildVoid 				(true);
-		/*PENDING: Add function to calculate siblings.*/
+		
+		/*For everytime a player move to another exhibition iterate through all player to re - add the siblings.*/
+		for(int i = 0; i < playerObjectList.size(); i ++){ playerObjectList.get(i).SetSiblingObjectList(); }
 
 		return exhibitionCurrentObject;
 

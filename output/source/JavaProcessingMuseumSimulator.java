@@ -21,6 +21,7 @@ public class JavaProcessingMuseumSimulator extends PApplet {
 List<ObjectMuseum>      floorObjectList         = new ArrayList<ObjectMuseum>();
 List<ObjectMuseum>      roomObjectList          = new ArrayList<ObjectMuseum>();
 List<ObjectMuseum>      exhibitionObjectList    = new ArrayList<ObjectMuseum>();
+List<ObjectPlayer>      playerObjectList        = new ArrayList<ObjectPlayer>();
 
 public void setup		(){
 
@@ -293,6 +294,9 @@ class ObjectPlayer{
 	List<String> 		exhibitionVisitedStringList	= new ArrayList<String>();
 	List<TagCounter>	exhibitionTagCounterList 	= new ArrayList<TagCounter>();
 
+	List<ObjectPlayer>	playerSiblingObjectList 	= new ArrayList<ObjectPlayer>();
+	int 				playerSiblingIndexInt		= -1;
+
 	int 				timeCurrentExhibitionInt 	= -1;
 	int 				timeTotalInt 				= -1;
 
@@ -368,6 +372,41 @@ class ObjectPlayer{
 
 	}
 
+	/*A function to return the position of this player in the player sibling list*/
+	public int SetPlayerSiblingIndexInt(
+
+		List<ObjectPlayer> _playerSiblingObjectList
+
+	){
+
+		playerSiblingIndexInt = -1;
+		for(int i = 0; i < _playerSiblingObjectList.size(); i ++){ if(_playerSiblingObjectList.get(i) == this){ playerSiblingIndexInt = i; } }
+		return playerSiblingIndexInt;
+
+	}
+
+	/*A function to automatically add other player of which in the same exhibition.*/
+	public List<ObjectPlayer> SetSiblingObjectList()				{
+
+		playerSiblingObjectList = new ArrayList<ObjectPlayer>();
+
+		for(int i = 0; i < playerObjectList.size(); i ++){
+
+			if(playerObjectList.get(i).exhibitionCurrentString.equals(exhibitionCurrentString)){
+
+				playerSiblingObjectList.add(playerObjectList.get(i));
+
+			}
+
+		}
+
+		/*Set the new index of this player object.*/
+		playerSiblingIndexInt = SetPlayerSiblingIndexInt(playerSiblingObjectList);
+
+		return playerSiblingObjectList;
+
+	}
+
 	/*A function to move this player into new exhibition and add the tags to the tag coutner list.*/
 	public ObjectMuseum ExhibitionMoveString(
 
@@ -414,10 +453,11 @@ class ObjectPlayer{
 		roomCurrentObject				.visitorTotalInt	++;
 		floorCurrentObject				.visitorTotalInt	++;
 
-		/*PROTOTYPE: Here you need to create a function to add tags into player's preferences.
-		PENDING: After you made the prototype here please make it into a function to make
-			this source code easier to read.*/
-		AddTagCounterVoid(exhibitionCurrentObject);
+		AddTagCounterVoid 				(exhibitionCurrentObject);
+		AddRemoveChildVoid 				(true);
+		
+		/*For everytime a player move to another exhibition iterate through all player to re - add the siblings.*/
+		for(int i = 0; i < playerObjectList.size(); i ++){ playerObjectList.get(i).SetSiblingObjectList(); }
 
 		return exhibitionCurrentObject;
 
