@@ -276,12 +276,19 @@ class   ObjectMuseum                            {
 This is because List in Java must be homogenous.*/
 class TagCounter{
 
-	String 	tagNameString = "";
-	int 	tagCounterInt = -1;
+	List<Integer>	tagCounterIntList 	= new ArrayList<Integer>();
+	String 			tagNameString 		= "";
+	int 			tagCounterInt 		= -1;
 
 	TagCounter(){}
 	public void 	SetTagNameStringVoid	(String _tagNameString)	{ tagNameString = _tagNameString; }
-	public void 	SetTagCounterIntVoid	(int _tagCounterInt)	{ tagCounterInt = _tagCounterInt; }
+	public void 	SetTagCounterIntVoid	(int _tagCounterInt)	{
+
+		tagCounterInt 		= _tagCounterInt;
+		tagCounterIntList 	= new ArrayList<Integer>();
+		tagCounterIntList	.add(tagCounterInt);
+
+	}
 	public int 	GetTagCounterInt		(){ return tagCounterInt; }
 	public String 	GetTagNameString		(){ return tagNameString; }
 
@@ -301,11 +308,7 @@ class ObjectPlayer{
 	int 				timeTotalInt 				= -1;
 
 	/*Constructor.*/
-	ObjectPlayer(String	_exhibitionStartString)				{
-
-		/*PENDING: exhibition move function.*/
-
-	}
+	ObjectPlayer(String	_exhibitionStartString)				{ ExhibitionMoveObject(_exhibitionStartString); }
 
 	/*A function to either add the tag or increase the tag value in this player.*/
 	public void AddTagCounterVoid(
@@ -361,12 +364,25 @@ class ObjectPlayer{
 
 		}
 
+		/*Sort the object in the list based on tag counter int.*/
+		Collections.sort(exhibitionTagCounterList, new Comparator<TagCounter>(){
+
+				public int compare(TagCounter _tagCounter1Object, TagCounter _tagCounter2Object) {
+				
+					return _tagCounter1Object.tagCounterIntList.get(0).compareTo(_tagCounter2Object.tagCounterIntList.get(0));
+				
+				}
+
+			}
+
+		);
+
 	}
 
 	/*A function to add or remove this object from parent child object.*/
 	public void AddRemoveChildVoid(boolean _isAdd)					{
 
-		ObjectMuseum exhibitionCurrentObject 				= FindObject(exhibitionCurrentString, exhibitionObjectList);
+		ObjectMuseum exhibitionCurrentObject 				= FindObject(exhibitionObjectList, exhibitionCurrentString);
 		if 		(_isAdd == true )							{ exhibitionCurrentObject.childPlayerObjectList.add(this); 		}
 		else if (_isAdd == false)							{ exhibitionCurrentObject.childPlayerObjectList.remove(this); 	}
 
@@ -407,8 +423,163 @@ class ObjectPlayer{
 
 	}
 
+	/*A function to determine target exhibition.*/
+	public List<String> DetermineExhibitionTargetStringList()		{
+
+		exhibitionTargetStringList 	= new ArrayList<String>();
+
+		/*Stage one sort.
+    	Stage one sort is to remove the currently visited exhibition from the target exhibition index.
+    	So that the player have no chance on visiting the exhibition that he/she  currently visits.*/
+		for(int i = 0; i < exhibitionObjectList.size(); i ++){
+
+			/*Compare the current exihibition with the object exhibitiob array.
+        	After that remove the object exhibition that is the current exhibition and put the rest
+            	of the exhibition in the target exhibition array string.*/
+			if(
+
+				!(exhibitionObjectList.get(i).nameAltString.equals(exhibitionCurrentString))
+
+			){
+
+				exhibitionTargetStringList.add(
+
+					exhibitionObjectList.get(i).nameAltString
+
+				);
+
+			}
+
+		}
+
+		/*Stage two sort.
+	    Remove all exhibition target that is full of visitor.*/
+	    for(int i = 0; i < exhibitionObjectList.size(); i ++){
+
+	        if(
+
+	             (exhibitionObjectList.get(i).fullBoolean    	== true)                                               &&
+	            !(exhibitionCurrentString                		.equals(exhibitionObjectList.get(i).nameAltString))
+
+	        ){
+	            
+	            exhibitionTargetStringList 						.remove(exhibitionObjectList.get(i).nameAltString);
+	            if(exhibitionTargetStringList.size() == 3)    	{ return exhibitionTargetStringList; }
+
+	        }
+
+	    }
+
+	    /*Stage three sort.
+	    Stage three sort is to make the exhibition that has been visited before has 90% chance to make into target exhibition.
+	    For example the visitor is now in the Exhibition C as he/she used to visits Exhibition A and Exhibition B before,
+	        the system now will let Exhibition A and Exhibition B to have 10% chance to be not removed from the target
+	        exhibition array.*/
+	    for(int i = 0; i < exhibitionVisitedStringList.size(); i ++){
+
+	        for(int j = 0; j < exhibitionTargetStringList.size(); j ++){
+
+	            /*Compare the target exhibitions with all visited exhibition.
+	            If it matches then the corresponding exhibition has 90% chance to be deleted
+	                from target exhibition array.*/
+	            if(exhibitionTargetStringList.get(j).equals(exhibitionVisitedStringList.get(i))){
+
+	                if(Math.random() < 0.90f){
+
+	                    exhibitionTargetStringList.remove(exhibitionTargetStringList.get(j));
+	                    j --;
+
+	                }
+
+	                /*After each splice make sure to have the exhibition target length to be 3.
+	                If not 3 elements in the target exhibition array, then return the last 3 elements
+	                    of target exhibition array ever exist.*/
+	                if(exhibitionTargetStringList.size() == 3)	{ return exhibitionTargetStringList; }
+
+	            }
+
+	        }
+
+	    }
+
+	    /*Stage four sort.
+	    So now this application compare the the most visited tags from this player profile (take three most visited tags)
+	        and compared to the exhibition tag.
+	    Each exhibition has 3 tags so,
+	        if nothing match the exhibition is excluded from from the target exhibition array,
+	        if one tag is match the exhibition has 66% chance of being removed from the target exhibition array,
+	        if two tags are match the exhibition has 33% chance of being removed from the target exhibition array,
+	        if three tags are match the exhibition will stay in the target exhibition array.*/
+	    String tempTagStringArray[] = new String[3];
+	    for(int i = 0; i < tempTagStringArray.length			; i ++){ tempTagStringArray[i] = exhibitionTagCounterList.get(i).GetTagNameString(); }
+	    for(int i = 0; i < exhibitionTargetStringList.size()	; i ++){
+
+	        ObjectMuseum 	exhibitionTargetObject	= FindObject(exhibitionObjectList, exhibitionTargetStringList.get(i));
+	        int 			tagSameCountInt			= 0;
+
+	        for(int j = 0; j < exhibitionTargetObject.tagStringList.size(); j ++){
+
+	            for(int k = 0; k < tempTagStringArray.length; k ++){
+
+	                if(exhibitionTargetObject.tagStringList.get(j) == tempTagStringArray[k]){ tagSameCountInt ++; }
+
+	            }
+
+	        }
+	        
+	        if      (tagSameCountInt == 0)          {                            exhibitionTargetStringList.remove(exhibitionTargetStringList.get(i)); i --; }
+	        else if (tagSameCountInt == 1)          { if(Math.random() < 0.66f){ exhibitionTargetStringList.remove(exhibitionTargetStringList.get(i)); i --; } }
+	        else if (tagSameCountInt == 2)          { if(Math.random() < 0.33f){ exhibitionTargetStringList.remove(exhibitionTargetStringList.get(i)); i --; } }
+	        else if (tagSameCountInt == 3)          {  }
+
+	        /*After each splice make sure to have the exhibition target length to be 3.
+	        If not 3 elements in the target exhibition array, then return the last 3 elements
+	            of target exhibition array ever exist.*/
+	        if(exhibitionTargetStringList.size() == 3)	{ return exhibitionTargetStringList; }
+
+	    }
+
+	    ObjectMuseum 	exhibitionCurrentObject 	= FindObject(exhibitionObjectList, exhibitionCurrentString);
+	    String 			roomCurrentString 			= exhibitionCurrentObject.parentNameAltString;
+	    ObjectMuseum 	roomCurrentObject 			= FindObject(roomObjectList, roomCurrentString);
+	    String 			floorCurrentString 			= roomCurrentObject.parentNameAltString;
+	    ObjectMuseum 	floorCurrentObject 			= FindObject(floorObjectList, floorCurrentString);
+
+	    /*Stage five sort.
+	    The fourth sort is to make the exhibition target that are not in the same floor or room of which player's
+	        current exhibition to have 50% chance of stay.*/
+	    for(int i = 0; i < exhibitionTargetStringList.size(); i ++){
+
+	        ObjectMuseum 	exhibitionTargetObject 	= FindObject(exhibitionObjectList, exhibitionTargetStringList.get(i));
+	        String 			roomTargetString		= exhibitionTargetObject.parentNameAltString;
+	        ObjectMuseum 	roomTargetObject		= FindObject(roomObjectList, roomTargetString);
+	        String 			floorTargetString		= roomTargetObject.parentNameAltString;
+	        ObjectMuseum 	floorTargetObject		= FindObject(floorObjectList, floorTargetString);
+
+	        if(roomCurrentString 	!= roomTargetString ){
+
+	        	if(Math.random() < 0.20f){ exhibitionTargetStringList.remove(exhibitionTargetStringList.get(i)); i --; }
+	        	else{
+
+	        		if(floorCurrentString != floorTargetString){ if(Math.random() < 0.50f){ exhibitionTargetStringList.remove(exhibitionTargetStringList.get(i)); i --; } }
+
+	        	}
+
+	        }
+	        
+	        /*After each splice make sure to have the exhibition target length to be 3.
+	        If not 3 elements in the target exhibition array, then return the last 3 elements
+	            of target exhibition array ever exist.*/
+	        if(exhibitionTargetStringList.size() == 3)	{ return exhibitionTargetStringList; }
+
+	    }
+
+		return 						exhibitionTargetStringList;
+
+	}
+
 	/*A function to move this player into new exhibition and add the tags to the tag coutner list.*/
-	public ObjectMuseum ExhibitionMoveString(
+	public ObjectMuseum ExhibitionMoveObject(
 
 		String _targetNameAltString
 
@@ -428,9 +599,9 @@ class ObjectPlayer{
 				before we move this player into another exhibition.*/
 			AddRemoveChildVoid(false);
 
-			exhibitionCurrentObject		= FindObject(exhibitionCurrentString							, exhibitionObjectList	);
-			roomCurrentObject			= FindObject(exhibitionCurrentObject	.parentNameAltString	, roomObjectList		);
-			floorCurrentObject 			= FindObject(roomCurrentObject			.parentNameAltString	, floorObjectList		);
+			exhibitionCurrentObject		= FindObject(exhibitionObjectList	, exhibitionCurrentString							);
+			roomCurrentObject			= FindObject(roomObjectList			, exhibitionCurrentObject	.parentNameAltString	);
+			floorCurrentObject 			= FindObject(floorObjectList		, roomCurrentObject			.parentNameAltString	);
 			exhibitionCurrentObject		.visitorCurrentInt --;
 			roomCurrentObject			.visitorCurrentInt --;
 			floorCurrentObject			.visitorCurrentInt --;
@@ -441,9 +612,9 @@ class ObjectPlayer{
 		exhibitionVisitedStringList		.add(exhibitionCurrentString);		/*Add the current exhibition to visited exhibition list.*/
 		
 		/*Re - instantiated all newly visited museum objects.*/
-		exhibitionCurrentObject			= FindObject(exhibitionCurrentString							, exhibitionObjectList	);
-		roomCurrentObject				= FindObject(exhibitionCurrentObject	.parentNameAltString	, roomObjectList		);
-		floorCurrentObject 				= FindObject(roomCurrentObject			.parentNameAltString	, floorObjectList		);
+		exhibitionCurrentObject		= FindObject(exhibitionObjectList	, exhibitionCurrentString							);
+		roomCurrentObject			= FindObject(roomObjectList			, exhibitionCurrentObject	.parentNameAltString	);
+		floorCurrentObject 			= FindObject(floorObjectList		, roomCurrentObject			.parentNameAltString	);
 
 		/*Add total number museum visit.*/
 		exhibitionCurrentObject			.visitorCurrentInt	++;
@@ -466,8 +637,8 @@ class ObjectPlayer{
 	/*A function to find an object from an array.*/
 	public ObjectMuseum FindObject(
 
-		String 				_targetNameAltString	,
-		List<ObjectMuseum> 	_targetObjectList
+		List<ObjectMuseum> 	_targetObjectList		,
+		String 				_targetNameAltString
 
 	){
 
