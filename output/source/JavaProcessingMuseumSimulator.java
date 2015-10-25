@@ -17,7 +17,8 @@ import java.io.IOException;
 
 public class JavaProcessingMuseumSimulator extends PApplet {
 
-/*Determine global variable.s.*/
+/*Determine global variables.*/
+int                     playerAmountInt         = 30;
 List<ObjectMuseum>      floorObjectList         = new ArrayList<ObjectMuseum>();
 List<ObjectMuseum>      roomObjectList          = new ArrayList<ObjectMuseum>();
 List<ObjectMuseum>      exhibitionObjectList    = new ArrayList<ObjectMuseum>();
@@ -62,20 +63,18 @@ public void setup		(){
 
     );
 
-    for(int i = 0; i < floorObjectList.size()           ; i ++){
-
-        floorObjectList         .get(i).SetChildObjectList  (roomObjectList);
-
-    }
-    for(int i = 0; i < roomObjectList.size()            ; i ++){
+    for(int i = 0; i < floorObjectList.size()           ; i ++) { floorObjectList.get(i).SetChildObjectList  (roomObjectList); }
+    for(int i = 0; i < roomObjectList.size()            ; i ++) {
 
         roomObjectList          .get(i).SetParentObject     (floorObjectList);
         roomObjectList          .get(i).SetChildObjectList  (exhibitionObjectList);
 
     }
-    for(int i = 0; i < exhibitionObjectList.size()      ; i ++){
+    for(int i = 0; i < exhibitionObjectList.size()      ; i ++) { exhibitionObjectList.get(i).SetParentObject(roomObjectList); }
 
-        exhibitionObjectList    .get(i).SetParentObject     (roomObjectList);
+    for(int i = 0; i < playerAmountInt; i ++)                   {
+
+        ObjectPlayer objectPlayer = new ObjectPlayer(i, exhibitionObjectList.get((int)(Math.floor((Math.random()*exhibitionObjectList.size()) + 0))).nameAltString);
 
     }
 
