@@ -29,13 +29,20 @@ class ObjectPlayer{
     List<String>        exhibitionVisitedStringList = new ArrayList<String>();
     List<TagCounter>    exhibitionTagCounterList    = new ArrayList<TagCounter>();
 
+    int                 playerIndex                 = 0;
+
     List<ObjectPlayer>  playerSiblingObjectList     = new ArrayList<ObjectPlayer>();
     int                 playerSiblingIndexInt       = -1;
 
     int                 timeCurrentExhibitionInt    = 0;
 
     /*Constructor.*/
-    ObjectPlayer(String _exhibitionStartString)             { ExhibitionMoveObject(_exhibitionStartString); }
+    ObjectPlayer(
+
+        int     _playerIndex            ,
+        String  _exhibitionStartString
+
+    ){ playerIndex = _playerIndex; ExhibitionMoveObject(_exhibitionStartString); }
 
     /*A function to either add the tag or increase the tag value in this player.*/
     void AddTagCounterVoid(
@@ -130,8 +137,6 @@ class ObjectPlayer{
             timeCurrentExhibitionInt                        ++;
 
             if(Math.random() > (1 - (timeCurrentExhibitionInt/100))){
-
-                SetExhibitionTargetStringList();
 
                 /*Move player to the new exhibition.*/
                 int     randomIndexInt          = (int)(Math.floor((Math.random()*exhibitionTargetStringList.size()) + 0));
