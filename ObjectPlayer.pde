@@ -31,7 +31,7 @@ class ObjectPlayer{
 	/*Constructor.*/
 	ObjectPlayer(String	_exhibitionStartString)				{
 
-		/*PENDING: exhibition move function.*/
+		ExhibitionMoveObject(_exhibitionStartString);
 
 	}
 
@@ -136,7 +136,7 @@ class ObjectPlayer{
 	}
 
 	/*A function to move this player into new exhibition and add the tags to the tag coutner list.*/
-	ObjectMuseum ExhibitionMoveString(
+	ObjectMuseum ExhibitionMoveObject(
 
 		String _targetNameAltString
 
