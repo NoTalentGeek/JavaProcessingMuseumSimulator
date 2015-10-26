@@ -24,6 +24,19 @@ List<ObjectMuseum>      roomObjectList          = new ArrayList<ObjectMuseum>();
 List<ObjectMuseum>      exhibitionObjectList    = new ArrayList<ObjectMuseum>();
 List<ObjectPlayer>      playerObjectList        = new ArrayList<ObjectPlayer>();
 
+class   Name                        {
+
+    String          nameAltString   = "";
+    String          nameFullString  = "";
+    Name                            (String _nameAltString, String _nameFullString){
+
+        nameAltString               = _nameAltString;
+        nameFullString              = _nameFullString;
+
+    }
+
+};
+
 public void setup		(){
 
 	floorObjectList        = Arrays.asList(
@@ -75,22 +88,14 @@ public void setup		(){
     for(int i = 0; i < playerAmountInt; i ++)                   {
 
         ObjectPlayer objectPlayer = new ObjectPlayer(i, exhibitionObjectList.get((int)(Math.floor((Math.random()*exhibitionObjectList.size()) + 0))).nameAltString);
+        playerObjectList.add(objectPlayer);
 
     }
+
+    println(playerObjectList.size());
 
 }
-class   Name                        {
 
-    String          nameAltString   = "";
-    String          nameFullString  = "";
-    Name                            (String _nameAltString, String _nameFullString){
-
-        nameAltString               = _nameAltString;
-        nameFullString              = _nameFullString;
-
-    }
-
-};
 
 
 /*A class for museum object.
