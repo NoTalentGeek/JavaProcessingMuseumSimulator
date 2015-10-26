@@ -19,16 +19,19 @@ public class JavaProcessingMuseumSimulator extends PApplet {
 
 /*Determine global variables.*/
 int                     playerAmountInt         = 30;
+List<Tag>               tagObjectList           = new ArrayList<Tag>();
 List<ObjectMuseum>      floorObjectList         = new ArrayList<ObjectMuseum>();
 List<ObjectMuseum>      roomObjectList          = new ArrayList<ObjectMuseum>();
 List<ObjectMuseum>      exhibitionObjectList    = new ArrayList<ObjectMuseum>();
 List<ObjectPlayer>      playerObjectList        = new ArrayList<ObjectPlayer>();
-
-class   Name                        {
+class Name                                      {
 
     String          nameAltString   = "";
     String          nameFullString  = "";
-    Name                            (String _nameAltString, String _nameFullString){
+    Name(
+        String _nameAltString   , 
+        String _nameFullString
+    ){
 
         nameAltString               = _nameAltString;
         nameFullString              = _nameFullString;
@@ -37,42 +40,83 @@ class   Name                        {
 
 };
 
-public void setup		(){
+class Tag                                       {
 
-	floorObjectList        = Arrays.asList(
+    Name            tagName         = null;
+    String          nameAltString   = "";
+    String          nameFullString  = "";
+    Tag(Name _nameObject)                       {
 
-        new ObjectMuseum(new Name("FLR_001", "First Floor"                        ), "XXX_XXX", "FLR", "TAG_XXX"),
-        new ObjectMuseum(new Name("FLR_002", "Second Floor"                       ), "XXX_XXX", "FLR", "TAG_XXX"),
-        new ObjectMuseum(new Name("FLR_003", "Third Floor"                        ), "XXX_XXX", "FLR", "TAG_XXX"),
-        new ObjectMuseum(new Name("FLR_004", "Fourth Floor"                       ), "XXX_XXX", "FLR", "TAG_XXX")
+        tagName             = _nameObject;
+        nameAltString       = tagName.nameAltString;
+        nameFullString      = tagName.nameFullString;
+
+    }
+
+}
+
+public void setup()                                    {
+
+	/*Create the tag list.*/
+	tagObjectList 			= Arrays.asList(
+	
+		new Tag(new Name("Agreeable"  	, "TAG_AGR")),
+		new Tag(new Name("Brave"		, "TAG_BRA")),
+		new Tag(new Name("Calm"			, "TAG_CAL")),
+		new Tag(new Name("Delightful"	, "TAG_DEL")),
+		new Tag(new Name("Eager"		, "TAG_EAG")),
+		new Tag(new Name("Faithful"		, "TAG_FAI")),
+		new Tag(new Name("Gentle"		, "TAG_GEN")),
+		new Tag(new Name("Happy"		, "TAG_HAP")),
+		new Tag(new Name("Jolly"		, "TAG_JOL")),
+		new Tag(new Name("Kind"			, "TAG_KIN")),
+		new Tag(new Name("Lively"		, "TAG_LIV")),
+		new Tag(new Name("Nice"			, "TAG_NIC")),
+		new Tag(new Name("Obedient"		, "TAG_OBE")),
+		new Tag(new Name("Proud"		, "TAG_PRO")),
+		new Tag(new Name("Relieved"		, "TAG_REL")),
+		new Tag(new Name("Silly"		, "TAG_SIL")),
+		new Tag(new Name("Thankful"		, "TAG_THA")),
+		new Tag(new Name("Victorious"	, "TAG_VIC")),
+		new Tag(new Name("Witty"		, "TAG_WIT")),
+		new Tag(new Name("Zealous"		, "TAG_ZEA"))
+	
+	);
+
+	floorObjectList        	= Arrays.asList(
+
+        new ObjectMuseum(new Name("FLR_001", "First Floor"                        ), "XXX_XXX", "FLR", AssignTagList(tagObjectList)),
+        new ObjectMuseum(new Name("FLR_002", "Second Floor"                       ), "XXX_XXX", "FLR", AssignTagList(tagObjectList)),
+        new ObjectMuseum(new Name("FLR_003", "Third Floor"                        ), "XXX_XXX", "FLR", AssignTagList(tagObjectList)),
+        new ObjectMuseum(new Name("FLR_004", "Fourth Floor"                       ), "XXX_XXX", "FLR", AssignTagList(tagObjectList))
 
     );
-	roomObjectList         = Arrays.asList(
+	roomObjectList         	= Arrays.asList(
 
-        new ObjectMuseum(new Name("ROM_AFK", "Room Afrika"                        ), "FLR_001", "ROM", "TAG_XXX"),
-        new ObjectMuseum(new Name("ROM_AME", "Room America"                       ), "FLR_001", "ROM", "TAG_XXX"),
-        new ObjectMuseum(new Name("ROM_ASI", "Room Asia"                          ), "FLR_001", "ROM", "TAG_XXX"),
-        new ObjectMuseum(new Name("ROM_EUR", "Room Europe"                        ), "FLR_001", "ROM", "TAG_XXX")
+        new ObjectMuseum(new Name("ROM_AFK", "Room Afrika"                        ), "FLR_001", "ROM", AssignTagList(tagObjectList)),
+        new ObjectMuseum(new Name("ROM_AME", "Room America"                       ), "FLR_001", "ROM", AssignTagList(tagObjectList)),
+        new ObjectMuseum(new Name("ROM_ASI", "Room Asia"                          ), "FLR_001", "ROM", AssignTagList(tagObjectList)),
+        new ObjectMuseum(new Name("ROM_EUR", "Room Europe"                        ), "FLR_001", "ROM", AssignTagList(tagObjectList))
 
     );
-	exhibitionObjectList   = Arrays.asList(
+	exhibitionObjectList   	= Arrays.asList(
 
-        new ObjectMuseum(new Name("EXH_CAO", "Exhibition Cameroon"                ), "ROM_AFK", "EXH", "TAG_XXX"),
-        new ObjectMuseum(new Name("EXH_EGY", "Exhibition Egypt"                   ), "ROM_AFK", "EXH", "TAG_XXX"),
-        new ObjectMuseum(new Name("EXH_ETH", "Exhibition Ethiopia"                ), "ROM_AFK", "EXH", "TAG_XXX"),
-        new ObjectMuseum(new Name("EXH_NIG", "Exhibition Nigeria"                 ), "ROM_AFK", "EXH", "TAG_XXX"),
-        new ObjectMuseum(new Name("EXH_BRA", "Exhibition Brazil"                  ), "ROM_AME", "EXH", "TAG_XXX"),
-        new ObjectMuseum(new Name("EXH_CAN", "Exhibition Canada"                  ), "ROM_AME", "EXH", "TAG_XXX"),
-        new ObjectMuseum(new Name("EXH_MEX", "Exhibition Mexico"                  ), "ROM_AME", "EXH", "TAG_XXX"),
-        new ObjectMuseum(new Name("EXH_USA", "Exhibition United States Of America"), "ROM_AME", "EXH", "TAG_XXX"),
-        new ObjectMuseum(new Name("EXH_CAM", "Exhibition Cambodia"                ), "ROM_ASI", "EXH", "TAG_XXX"),
-        new ObjectMuseum(new Name("EXH_IND", "Exhibition India"                   ), "ROM_ASI", "EXH", "TAG_XXX"),
-        new ObjectMuseum(new Name("EXH_JAP", "Exhibition Japan"                   ), "ROM_ASI", "EXH", "TAG_XXX"),
-        new ObjectMuseum(new Name("EXH_SIN", "Exhibition Singapore"               ), "ROM_ASI", "EXH", "TAG_XXX"),
-        new ObjectMuseum(new Name("EXH_BEL", "Exhibition Belgium"                 ), "ROM_EUR", "EXH", "TAG_XXX"),
-        new ObjectMuseum(new Name("EXH_FRA", "Exhibition France"                  ), "ROM_EUR", "EXH", "TAG_XXX"),
-        new ObjectMuseum(new Name("EXH_GER", "Exhibition Germany"                 ), "ROM_EUR", "EXH", "TAG_XXX"),
-        new ObjectMuseum(new Name("EXH_NED", "Exhibition The Netherlands"         ), "ROM_EUR", "EXH", "TAG_XXX")
+        new ObjectMuseum(new Name("EXH_CAO", "Exhibition Cameroon"                ), "ROM_AFK", "EXH", AssignTagList(tagObjectList)),
+        new ObjectMuseum(new Name("EXH_EGY", "Exhibition Egypt"                   ), "ROM_AFK", "EXH", AssignTagList(tagObjectList)),
+        new ObjectMuseum(new Name("EXH_ETH", "Exhibition Ethiopia"                ), "ROM_AFK", "EXH", AssignTagList(tagObjectList)),
+        new ObjectMuseum(new Name("EXH_NIG", "Exhibition Nigeria"                 ), "ROM_AFK", "EXH", AssignTagList(tagObjectList)),
+        new ObjectMuseum(new Name("EXH_BRA", "Exhibition Brazil"                  ), "ROM_AME", "EXH", AssignTagList(tagObjectList)),
+        new ObjectMuseum(new Name("EXH_CAN", "Exhibition Canada"                  ), "ROM_AME", "EXH", AssignTagList(tagObjectList)),
+        new ObjectMuseum(new Name("EXH_MEX", "Exhibition Mexico"                  ), "ROM_AME", "EXH", AssignTagList(tagObjectList)),
+        new ObjectMuseum(new Name("EXH_USA", "Exhibition United States Of America"), "ROM_AME", "EXH", AssignTagList(tagObjectList)),
+        new ObjectMuseum(new Name("EXH_CAM", "Exhibition Cambodia"                ), "ROM_ASI", "EXH", AssignTagList(tagObjectList)),
+        new ObjectMuseum(new Name("EXH_IND", "Exhibition India"                   ), "ROM_ASI", "EXH", AssignTagList(tagObjectList)),
+        new ObjectMuseum(new Name("EXH_JAP", "Exhibition Japan"                   ), "ROM_ASI", "EXH", AssignTagList(tagObjectList)),
+        new ObjectMuseum(new Name("EXH_SIN", "Exhibition Singapore"               ), "ROM_ASI", "EXH", AssignTagList(tagObjectList)),
+        new ObjectMuseum(new Name("EXH_BEL", "Exhibition Belgium"                 ), "ROM_EUR", "EXH", AssignTagList(tagObjectList)),
+        new ObjectMuseum(new Name("EXH_FRA", "Exhibition France"                  ), "ROM_EUR", "EXH", AssignTagList(tagObjectList)),
+        new ObjectMuseum(new Name("EXH_GER", "Exhibition Germany"                 ), "ROM_EUR", "EXH", AssignTagList(tagObjectList)),
+        new ObjectMuseum(new Name("EXH_NED", "Exhibition The Netherlands"         ), "ROM_EUR", "EXH", AssignTagList(tagObjectList))
 
     );
 
@@ -84,56 +128,112 @@ public void setup		(){
 
     }
     for(int i = 0; i < exhibitionObjectList.size()      ; i ++) { exhibitionObjectList.get(i).SetParentObject(roomObjectList); }
-
     for(int i = 0; i < playerAmountInt; i ++)                   {
 
-        ObjectPlayer objectPlayer = new ObjectPlayer(i, exhibitionObjectList.get((int)(Math.floor((Math.random()*exhibitionObjectList.size()) + 0))).nameAltString);
-        playerObjectList.add(objectPlayer);
+        ObjectPlayer objectPlayer 	= new ObjectPlayer(i, exhibitionObjectList.get((int)(Math.floor((Math.random()*exhibitionObjectList.size()) + 0))).nameAltString);
+        playerObjectList			.add(objectPlayer);
 
     }
 
-    println(playerObjectList.size());
+    println(exhibitionObjectList.get(0).tagMuseumNameAltStringList.get(0));
 
 }
 
+public void draw()											{}
+
+/*A function to return an array of object tag to be put in the museum object, randomly.*/
+public Tag[] AssignTagList(List<Tag> _tagObjectList)		{
+
+	/*Temporary tag object list to be returned later on this function.*/
+	List<Tag> assignTagObjectList 					= new ArrayList<Tag>();
+	
+	/*This function need to be atleast gives three tags to a museum object.
+	After three tags is insie the List then we can randomly add another tag with
+		random chance.
+	The thing is that every tag added the chance of another tag will be added/pushed
+		is lower.*/
+	float randomChanceFloat							= 1f;
+	while(
+
+		(assignTagObjectList.size() <= 3) ||
+		(Math.random() < randomChanceFloat)
+
+	){
+
+		/*Need to make sure the inputted random tag is not something that is already in the museum object
+		Create a temporary tag object to hold.*/
+		int randomIndexInt	= (int)((Math.random()*_tagObjectList.size()) + 0);
+		Tag tagObject 		= _tagObjectList.get(randomIndexInt);
+		
+		/*Keep looping over and over until the random index is not a tag that is already in the list.*/
+		for(int i = 0; i < assignTagObjectList.size(); i ++){
+
+			/*If the random tag is already inside the museum object then we need to iterate again to get new random tag
+				generated.*/
+			while(assignTagObjectList.get(i) == tagObject){
+				
+				randomIndexInt	= (int)((Math.random()*_tagObjectList.size()) + 0);
+				tagObject 		= _tagObjectList.get(randomIndexInt);
+				
+			}
+
+		}
+		
+		/*If the assignTagObjectList has three or more elements then we need to start reducing the changce.*/
+		if(assignTagObjectList.size() > 3){ randomChanceFloat -= 0.1f; }
+		
+		/*Add/push a tag object into the temporary list.*/
+		assignTagObjectList.add(tagObject);
+
+	}
+	
+	/*Before returning the value, the object here is still in List, hence we need to convert it to array.
+	Thus, it can be used in params.*/
+	Tag[] assignTagObjectArray 						= new Tag[assignTagObjectList.size()];
+	for(int i = 0; i < assignTagObjectArray.length; i ++){ assignTagObjectArray[i] = assignTagObjectList.get(i); }
+	
+	return assignTagObjectArray;
+
+}
 
 
 /*A class for museum object.
 The museum objects within this application are things that can interract with visitor.
 For example floor, room, and exhibition.*/
-class   ObjectMuseum                            {
+class   ObjectMuseum                                {
 
-    List<ObjectMuseum>  childObjectList         = new ArrayList<ObjectMuseum>();    /*This list contains all possible exhibition object.*/
-    List<ObjectPlayer>  childPlayerObjectList   = new ArrayList<ObjectPlayer>(); 
+    List<ObjectMuseum>  childObjectList             = new ArrayList<ObjectMuseum>();    /*This list contains all possible exhibition object.*/
+    List<ObjectPlayer>  childPlayerObjectList       = new ArrayList<ObjectPlayer>(); 
 
-    int                 indexGlobalInt          = -1;                               /*This is an index number of the location of this object in its respective list.*/
-    int                 indexLocalInt           = -1;                               /*This is an index number of the location of this object within its parent child object list.*/
+    int                 indexGlobalInt              = -1;                               /*This is an index number of the location of this object in its respective list.*/
+    int                 indexLocalInt               = -1;                               /*This is an index number of the location of this object within its parent child object list.*/
 
-    Name                nameObject              = null;                             /*Name object that contains the alternative name and the full name of this object.*/
-    String              nameAltString           = "";                               /*This variable is intended solely to store the alternative name of this object.*/
-    String              nameFullString          = "";                               /*This variable is intended solely to store the full name of this object.*/
+    Name                nameObject                  = null;                             /*Name object that contains the alternative name and the full name of this object.*/
+    String              nameAltString               = "";                               /*This variable is intended solely to store the alternative name of this object.*/
+    String              nameFullString              = "";                               /*This variable is intended solely to store the full name of this object.*/
 
-    ObjectMuseum        parentObject            = null;                             /*The object parent of this object, which means this object should be inside the parent object's child object list.*/
-    String              parentNameAltString     = "";                               /*The alternative name of the parent object.*/
+    ObjectMuseum        parentObject                = null;                             /*The object parent of this object, which means this object should be inside the parent object's child object list.*/
+    String              parentNameAltString         = "";                               /*The alternative name of the parent object.*/
     
-    String              typeString              = "";                               /*The type of this object (the only possible values are "FLR", "ROM", and "EXH").*/
+    String              typeString                  = "";                               /*The type of this object (the only possible values are "FLR", "ROM", and "EXH").*/
 
-    List<String>        tagStringList           = new ArrayList<String>();          /*The tags for whit museum object.*/
+    List<Tag>           tagMuseumObjectList         = new ArrayList<Tag>();             /*Object tag list.*/
+    List<String>        tagMuseumNameAltStringList  = new ArrayList<String>();          /*The tags for whit museum object.*/
 
-    boolean             fullBoolean             = false;                            /*Whether this museum object is full or not.*/
-    int                 fullThresholdInt        = -1;
-    int                 visitorCurrentInt       = 0;                                /*This museum object current visitor.*/
-    int                 visitorTotalInt         = 0;                                /*This museum objecy total visitor.*/
+    boolean             fullBoolean                 = false;                            /*Whether this museum object is full or not.*/
+    int                 fullThresholdInt            = -1;
+    int                 visitorCurrentInt           = 0;                                /*This museum object current visitor.*/
+    int                 visitorTotalInt             = 0;                                /*This museum objecy total visitor.*/
 
     /*These are some user interfaces related variables.*/
-    boolean             activeBoolean           = false;
+    boolean             activeBoolean               = false;
 
-    ObjectMuseum                                (
+    ObjectMuseum                                    (
 
-        Name                                    _nameObject,
-        String                                  _parentNameAltString,
-        String                                  _typeString,
-        String...                               _tagStringList
+        Name                                        _nameObject             ,
+        String                                      _parentNameAltString    ,
+        String                                      _typeString             ,
+        Tag...                                      _tagObjectArray
 
     ){
 
@@ -141,27 +241,30 @@ class   ObjectMuseum                            {
         The name object is an object that contains only two variables,
             the alternative name of an object and the full name of an object
         For processing within this whoel application we used the alternative name.*/
-        nameObject                              = _nameObject;
-        nameAltString                           = nameObject.nameAltString;
-        nameFullString                          = nameObject.nameFullString;
+        nameObject                                  = _nameObject;
+        nameAltString                               = nameObject.nameAltString;
+        nameFullString                              = nameObject.nameFullString;
 
         /*We put the alternative name of the parent here.
         For example the anternative name of an exhibition object must be
             an object with type string of "ROM" which mean the parent object
             is an room object.*/
-        parentNameAltString                     = _parentNameAltString;
+        parentNameAltString                         = _parentNameAltString;
 
         /*This is the type of this object.
         The only possible input will be,
             "FLR" if this object is a room object,
             "ROM" if this object is a room object,
             "EXH" if this object is an exhibition object.*/
-        typeString                              = _typeString;
+        typeString                                  = _typeString;
 
-        for(String tagString : _tagStringList){ tagStringList.add(tagString); }
+        /*Assign the added tags and then convert it from array to List.*/
+        tagMuseumObjectList                         = Arrays.asList(_tagObjectArray);
+        for(int i = 0; i < tagMuseumObjectList.size(); i ++)
+                                                    { tagMuseumNameAltStringList.add(tagMuseumObjectList.get(i).nameAltString); }
 
-        /*SetIndexGlobalInt();*/
-        /*SetIndexLocalInt();*/
+        /*PENDING: SetIndexGlobalInt();*/
+        /*PENDING: SetIndexLocalInt();*/
 
     }
 
@@ -327,11 +430,11 @@ class ObjectPlayer{
 
     ){
 
-        for(int i = 0; i < _exhibitionCurrentObject.tagStringList.size(); i ++){
+        for(int i = 0; i < _exhibitionCurrentObject.tagMuseumNameAltStringList.size(); i ++){
 
             /*Create new tag counter to count how many tags are in the user preference.*/
             TagCounter  tagCounter      = new TagCounter();
-                        tagCounter      .SetTagNameStringVoid(_exhibitionCurrentObject.tagStringList.get(i));
+                        tagCounter      .SetTagNameStringVoid(_exhibitionCurrentObject.tagMuseumNameAltStringList.get(i));
 
             boolean     newBool         = true;     /*Whether the tag is new to the array or there is already existing one.*/
             int         indexInt        = -1;       /*If there is the corresponding tag already in the array return its index with this variable, otherwise it keeps -1.*/
@@ -554,11 +657,11 @@ class ObjectPlayer{
             ObjectMuseum    exhibitionTargetObject  = FindObject(exhibitionObjectList, exhibitionTargetStringList.get(i));
             int             tagSameCountInt         = 0;
 
-            for(int j = 0; j < exhibitionTargetObject.tagStringList.size(); j ++){
+            for(int j = 0; j < exhibitionTargetObject.tagMuseumNameAltStringList.size(); j ++){
 
                 for(int k = 0; k < tempTagStringArray.length; k ++){
 
-                    if(exhibitionTargetObject.tagStringList.get(j) == tempTagStringArray[k]){ tagSameCountInt ++; }
+                    if(exhibitionTargetObject.tagMuseumNameAltStringList.get(j) == tempTagStringArray[k]){ tagSameCountInt ++; }
 
                 }
 

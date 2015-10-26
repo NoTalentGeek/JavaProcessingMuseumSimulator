@@ -51,11 +51,11 @@ class ObjectPlayer{
 
     ){
 
-        for(int i = 0; i < _exhibitionCurrentObject.tagStringList.size(); i ++){
+        for(int i = 0; i < _exhibitionCurrentObject.tagMuseumNameAltStringList.size(); i ++){
 
             /*Create new tag counter to count how many tags are in the user preference.*/
             TagCounter  tagCounter      = new TagCounter();
-                        tagCounter      .SetTagNameStringVoid(_exhibitionCurrentObject.tagStringList.get(i));
+                        tagCounter      .SetTagNameStringVoid(_exhibitionCurrentObject.tagMuseumNameAltStringList.get(i));
 
             boolean     newBool         = true;     /*Whether the tag is new to the array or there is already existing one.*/
             int         indexInt        = -1;       /*If there is the corresponding tag already in the array return its index with this variable, otherwise it keeps -1.*/
@@ -278,11 +278,11 @@ class ObjectPlayer{
             ObjectMuseum    exhibitionTargetObject  = FindObject(exhibitionObjectList, exhibitionTargetStringList.get(i));
             int             tagSameCountInt         = 0;
 
-            for(int j = 0; j < exhibitionTargetObject.tagStringList.size(); j ++){
+            for(int j = 0; j < exhibitionTargetObject.tagMuseumNameAltStringList.size(); j ++){
 
                 for(int k = 0; k < tempTagStringArray.length; k ++){
 
-                    if(exhibitionTargetObject.tagStringList.get(j) == tempTagStringArray[k]){ tagSameCountInt ++; }
+                    if(exhibitionTargetObject.tagMuseumNameAltStringList.get(j) == tempTagStringArray[k]){ tagSameCountInt ++; }
 
                 }
 

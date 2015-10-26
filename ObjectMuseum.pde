@@ -3,39 +3,40 @@ import java.util.*;
 /*A class for museum object.
 The museum objects within this application are things that can interract with visitor.
 For example floor, room, and exhibition.*/
-class   ObjectMuseum                            {
+class   ObjectMuseum                                {
 
-    List<ObjectMuseum>  childObjectList         = new ArrayList<ObjectMuseum>();    /*This list contains all possible exhibition object.*/
-    List<ObjectPlayer>  childPlayerObjectList   = new ArrayList<ObjectPlayer>(); 
+    List<ObjectMuseum>  childObjectList             = new ArrayList<ObjectMuseum>();    /*This list contains all possible exhibition object.*/
+    List<ObjectPlayer>  childPlayerObjectList       = new ArrayList<ObjectPlayer>(); 
 
-    int                 indexGlobalInt          = -1;                               /*This is an index number of the location of this object in its respective list.*/
-    int                 indexLocalInt           = -1;                               /*This is an index number of the location of this object within its parent child object list.*/
+    int                 indexGlobalInt              = -1;                               /*This is an index number of the location of this object in its respective list.*/
+    int                 indexLocalInt               = -1;                               /*This is an index number of the location of this object within its parent child object list.*/
 
-    Name                nameObject              = null;                             /*Name object that contains the alternative name and the full name of this object.*/
-    String              nameAltString           = "";                               /*This variable is intended solely to store the alternative name of this object.*/
-    String              nameFullString          = "";                               /*This variable is intended solely to store the full name of this object.*/
+    Name                nameObject                  = null;                             /*Name object that contains the alternative name and the full name of this object.*/
+    String              nameAltString               = "";                               /*This variable is intended solely to store the alternative name of this object.*/
+    String              nameFullString              = "";                               /*This variable is intended solely to store the full name of this object.*/
 
-    ObjectMuseum        parentObject            = null;                             /*The object parent of this object, which means this object should be inside the parent object's child object list.*/
-    String              parentNameAltString     = "";                               /*The alternative name of the parent object.*/
+    ObjectMuseum        parentObject                = null;                             /*The object parent of this object, which means this object should be inside the parent object's child object list.*/
+    String              parentNameAltString         = "";                               /*The alternative name of the parent object.*/
     
-    String              typeString              = "";                               /*The type of this object (the only possible values are "FLR", "ROM", and "EXH").*/
+    String              typeString                  = "";                               /*The type of this object (the only possible values are "FLR", "ROM", and "EXH").*/
 
-    List<String>        tagStringList           = new ArrayList<String>();          /*The tags for whit museum object.*/
+    List<Tag>           tagMuseumObjectList         = new ArrayList<Tag>();             /*Object tag list.*/
+    List<String>        tagMuseumNameAltStringList  = new ArrayList<String>();          /*The tags for whit museum object.*/
 
-    boolean             fullBoolean             = false;                            /*Whether this museum object is full or not.*/
-    int                 fullThresholdInt        = -1;
-    int                 visitorCurrentInt       = 0;                                /*This museum object current visitor.*/
-    int                 visitorTotalInt         = 0;                                /*This museum objecy total visitor.*/
+    boolean             fullBoolean                 = false;                            /*Whether this museum object is full or not.*/
+    int                 fullThresholdInt            = -1;
+    int                 visitorCurrentInt           = 0;                                /*This museum object current visitor.*/
+    int                 visitorTotalInt             = 0;                                /*This museum objecy total visitor.*/
 
     /*These are some user interfaces related variables.*/
-    boolean             activeBoolean           = false;
+    boolean             activeBoolean               = false;
 
-    ObjectMuseum                                (
+    ObjectMuseum                                    (
 
-        Name                                    _nameObject,
-        String                                  _parentNameAltString,
-        String                                  _typeString,
-        String...                               _tagStringList
+        Name                                        _nameObject             ,
+        String                                      _parentNameAltString    ,
+        String                                      _typeString             ,
+        Tag...                                      _tagObjectArray
 
     ){
 
@@ -43,27 +44,30 @@ class   ObjectMuseum                            {
         The name object is an object that contains only two variables,
             the alternative name of an object and the full name of an object
         For processing within this whoel application we used the alternative name.*/
-        nameObject                              = _nameObject;
-        nameAltString                           = nameObject.nameAltString;
-        nameFullString                          = nameObject.nameFullString;
+        nameObject                                  = _nameObject;
+        nameAltString                               = nameObject.nameAltString;
+        nameFullString                              = nameObject.nameFullString;
 
         /*We put the alternative name of the parent here.
         For example the anternative name of an exhibition object must be
             an object with type string of "ROM" which mean the parent object
             is an room object.*/
-        parentNameAltString                     = _parentNameAltString;
+        parentNameAltString                         = _parentNameAltString;
 
         /*This is the type of this object.
         The only possible input will be,
             "FLR" if this object is a room object,
             "ROM" if this object is a room object,
             "EXH" if this object is an exhibition object.*/
-        typeString                              = _typeString;
+        typeString                                  = _typeString;
 
-        for(String tagString : _tagStringList){ tagStringList.add(tagString); }
+        /*Assign the added tags and then convert it from array to List.*/
+        tagMuseumObjectList                         = Arrays.asList(_tagObjectArray);
+        for(int i = 0; i < tagMuseumObjectList.size(); i ++)
+                                                    { tagMuseumNameAltStringList.add(tagMuseumObjectList.get(i).nameAltString); }
 
-        /*SetIndexGlobalInt();*/
-        /*SetIndexLocalInt();*/
+        /*PENDING: SetIndexGlobalInt();*/
+        /*PENDING: SetIndexLocalInt();*/
 
     }
 
