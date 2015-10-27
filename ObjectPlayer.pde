@@ -29,20 +29,20 @@ class ObjectPlayer{
     List<String>        exhibitionVisitedStringList = new ArrayList<String>();
     List<TagCounter>    exhibitionTagCounterList    = new ArrayList<TagCounter>();
 
-    int                 playerIndex                 = 0;
+    int                 playerIndexInt              = 0;
 
     List<ObjectPlayer>  playerSiblingObjectList     = new ArrayList<ObjectPlayer>();
     int                 playerSiblingIndexInt       = -1;
 
-    int                 timeCurrentExhibitionInt    = 0;
+    float               timeCurrentExhibitionFloat  = 0f;
 
     /*Constructor.*/
     ObjectPlayer(
 
-        int     _playerIndex            ,
+        int     _playerIndexInt            ,
         String  _exhibitionStartString
 
-    ){ playerIndex = _playerIndex; ExhibitionMoveObject(_exhibitionStartString); }
+    ){ playerIndexInt = _playerIndexInt; ExhibitionMoveObject(_exhibitionStartString); }
 
     /*A function to either add the tag or increase the tag value in this player.*/
     void AddTagCounterVoid(
@@ -128,20 +128,21 @@ class ObjectPlayer{
         I checked the whether the exhibition visited has the same amount of length with total exhibition length.
         It is not necessary for this player to have all exhibitions visited due to there is a chance that this player
             visited same exhibitions twice or more.*/
-        if(exhibitionObjectList.size()                      >= exhibitionVisitedStringList.size()){
+        if(exhibitionObjectList.size()                      > exhibitionVisitedStringList.size()){
 
             /*Increase the amount of time of this player in the current exhibition the visitor visits.
             The more time this player spent time in the exhibition the more chance the visitor will move to the
                 new exhibition.
             PENDING: Change the time increment per second add and per frame.*/
-            timeCurrentExhibitionInt                        ++;
+            float   randomFloat                             = (float)(Math.random());
+                    timeCurrentExhibitionFloat              += 0.01f;
 
-            if(Math.random() > (1 - (timeCurrentExhibitionInt/100))){
+            if(randomFloat > (1f - timeCurrentExhibitionFloat)){
 
                 /*Move player to the new exhibition.*/
-                int     randomIndexInt          = (int)(Math.floor((Math.random()*exhibitionTargetStringList.size()) + 0));
-                ExhibitionMoveObject            (exhibitionTargetStringList.get(randomIndexInt));
-                timeCurrentExhibitionInt        = 0;                                                                            /*Reset timer.*/
+                int randomIndexInt          = (int)(Math.floor((Math.random()*exhibitionTargetStringList.size()) + 0));
+                ExhibitionMoveObject        (exhibitionTargetStringList.get(randomIndexInt));
+                timeCurrentExhibitionFloat    = 0;                                                                            /*Reset timer.*/
 
             }
 
@@ -224,6 +225,9 @@ class ObjectPlayer{
 
             ){
                 
+                /*After each remove make sure to have the exhibition target length to be 3.
+                If not 3 elements in the target exhibition array, then return the last 3 elements
+                    of target exhibition array ever exist.*/
                 exhibitionTargetStringList                      .remove(exhibitionObjectList.get(i).nameAltString);
                 if(exhibitionTargetStringList.size() == 3)      { return exhibitionTargetStringList; }
 
@@ -252,7 +256,7 @@ class ObjectPlayer{
 
                     }
 
-                    /*After each splice make sure to have the exhibition target length to be 3.
+                    /*After each remove make sure to have the exhibition target length to be 3.
                     If not 3 elements in the target exhibition array, then return the last 3 elements
                         of target exhibition array ever exist.*/
                     if(exhibitionTargetStringList.size() == 3)  { return exhibitionTargetStringList; }
@@ -293,7 +297,7 @@ class ObjectPlayer{
             else if (tagSameCountInt == 2)          { if(Math.random() < 0.33f){ exhibitionTargetStringList.remove(exhibitionTargetStringList.get(i)); i --; } }
             else if (tagSameCountInt == 3)          {  }
 
-            /*After each splice make sure to have the exhibition target length to be 3.
+            /*After each remove make sure to have the exhibition target length to be 3.
             If not 3 elements in the target exhibition array, then return the last 3 elements
                 of target exhibition array ever exist.*/
             if(exhibitionTargetStringList.size() == 3)  { return exhibitionTargetStringList; }
@@ -328,13 +332,26 @@ class ObjectPlayer{
 
             }
             
-            /*After each splice make sure to have the exhibition target length to be 3.
+            /*After each remove make sure to have the exhibition target length to be 3.
             If not 3 elements in the target exhibition array, then return the last 3 elements
                 of target exhibition array ever exist.*/
             if(exhibitionTargetStringList.size() == 3)  { return exhibitionTargetStringList; }
 
         }
 
+        /*Make sure to only have three exhibition target at the end of this function.*/
+        if(exhibitionTargetStringList.size() > 3){
+
+            int listIndexInt = exhibitionTargetStringList.size() - 1;
+
+            while(exhibitionTargetStringList.size() > 3){
+
+                exhibitionTargetStringList  .remove(listIndexInt);
+                listIndexInt                --;
+
+            }
+
+        }
         return                      exhibitionTargetStringList;
 
     }
@@ -388,6 +405,8 @@ class ObjectPlayer{
         AddTagCounterVoid               (exhibitionCurrentObject);
         AddRemoveChildVoid              (true);
         
+        SetExhibitionTargetStringList   ();
+
         /*For everytime a player move to another exhibition iterate through all player to re - add the siblings.*/
         for(int i = 0; i < playerObjectList.size(); i ++){
 

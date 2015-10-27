@@ -5,6 +5,13 @@ List<ObjectMuseum>      floorObjectList         = new ArrayList<ObjectMuseum>();
 List<ObjectMuseum>      roomObjectList          = new ArrayList<ObjectMuseum>();
 List<ObjectMuseum>      exhibitionObjectList    = new ArrayList<ObjectMuseum>();
 List<ObjectPlayer>      playerObjectList        = new ArrayList<ObjectPlayer>();
+
+/*PROTOTYPE: Testing AIAutoVoid() for this application.
+PROTOTYPE: Instead of using for loop to iterate through all the player
+	we create a small variable that update one player for every tick.
+PROTOTYPE: In result, the application is not burdened out by the for loop.*/
+int 					playerLoopCounterInt 	= 0;
+
 class Name                                      {
 
     String          nameAltString   = "";
@@ -101,24 +108,38 @@ void setup()                                    {
 
     );
 
-    for(int i = 0; i < floorObjectList.size()           ; i ++) { floorObjectList.get(i).SetChildObjectList  (roomObjectList); }
-    for(int i = 0; i < roomObjectList.size()            ; i ++) {
-
-        roomObjectList          .get(i).SetParentObject     (floorObjectList);
-        roomObjectList          .get(i).SetChildObjectList  (exhibitionObjectList);
-
-    }
-    for(int i = 0; i < exhibitionObjectList.size()      ; i ++) { exhibitionObjectList.get(i).SetParentObject(roomObjectList); }
+	/*Initiate all players.*/
     for(int i = 0; i < playerAmountInt; i ++)                   {
 
-        ObjectPlayer objectPlayer 	= new ObjectPlayer(i, exhibitionObjectList.get((int)(Math.floor((Math.random()*exhibitionObjectList.size()) + 0))).nameAltString);
+        ObjectPlayer objectPlayer	= new ObjectPlayer(i, exhibitionObjectList.get((int)(Math.floor((Math.random()*exhibitionObjectList.size()) + 0))).nameAltString);
         playerObjectList			.add(objectPlayer);
 
     }
 
+    for(int i = 0; i < floorObjectList.size()           ; i ++) { floorObjectList.get(i).SetChildObjectList  (roomObjectList); }
+    for(int i = 0; i < roomObjectList.size()            ; i ++) {
+
+        roomObjectList				.get(i).SetParentObject     (floorObjectList);
+        roomObjectList				.get(i).SetChildObjectList  (exhibitionObjectList);
+
+    }
+    for(int i = 0; i < exhibitionObjectList.size()      ; i ++) { exhibitionObjectList.get(i).SetParentObject(roomObjectList); }
+
 }
 
-void draw()											{}
+void draw()											{
+
+	playerObjectList			.get(playerLoopCounterInt).AIAutoVoid();
+
+	for(int i = 0; i < playerObjectList.size(); i ++){
+
+		println(playerObjectList.get(i).exhibitionVisitedStringList.size());
+
+	}
+
+	playerLoopCounterInt 		= (playerLoopCounterInt >= (playerObjectList.size() - 1)) ? 0 : (playerLoopCounterInt + 1);
+
+}
 
 /*A function to return an array of object tag to be put in the museum object, randomly.*/
 Tag[] AssignRandomTagList(List<Tag> _tagObjectList)	{
@@ -127,8 +148,7 @@ Tag[] AssignRandomTagList(List<Tag> _tagObjectList)	{
 	List<Tag> assignTagObjectList 					= new ArrayList<Tag>();
 	
 	/*This function need to be atleast gives three tags to a museum object.
-	After three tags is insie the List then we can randomly add another tag with
-		random chance.
+	After three tags is inside the List then we can randomly add another tag with a chance.
 	The thing is that every tag added the chance of another tag will be added/pushed
 		is lower.*/
 	float randomChanceFloat							= 1f;
@@ -159,7 +179,7 @@ Tag[] AssignRandomTagList(List<Tag> _tagObjectList)	{
 		}
 		
 		/*If the assignTagObjectList has three or more elements then we need to start reducing the changce.*/
-		if(assignTagObjectList.size() > 3){ randomChanceFloat -= 0.1f; }
+		if(assignTagObjectList.size() > 3){ randomChanceFloat -= 0.2f; }
 		
 		/*Add/push a tag object into the temporary list.*/
 		assignTagObjectList.add(tagObject);

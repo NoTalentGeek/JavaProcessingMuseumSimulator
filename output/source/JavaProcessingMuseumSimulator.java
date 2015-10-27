@@ -24,6 +24,13 @@ List<ObjectMuseum>      floorObjectList         = new ArrayList<ObjectMuseum>();
 List<ObjectMuseum>      roomObjectList          = new ArrayList<ObjectMuseum>();
 List<ObjectMuseum>      exhibitionObjectList    = new ArrayList<ObjectMuseum>();
 List<ObjectPlayer>      playerObjectList        = new ArrayList<ObjectPlayer>();
+
+/*PROTOTYPE: Testing AIAutoVoid() for this application.
+PROTOTYPE: Instead of using for loop to iterate through all the player
+	we create a small variable that update one player for every tick.
+PROTOTYPE: In result, the application is not burdened out by the for loop.*/
+int 					playerLoopCounterInt 	= 0;
+
 class Name                                      {
 
     String          nameAltString   = "";
@@ -85,71 +92,82 @@ public void setup()                                    {
 
 	floorObjectList        	= Arrays.asList(
 
-        new ObjectMuseum(new Name("FLR_001", "First Floor"                        ), "XXX_XXX", "FLR", AssignTagList(tagObjectList)),
-        new ObjectMuseum(new Name("FLR_002", "Second Floor"                       ), "XXX_XXX", "FLR", AssignTagList(tagObjectList)),
-        new ObjectMuseum(new Name("FLR_003", "Third Floor"                        ), "XXX_XXX", "FLR", AssignTagList(tagObjectList)),
-        new ObjectMuseum(new Name("FLR_004", "Fourth Floor"                       ), "XXX_XXX", "FLR", AssignTagList(tagObjectList))
+        new ObjectMuseum(new Name("FLR_001", "First Floor"                        ), "XXX_XXX", "FLR", AssignRandomTagList(tagObjectList)),
+        new ObjectMuseum(new Name("FLR_002", "Second Floor"                       ), "XXX_XXX", "FLR", AssignRandomTagList(tagObjectList)),
+        new ObjectMuseum(new Name("FLR_003", "Third Floor"                        ), "XXX_XXX", "FLR", AssignRandomTagList(tagObjectList)),
+        new ObjectMuseum(new Name("FLR_004", "Fourth Floor"                       ), "XXX_XXX", "FLR", AssignRandomTagList(tagObjectList))
 
     );
 	roomObjectList         	= Arrays.asList(
 
-        new ObjectMuseum(new Name("ROM_AFK", "Room Afrika"                        ), "FLR_001", "ROM", AssignTagList(tagObjectList)),
-        new ObjectMuseum(new Name("ROM_AME", "Room America"                       ), "FLR_001", "ROM", AssignTagList(tagObjectList)),
-        new ObjectMuseum(new Name("ROM_ASI", "Room Asia"                          ), "FLR_001", "ROM", AssignTagList(tagObjectList)),
-        new ObjectMuseum(new Name("ROM_EUR", "Room Europe"                        ), "FLR_001", "ROM", AssignTagList(tagObjectList))
+        new ObjectMuseum(new Name("ROM_AFK", "Room Afrika"                        ), "FLR_001", "ROM", AssignRandomTagList(tagObjectList)),
+        new ObjectMuseum(new Name("ROM_AME", "Room America"                       ), "FLR_001", "ROM", AssignRandomTagList(tagObjectList)),
+        new ObjectMuseum(new Name("ROM_ASI", "Room Asia"                          ), "FLR_001", "ROM", AssignRandomTagList(tagObjectList)),
+        new ObjectMuseum(new Name("ROM_EUR", "Room Europe"                        ), "FLR_001", "ROM", AssignRandomTagList(tagObjectList))
 
     );
 	exhibitionObjectList   	= Arrays.asList(
 
-        new ObjectMuseum(new Name("EXH_CAO", "Exhibition Cameroon"                ), "ROM_AFK", "EXH", AssignTagList(tagObjectList)),
-        new ObjectMuseum(new Name("EXH_EGY", "Exhibition Egypt"                   ), "ROM_AFK", "EXH", AssignTagList(tagObjectList)),
-        new ObjectMuseum(new Name("EXH_ETH", "Exhibition Ethiopia"                ), "ROM_AFK", "EXH", AssignTagList(tagObjectList)),
-        new ObjectMuseum(new Name("EXH_NIG", "Exhibition Nigeria"                 ), "ROM_AFK", "EXH", AssignTagList(tagObjectList)),
-        new ObjectMuseum(new Name("EXH_BRA", "Exhibition Brazil"                  ), "ROM_AME", "EXH", AssignTagList(tagObjectList)),
-        new ObjectMuseum(new Name("EXH_CAN", "Exhibition Canada"                  ), "ROM_AME", "EXH", AssignTagList(tagObjectList)),
-        new ObjectMuseum(new Name("EXH_MEX", "Exhibition Mexico"                  ), "ROM_AME", "EXH", AssignTagList(tagObjectList)),
-        new ObjectMuseum(new Name("EXH_USA", "Exhibition United States Of America"), "ROM_AME", "EXH", AssignTagList(tagObjectList)),
-        new ObjectMuseum(new Name("EXH_CAM", "Exhibition Cambodia"                ), "ROM_ASI", "EXH", AssignTagList(tagObjectList)),
-        new ObjectMuseum(new Name("EXH_IND", "Exhibition India"                   ), "ROM_ASI", "EXH", AssignTagList(tagObjectList)),
-        new ObjectMuseum(new Name("EXH_JAP", "Exhibition Japan"                   ), "ROM_ASI", "EXH", AssignTagList(tagObjectList)),
-        new ObjectMuseum(new Name("EXH_SIN", "Exhibition Singapore"               ), "ROM_ASI", "EXH", AssignTagList(tagObjectList)),
-        new ObjectMuseum(new Name("EXH_BEL", "Exhibition Belgium"                 ), "ROM_EUR", "EXH", AssignTagList(tagObjectList)),
-        new ObjectMuseum(new Name("EXH_FRA", "Exhibition France"                  ), "ROM_EUR", "EXH", AssignTagList(tagObjectList)),
-        new ObjectMuseum(new Name("EXH_GER", "Exhibition Germany"                 ), "ROM_EUR", "EXH", AssignTagList(tagObjectList)),
-        new ObjectMuseum(new Name("EXH_NED", "Exhibition The Netherlands"         ), "ROM_EUR", "EXH", AssignTagList(tagObjectList))
+        new ObjectMuseum(new Name("EXH_CAO", "Exhibition Cameroon"                ), "ROM_AFK", "EXH", AssignRandomTagList(tagObjectList)),
+        new ObjectMuseum(new Name("EXH_EGY", "Exhibition Egypt"                   ), "ROM_AFK", "EXH", AssignRandomTagList(tagObjectList)),
+        new ObjectMuseum(new Name("EXH_ETH", "Exhibition Ethiopia"                ), "ROM_AFK", "EXH", AssignRandomTagList(tagObjectList)),
+        new ObjectMuseum(new Name("EXH_NIG", "Exhibition Nigeria"                 ), "ROM_AFK", "EXH", AssignRandomTagList(tagObjectList)),
+        new ObjectMuseum(new Name("EXH_BRA", "Exhibition Brazil"                  ), "ROM_AME", "EXH", AssignRandomTagList(tagObjectList)),
+        new ObjectMuseum(new Name("EXH_CAN", "Exhibition Canada"                  ), "ROM_AME", "EXH", AssignRandomTagList(tagObjectList)),
+        new ObjectMuseum(new Name("EXH_MEX", "Exhibition Mexico"                  ), "ROM_AME", "EXH", AssignRandomTagList(tagObjectList)),
+        new ObjectMuseum(new Name("EXH_USA", "Exhibition United States Of America"), "ROM_AME", "EXH", AssignRandomTagList(tagObjectList)),
+        new ObjectMuseum(new Name("EXH_CAM", "Exhibition Cambodia"                ), "ROM_ASI", "EXH", AssignRandomTagList(tagObjectList)),
+        new ObjectMuseum(new Name("EXH_IND", "Exhibition India"                   ), "ROM_ASI", "EXH", AssignRandomTagList(tagObjectList)),
+        new ObjectMuseum(new Name("EXH_JAP", "Exhibition Japan"                   ), "ROM_ASI", "EXH", AssignRandomTagList(tagObjectList)),
+        new ObjectMuseum(new Name("EXH_SIN", "Exhibition Singapore"               ), "ROM_ASI", "EXH", AssignRandomTagList(tagObjectList)),
+        new ObjectMuseum(new Name("EXH_BEL", "Exhibition Belgium"                 ), "ROM_EUR", "EXH", AssignRandomTagList(tagObjectList)),
+        new ObjectMuseum(new Name("EXH_FRA", "Exhibition France"                  ), "ROM_EUR", "EXH", AssignRandomTagList(tagObjectList)),
+        new ObjectMuseum(new Name("EXH_GER", "Exhibition Germany"                 ), "ROM_EUR", "EXH", AssignRandomTagList(tagObjectList)),
+        new ObjectMuseum(new Name("EXH_NED", "Exhibition The Netherlands"         ), "ROM_EUR", "EXH", AssignRandomTagList(tagObjectList))
 
     );
 
-    for(int i = 0; i < floorObjectList.size()           ; i ++) { floorObjectList.get(i).SetChildObjectList  (roomObjectList); }
-    for(int i = 0; i < roomObjectList.size()            ; i ++) {
-
-        roomObjectList          .get(i).SetParentObject     (floorObjectList);
-        roomObjectList          .get(i).SetChildObjectList  (exhibitionObjectList);
-
-    }
-    for(int i = 0; i < exhibitionObjectList.size()      ; i ++) { exhibitionObjectList.get(i).SetParentObject(roomObjectList); }
+	/*Initiate all players.*/
     for(int i = 0; i < playerAmountInt; i ++)                   {
 
-        ObjectPlayer objectPlayer 	= new ObjectPlayer(i, exhibitionObjectList.get((int)(Math.floor((Math.random()*exhibitionObjectList.size()) + 0))).nameAltString);
+        ObjectPlayer objectPlayer	= new ObjectPlayer(i, exhibitionObjectList.get((int)(Math.floor((Math.random()*exhibitionObjectList.size()) + 0))).nameAltString);
         playerObjectList			.add(objectPlayer);
 
     }
 
-    println(exhibitionObjectList.get(0).tagMuseumNameAltStringList.get(0));
+    for(int i = 0; i < floorObjectList.size()           ; i ++) { floorObjectList.get(i).SetChildObjectList  (roomObjectList); }
+    for(int i = 0; i < roomObjectList.size()            ; i ++) {
+
+        roomObjectList				.get(i).SetParentObject     (floorObjectList);
+        roomObjectList				.get(i).SetChildObjectList  (exhibitionObjectList);
+
+    }
+    for(int i = 0; i < exhibitionObjectList.size()      ; i ++) { exhibitionObjectList.get(i).SetParentObject(roomObjectList); }
 
 }
 
-public void draw()											{}
+public void draw()											{
+
+	playerObjectList			.get(playerLoopCounterInt).AIAutoVoid();
+
+	for(int i = 0; i < playerObjectList.size(); i ++){
+
+		println(playerObjectList.get(i).exhibitionVisitedStringList.size());
+
+	}
+
+	playerLoopCounterInt 		= (playerLoopCounterInt >= (playerObjectList.size() - 1)) ? 0 : (playerLoopCounterInt + 1);
+
+}
 
 /*A function to return an array of object tag to be put in the museum object, randomly.*/
-public Tag[] AssignTagList(List<Tag> _tagObjectList)		{
+public Tag[] AssignRandomTagList(List<Tag> _tagObjectList)	{
 
 	/*Temporary tag object list to be returned later on this function.*/
 	List<Tag> assignTagObjectList 					= new ArrayList<Tag>();
 	
 	/*This function need to be atleast gives three tags to a museum object.
-	After three tags is insie the List then we can randomly add another tag with
-		random chance.
+	After three tags is inside the List then we can randomly add another tag with a chance.
 	The thing is that every tag added the chance of another tag will be added/pushed
 		is lower.*/
 	float randomChanceFloat							= 1f;
@@ -180,7 +198,7 @@ public Tag[] AssignTagList(List<Tag> _tagObjectList)		{
 		}
 		
 		/*If the assignTagObjectList has three or more elements then we need to start reducing the changce.*/
-		if(assignTagObjectList.size() > 3){ randomChanceFloat -= 0.1f; }
+		if(assignTagObjectList.size() > 3){ randomChanceFloat -= 0.2f; }
 		
 		/*Add/push a tag object into the temporary list.*/
 		assignTagObjectList.add(tagObject);
@@ -376,6 +394,7 @@ class   ObjectMuseum                                {
         return          fullThresholdInt;
         
     }
+    
 };
 
 
@@ -408,20 +427,20 @@ class ObjectPlayer{
     List<String>        exhibitionVisitedStringList = new ArrayList<String>();
     List<TagCounter>    exhibitionTagCounterList    = new ArrayList<TagCounter>();
 
-    int                 playerIndex                 = 0;
+    int                 playerIndexInt              = 0;
 
     List<ObjectPlayer>  playerSiblingObjectList     = new ArrayList<ObjectPlayer>();
     int                 playerSiblingIndexInt       = -1;
 
-    int                 timeCurrentExhibitionInt    = 0;
+    float               timeCurrentExhibitionFloat  = 0f;
 
     /*Constructor.*/
     ObjectPlayer(
 
-        int     _playerIndex            ,
+        int     _playerIndexInt            ,
         String  _exhibitionStartString
 
-    ){ playerIndex = _playerIndex; ExhibitionMoveObject(_exhibitionStartString); }
+    ){ playerIndexInt = _playerIndexInt; ExhibitionMoveObject(_exhibitionStartString); }
 
     /*A function to either add the tag or increase the tag value in this player.*/
     public void AddTagCounterVoid(
@@ -507,20 +526,21 @@ class ObjectPlayer{
         I checked the whether the exhibition visited has the same amount of length with total exhibition length.
         It is not necessary for this player to have all exhibitions visited due to there is a chance that this player
             visited same exhibitions twice or more.*/
-        if(exhibitionObjectList.size()                      >= exhibitionVisitedStringList.size()){
+        if(exhibitionObjectList.size()                      > exhibitionVisitedStringList.size()){
 
             /*Increase the amount of time of this player in the current exhibition the visitor visits.
             The more time this player spent time in the exhibition the more chance the visitor will move to the
                 new exhibition.
             PENDING: Change the time increment per second add and per frame.*/
-            timeCurrentExhibitionInt                        ++;
+            float   randomFloat                             = (float)(Math.random());
+                    timeCurrentExhibitionFloat              += 0.01f;
 
-            if(Math.random() > (1 - (timeCurrentExhibitionInt/100))){
+            if(randomFloat > (1f - timeCurrentExhibitionFloat)){
 
                 /*Move player to the new exhibition.*/
-                int     randomIndexInt          = (int)(Math.floor((Math.random()*exhibitionTargetStringList.size()) + 0));
-                ExhibitionMoveObject            (exhibitionTargetStringList.get(randomIndexInt));
-                timeCurrentExhibitionInt        = 0;                                                                            /*Reset timer.*/
+                int randomIndexInt          = (int)(Math.floor((Math.random()*exhibitionTargetStringList.size()) + 0));
+                ExhibitionMoveObject        (exhibitionTargetStringList.get(randomIndexInt));
+                timeCurrentExhibitionFloat    = 0;                                                                            /*Reset timer.*/
 
             }
 
@@ -603,6 +623,9 @@ class ObjectPlayer{
 
             ){
                 
+                /*After each remove make sure to have the exhibition target length to be 3.
+                If not 3 elements in the target exhibition array, then return the last 3 elements
+                    of target exhibition array ever exist.*/
                 exhibitionTargetStringList                      .remove(exhibitionObjectList.get(i).nameAltString);
                 if(exhibitionTargetStringList.size() == 3)      { return exhibitionTargetStringList; }
 
@@ -631,7 +654,7 @@ class ObjectPlayer{
 
                     }
 
-                    /*After each splice make sure to have the exhibition target length to be 3.
+                    /*After each remove make sure to have the exhibition target length to be 3.
                     If not 3 elements in the target exhibition array, then return the last 3 elements
                         of target exhibition array ever exist.*/
                     if(exhibitionTargetStringList.size() == 3)  { return exhibitionTargetStringList; }
@@ -672,7 +695,7 @@ class ObjectPlayer{
             else if (tagSameCountInt == 2)          { if(Math.random() < 0.33f){ exhibitionTargetStringList.remove(exhibitionTargetStringList.get(i)); i --; } }
             else if (tagSameCountInt == 3)          {  }
 
-            /*After each splice make sure to have the exhibition target length to be 3.
+            /*After each remove make sure to have the exhibition target length to be 3.
             If not 3 elements in the target exhibition array, then return the last 3 elements
                 of target exhibition array ever exist.*/
             if(exhibitionTargetStringList.size() == 3)  { return exhibitionTargetStringList; }
@@ -707,13 +730,26 @@ class ObjectPlayer{
 
             }
             
-            /*After each splice make sure to have the exhibition target length to be 3.
+            /*After each remove make sure to have the exhibition target length to be 3.
             If not 3 elements in the target exhibition array, then return the last 3 elements
                 of target exhibition array ever exist.*/
             if(exhibitionTargetStringList.size() == 3)  { return exhibitionTargetStringList; }
 
         }
 
+        /*Make sure to only have three exhibition target at the end of this function.*/
+        if(exhibitionTargetStringList.size() > 3){
+
+            int listIndexInt = exhibitionTargetStringList.size() - 1;
+
+            while(exhibitionTargetStringList.size() > 3){
+
+                exhibitionTargetStringList  .remove(listIndexInt);
+                listIndexInt                --;
+
+            }
+
+        }
         return                      exhibitionTargetStringList;
 
     }
@@ -767,6 +803,8 @@ class ObjectPlayer{
         AddTagCounterVoid               (exhibitionCurrentObject);
         AddRemoveChildVoid              (true);
         
+        SetExhibitionTargetStringList   ();
+
         /*For everytime a player move to another exhibition iterate through all player to re - add the siblings.*/
         for(int i = 0; i < playerObjectList.size(); i ++){
 
