@@ -6,11 +6,16 @@ List<ObjectMuseum>      roomObjectList          = new ArrayList<ObjectMuseum>();
 List<ObjectMuseum>      exhibitionObjectList    = new ArrayList<ObjectMuseum>();
 List<ObjectPlayer>      playerObjectList        = new ArrayList<ObjectPlayer>();
 
+PFont   layoutPanelPFont;
+int     layoutOffsetInt     = 10;
+int     layoutTextSizeInt   = 24;
+int     layoutTotalRowInt   = 0;
+
 /*PROTOTYPE: Testing AIAutoVoid() for this application.
 PROTOTYPE: Instead of using for loop to iterate through all the player
-	we create a small variable that update one player for every tick.
+    we create a small variable that update one player for every tick.
 PROTOTYPE: In result, the application is not burdened out by the for loop.*/
-int 					playerLoopCounterInt 	= 0;
+int                     playerLoopCounterInt    = 0;
 
 class Name                                      {
 
@@ -45,33 +50,39 @@ class Tag                                       {
 
 void setup()                                    {
 
-	/*Create the tag list.*/
-	tagObjectList 			= Arrays.asList(
-	
-		new Tag(new Name("Agreeable"  	, "TAG_AGR")),
-		new Tag(new Name("Brave"		, "TAG_BRA")),
-		new Tag(new Name("Calm"			, "TAG_CAL")),
-		new Tag(new Name("Delightful"	, "TAG_DEL")),
-		new Tag(new Name("Eager"		, "TAG_EAG")),
-		new Tag(new Name("Faithful"		, "TAG_FAI")),
-		new Tag(new Name("Gentle"		, "TAG_GEN")),
-		new Tag(new Name("Happy"		, "TAG_HAP")),
-		new Tag(new Name("Jolly"		, "TAG_JOL")),
-		new Tag(new Name("Kind"			, "TAG_KIN")),
-		new Tag(new Name("Lively"		, "TAG_LIV")),
-		new Tag(new Name("Nice"			, "TAG_NIC")),
-		new Tag(new Name("Obedient"		, "TAG_OBE")),
-		new Tag(new Name("Proud"		, "TAG_PRO")),
-		new Tag(new Name("Relieved"		, "TAG_REL")),
-		new Tag(new Name("Silly"		, "TAG_SIL")),
-		new Tag(new Name("Thankful"		, "TAG_THA")),
-		new Tag(new Name("Victorious"	, "TAG_VIC")),
-		new Tag(new Name("Witty"		, "TAG_WIT")),
-		new Tag(new Name("Zealous"		, "TAG_ZEA"))
-	
-	);
+    /*Setting up application.*/
+    size                (1024, 576);
+    noStroke            ();
+    /*Setting up font for layout.*/
+    layoutPanelPFont    = createFont("Georgia", layoutTextSizeInt);
 
-	floorObjectList        	= Arrays.asList(
+    /*Create the tag list.*/
+    tagObjectList           = Arrays.asList(
+    
+        new Tag(new Name("Agreeable"    , "TAG_AGR")),
+        new Tag(new Name("Brave"        , "TAG_BRA")),
+        new Tag(new Name("Calm"         , "TAG_CAL")),
+        new Tag(new Name("Delightful"   , "TAG_DEL")),
+        new Tag(new Name("Eager"        , "TAG_EAG")),
+        new Tag(new Name("Faithful"     , "TAG_FAI")),
+        new Tag(new Name("Gentle"       , "TAG_GEN")),
+        new Tag(new Name("Happy"        , "TAG_HAP")),
+        new Tag(new Name("Jolly"        , "TAG_JOL")),
+        new Tag(new Name("Kind"         , "TAG_KIN")),
+        new Tag(new Name("Lively"       , "TAG_LIV")),
+        new Tag(new Name("Nice"         , "TAG_NIC")),
+        new Tag(new Name("Obedient"     , "TAG_OBE")),
+        new Tag(new Name("Proud"        , "TAG_PRO")),
+        new Tag(new Name("Relieved"     , "TAG_REL")),
+        new Tag(new Name("Silly"        , "TAG_SIL")),
+        new Tag(new Name("Thankful"     , "TAG_THA")),
+        new Tag(new Name("Victorious"   , "TAG_VIC")),
+        new Tag(new Name("Witty"        , "TAG_WIT")),
+        new Tag(new Name("Zealous"      , "TAG_ZEA"))
+    
+    );
+
+    floorObjectList         = Arrays.asList(
 
         new ObjectMuseum(new Name("FLR_001", "First Floor"                        ), "XXX_XXX", "FLR", AssignRandomTagList(tagObjectList)),
         new ObjectMuseum(new Name("FLR_002", "Second Floor"                       ), "XXX_XXX", "FLR", AssignRandomTagList(tagObjectList)),
@@ -79,7 +90,7 @@ void setup()                                    {
         new ObjectMuseum(new Name("FLR_004", "Fourth Floor"                       ), "XXX_XXX", "FLR", AssignRandomTagList(tagObjectList))
 
     );
-	roomObjectList         	= Arrays.asList(
+    roomObjectList          = Arrays.asList(
 
         new ObjectMuseum(new Name("ROM_AFK", "Room Afrika"                        ), "FLR_001", "ROM", AssignRandomTagList(tagObjectList)),
         new ObjectMuseum(new Name("ROM_AME", "Room America"                       ), "FLR_001", "ROM", AssignRandomTagList(tagObjectList)),
@@ -87,7 +98,7 @@ void setup()                                    {
         new ObjectMuseum(new Name("ROM_EUR", "Room Europe"                        ), "FLR_001", "ROM", AssignRandomTagList(tagObjectList))
 
     );
-	exhibitionObjectList   	= Arrays.asList(
+    exhibitionObjectList    = Arrays.asList(
 
         new ObjectMuseum(new Name("EXH_CAO", "Exhibition Cameroon"                ), "ROM_AFK", "EXH", AssignRandomTagList(tagObjectList)),
         new ObjectMuseum(new Name("EXH_EGY", "Exhibition Egypt"                   ), "ROM_AFK", "EXH", AssignRandomTagList(tagObjectList)),
@@ -108,89 +119,103 @@ void setup()                                    {
 
     );
 
-	/*Initiate all players.*/
+    /*Initiate all players.*/
     for(int i = 0; i < playerAmountInt; i ++)                   {
 
-        ObjectPlayer objectPlayer	= new ObjectPlayer(i, exhibitionObjectList.get((int)(Math.floor((Math.random()*exhibitionObjectList.size()) + 0))).nameAltString);
-        playerObjectList			.add(objectPlayer);
+        ObjectPlayer objectPlayer   = new ObjectPlayer(i, exhibitionObjectList.get((int)(Math.floor((Math.random()*exhibitionObjectList.size()) + 0))).nameAltString);
+        playerObjectList            .add(objectPlayer);
 
     }
 
     for(int i = 0; i < floorObjectList.size()           ; i ++) { floorObjectList.get(i).SetChildObjectList  (roomObjectList); }
     for(int i = 0; i < roomObjectList.size()            ; i ++) {
 
-        roomObjectList				.get(i).SetParentObject     (floorObjectList);
-        roomObjectList				.get(i).SetChildObjectList  (exhibitionObjectList);
+        roomObjectList              .get(i).SetParentObject     (floorObjectList);
+        roomObjectList              .get(i).SetChildObjectList  (exhibitionObjectList);
 
     }
     for(int i = 0; i < exhibitionObjectList.size()      ; i ++) { exhibitionObjectList.get(i).SetParentObject(roomObjectList); }
 
 }
 
-void draw()											{
+void draw()                                         {
 
-	playerObjectList			.get(playerLoopCounterInt).AIAutoVoid();
+    /*Set the background color for this application.*/
+    background              (34, 32, 52);
 
-	for(int i = 0; i < playerObjectList.size(); i ++){
+    /*PROTOTYPE: Panel.*/
+    fill                    (69 , 40, 60);
+    layoutTotalRowInt       = 10;
+    int widthInt            =  width  -  (layoutOffsetInt*2);
+    int heightInt           = (height - ((layoutOffsetInt*layoutTotalRowInt) + layoutOffsetInt))/layoutTotalRowInt;
+    int xPanelInt           = layoutOffsetInt + (0*widthInt) + (0*layoutOffsetInt);
+    int yPanelInt           = layoutOffsetInt;
+    rect                    (xPanelInt, yPanelInt, widthInt, heightInt, 10);
+    noFill                  ();
+    fill                    (255);
+    textAlign               (CENTER);
+    textFont                (layoutPanelPFont);
+    String textTextString   = "FLR_001";
+    int xTextInt            = xPanelInt + ( widthInt/2);
+    int yTextInt            = yPanelInt + (heightInt/2) + (layoutTextSizeInt/4);
+    text                    (textTextString, xTextInt, yTextInt);
+    noFill                  ();
 
-		println(playerObjectList.get(i).exhibitionVisitedStringList.size());
-
-	}
-
-	playerLoopCounterInt 		= (playerLoopCounterInt >= (playerObjectList.size() - 1)) ? 0 : (playerLoopCounterInt + 1);
+    playerObjectList        .get(playerLoopCounterInt).AIAutoVoid();
+    playerLoopCounterInt    = (playerLoopCounterInt >= (playerObjectList.size() - 1)) ? 0 : (playerLoopCounterInt + 1);
 
 }
 
 /*A function to return an array of object tag to be put in the museum object, randomly.*/
-Tag[] AssignRandomTagList(List<Tag> _tagObjectList)	{
+Tag[] AssignRandomTagList(List<Tag> _tagObjectList) {
 
-	/*Temporary tag object list to be returned later on this function.*/
-	List<Tag> assignTagObjectList 					= new ArrayList<Tag>();
-	
-	/*This function need to be atleast gives three tags to a museum object.
-	After three tags is inside the List then we can randomly add another tag with a chance.
-	The thing is that every tag added the chance of another tag will be added/pushed
-		is lower.*/
-	float randomChanceFloat							= 1f;
-	while(
+    /*Temporary tag object list to be returned later on this function.*/
+    List<Tag> assignTagObjectList                   = new ArrayList<Tag>();
+    
+    /*This function need to be atleast gives three tags to a museum object.
+    After three tags is inside the List then we can randomly add another tag with a chance.
+    The thing is that every tag added the chance of another tag will be added/pushed
+        is lower.*/
+    float randomChanceFloat                         = 1f;
+    while(
 
-		(assignTagObjectList.size() <= 3) ||
-		(Math.random() < randomChanceFloat)
+        (assignTagObjectList.size() <= 3) ||
+        (Math.random() < randomChanceFloat)
 
-	){
+    ){
 
-		/*Need to make sure the inputted random tag is not something that is already in the museum object
-		Create a temporary tag object to hold.*/
-		int randomIndexInt	= (int)((Math.random()*_tagObjectList.size()) + 0);
-		Tag tagObject 		= _tagObjectList.get(randomIndexInt);
-		
-		/*Keep looping over and over until the random index is not a tag that is already in the list.*/
-		for(int i = 0; i < assignTagObjectList.size(); i ++){
+        /*Need to make sure the inputted random tag is not something that is already in the museum object
+        Create a temporary tag object to hold.*/
+        int randomIndexInt  = (int)((Math.random()*_tagObjectList.size()) + 0);
+        Tag tagObject       = _tagObjectList.get(randomIndexInt);
+        
+        /*Keep looping over and over until the random index is not a tag that is already in the list.*/
+        for(int i = 0; i < assignTagObjectList.size(); i ++){
 
-			/*If the random tag is already inside the museum object then we need to iterate again to get new random tag
-				generated.*/
-			while(assignTagObjectList.get(i) == tagObject){
-				
-				randomIndexInt	= (int)((Math.random()*_tagObjectList.size()) + 0);
-				tagObject 		= _tagObjectList.get(randomIndexInt);
-				
-			}
+            /*If the random tag is already inside the museum object then we need to iterate again to get new random tag
+                generated.*/
+            while(assignTagObjectList.get(i) == tagObject){
+                
+                randomIndexInt  = (int)((Math.random()*_tagObjectList.size()) + 0);
+                tagObject       = _tagObjectList.get(randomIndexInt);
+                
+            }
 
-		}
-		
-		/*If the assignTagObjectList has three or more elements then we need to start reducing the changce.*/
-		if(assignTagObjectList.size() > 3){ randomChanceFloat -= 0.2f; }
-		
-		/*Add/push a tag object into the temporary list.*/
-		assignTagObjectList.add(tagObject);
+        }
+        
+        /*If the assignTagObjectList has three or more elements then we need to start reducing the changce.*/
+        if(assignTagObjectList.size() > 3){ randomChanceFloat -= 0.2f; }
+        
+        /*Add/push a tag object into the temporary list.*/
+        assignTagObjectList.add(tagObject);
 
-	}
-	
-	/*Before returning the value, the object here is still in List, hence we need to convert it to array.
-	Thus, it can be used in params.*/
-	Tag[] assignTagObjectArray 						= new Tag[assignTagObjectList.size()];
-	for(int i = 0; i < assignTagObjectArray.length; i ++){ assignTagObjectArray[i] = assignTagObjectList.get(i); }
-	
-	return assignTagObjectArray;
+    }
+    
+    /*Before returning the value, the object here is still in List, hence we need to convert it to array.
+    Thus, it can be used in params.*/
+    Tag[] assignTagObjectArray                      = new Tag[assignTagObjectList.size()];
+    for(int i = 0; i < assignTagObjectArray.length; i ++){ assignTagObjectArray[i] = assignTagObjectList.get(i); }
+    
+    return assignTagObjectArray;
 
 }
