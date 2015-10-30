@@ -139,6 +139,7 @@ void draw()                                         {
     /*Set the background color for this application.*/
     background              (34, 32, 52);
 
+    /*PROTOTYPE: Example of panel.*/
     color   fillColor       = color(69 , 40, 60);
     int     widthInt        =  width  -  (layoutOffsetInt*2);
     int     heightInt       = (height - ((layoutOffsetInt*layoutTotalRowInt) + layoutOffsetInt))/layoutTotalRowInt;
