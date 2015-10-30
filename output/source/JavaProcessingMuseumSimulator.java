@@ -25,10 +25,8 @@ List<ObjectMuseum>      roomObjectList          = new ArrayList<ObjectMuseum>();
 List<ObjectMuseum>      exhibitionObjectList    = new ArrayList<ObjectMuseum>();
 List<ObjectPlayer>      playerObjectList        = new ArrayList<ObjectPlayer>();
 
-PFont   layoutPanelPFont;
 int     layoutOffsetInt     = 10;
-int     layoutTextSizeInt   = 24;
-int     layoutTotalRowInt   = 0;
+int     layoutTotalRowInt   = 10;
 
 /*PROTOTYPE: Testing AIAutoVoid() for this application.
 PROTOTYPE: Instead of using for loop to iterate through all the player
@@ -67,13 +65,64 @@ class Tag                                       {
 
 }
 
+/*Creating a Panel class for each object museum.*/
+class Panel                                         {
+
+    PFont   layoutPanelPFont;           /*Font variable to hold the font style.*/
+    int   fillColor;                  /*The color of the panel.*/
+    int     layoutTextSizeInt   = 100;  /*The default font size for the panel.*/
+
+    Panel(){}
+
+    public void DrawVoid(
+
+        int   _fillColor      ,
+        int     _widthPanelInt  ,
+        int     _heightPanelInt ,
+        int     _xPanelInt      ,
+        int     _yPanelInt      ,
+        String  _textString
+
+    ){
+
+        fill                    (_fillColor);
+        rect                    (_xPanelInt, _yPanelInt, _widthPanelInt, _heightPanelInt, 10);
+        noFill                  ();
+
+        fill                    (255);
+        textAlign               (CENTER);
+        String textTextString   = _textString;
+        layoutPanelPFont        = createFont("Georgia", layoutTextSizeInt);
+        textFont                (layoutPanelPFont);
+
+        while(
+
+            (textWidth(_textString) > _widthPanelInt)  ||
+            (layoutTextSizeInt       > _heightPanelInt)
+
+        ){
+
+            layoutTextSizeInt   --;
+            layoutPanelPFont    = createFont("Georgia", layoutTextSizeInt);
+            textFont            (layoutPanelPFont);
+
+        }
+
+        int xTextInt            = _xPanelInt + ( _widthPanelInt/2);
+        int yTextInt            = _yPanelInt + (_heightPanelInt/2) + ((layoutTextSizeInt*11)/45);
+        text                    (textTextString, xTextInt, yTextInt);
+        noFill                  ();
+
+    }
+
+
+}
+
 public void setup()                                    {
 
     /*Setting up application.*/
     size                (1024, 576);
     noStroke            ();
-    /*Setting up font for layout.*/
-    layoutPanelPFont    = createFont("Georgia", layoutTextSizeInt);
 
     /*Create the tag list.*/
     tagObjectList           = Arrays.asList(
@@ -162,23 +211,22 @@ public void draw()                                         {
     /*Set the background color for this application.*/
     background              (34, 32, 52);
 
-    /*PROTOTYPE: Panel.*/
-    fill                    (69 , 40, 60);
-    layoutTotalRowInt       = 10;
-    int widthInt            =  width  -  (layoutOffsetInt*2);
-    int heightInt           = (height - ((layoutOffsetInt*layoutTotalRowInt) + layoutOffsetInt))/layoutTotalRowInt;
-    int xPanelInt           = layoutOffsetInt + (0*widthInt) + (0*layoutOffsetInt);
-    int yPanelInt           = layoutOffsetInt;
-    rect                    (xPanelInt, yPanelInt, widthInt, heightInt, 10);
-    noFill                  ();
-    fill                    (255);
-    textAlign               (CENTER);
-    textFont                (layoutPanelPFont);
-    String textTextString   = "FLR_001";
-    int xTextInt            = xPanelInt + ( widthInt/2);
-    int yTextInt            = yPanelInt + (heightInt/2) + (layoutTextSizeInt/4);
-    text                    (textTextString, xTextInt, yTextInt);
-    noFill                  ();
+    int   fillColor       = color(69 , 40, 60);
+    int     widthInt        =  width  -  (layoutOffsetInt*2);
+    int     heightInt       = (height - ((layoutOffsetInt*layoutTotalRowInt) + layoutOffsetInt))/layoutTotalRowInt;
+    int     xPanelInt       = layoutOffsetInt + (0*widthInt) + (0*layoutOffsetInt);
+    int     yPanelInt       = layoutOffsetInt;
+    Panel   panelTest       = new Panel();
+            panelTest       .DrawVoid(
+
+                fillColor   ,
+                widthInt    ,
+                heightInt   ,
+                xPanelInt   ,
+                yPanelInt   ,
+                "FLR_001"
+
+            );
 
     playerObjectList        .get(playerLoopCounterInt).AIAutoVoid();
     playerLoopCounterInt    = (playerLoopCounterInt >= (playerObjectList.size() - 1)) ? 0 : (playerLoopCounterInt + 1);
