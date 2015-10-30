@@ -65,59 +65,6 @@ class Tag                                       {
 
 }
 
-/*Creating a Panel class for each object museum.*/
-class Panel                                         {
-
-    PFont   layoutPanelPFont;           /*Font variable to hold the font style.*/
-    int   fillColor;                  /*The color of the panel.*/
-    int     layoutTextSizeInt   = 100;  /*The default font size for the panel.*/
-
-    Panel(){}
-
-    public void DrawVoid(
-
-        int   _fillColor      ,
-        int     _widthPanelInt  ,
-        int     _heightPanelInt ,
-        int     _xPanelInt      ,
-        int     _yPanelInt      ,
-        String  _textString
-
-    ){
-
-        fill                    (_fillColor);
-        rect                    (_xPanelInt, _yPanelInt, _widthPanelInt, _heightPanelInt, 10);
-        noFill                  ();
-
-        fill                    (255);
-        textAlign               (CENTER);
-        String textTextString   = _textString;
-        layoutPanelPFont        = createFont("Georgia", layoutTextSizeInt);
-        textFont                (layoutPanelPFont);
-
-        while(
-
-            (textWidth(_textString) > _widthPanelInt)  ||
-            (layoutTextSizeInt       > _heightPanelInt)
-
-        ){
-
-            layoutTextSizeInt   --;
-            layoutPanelPFont    = createFont("Georgia", layoutTextSizeInt);
-            textFont            (layoutPanelPFont);
-
-        }
-
-        int xTextInt            = _xPanelInt + ( _widthPanelInt/2);
-        int yTextInt            = _yPanelInt + (_heightPanelInt/2) + ((layoutTextSizeInt*11)/45);
-        text                    (textTextString, xTextInt, yTextInt);
-        noFill                  ();
-
-    }
-
-
-}
-
 public void setup()                                    {
 
     /*Setting up application.*/
@@ -912,6 +859,61 @@ class ObjectPlayer{
         return objectMuseum;
 
     }
+
+}
+/*Creating a Panel class for each object museum.*/
+class Panel                                         {
+
+    PFont   layoutPanelPFont;           /*Font variable to hold the font style.*/
+    int   fillColor;                  /*The color of the panel.*/
+    int     layoutTextSizeInt   = 100;  /*The default font size for the panel.*/
+
+    Panel(){}
+
+    public void DrawVoid(
+
+        int   _fillColor      ,
+        int     _widthPanelInt  ,
+        int     _heightPanelInt ,
+        int     _xPanelInt      ,
+        int     _yPanelInt      ,
+        String  _textString
+
+    ){
+
+    	/*Fill color for the panel.*/
+        fill                    (_fillColor);
+        rect                    (_xPanelInt, _yPanelInt, _widthPanelInt, _heightPanelInt, 10);
+        noFill                  ();
+
+        /*Fill white color for the text.*/
+        fill                    (255);
+        textAlign               (CENTER);
+        String textTextString   = _textString;
+        layoutPanelPFont        = createFont("Georgia", layoutTextSizeInt);
+        textFont                (layoutPanelPFont);
+
+        /*Iterate font size so that it went a bit smaller than the panel.*/
+        while(
+
+            (textWidth(_textString)	> _widthPanelInt - layoutOffsetInt)  ||
+            (layoutTextSizeInt		> _heightPanelInt - layoutOffsetInt)
+
+        ){
+
+            layoutTextSizeInt   --;
+            layoutPanelPFont    = createFont("Georgia", layoutTextSizeInt);
+            textFont            (layoutPanelPFont);
+
+        }
+
+        int xTextInt            = _xPanelInt + ( _widthPanelInt/2);
+        int yTextInt            = _yPanelInt + (_heightPanelInt/2) + ((layoutTextSizeInt*11)/45);
+        text                    (textTextString, xTextInt, yTextInt);
+        noFill                  ();
+
+    }
+
 
 }
   static public void main(String[] passedArgs) {
