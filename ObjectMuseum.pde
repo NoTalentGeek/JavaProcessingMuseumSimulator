@@ -33,10 +33,6 @@ class   ObjectMuseum                                                            
     //color roomPanelColor                          = color();
     //color exhibitionPanelColor                    = color();
     /*
-    int widthInt                                    =  width  -  (layoutOffsetInt*2);
-    int heightInt                                   = (height - ((layoutOffsetInt*layoutTotalRowInt) + layoutOffsetInt))/layoutTotalRowInt;
-    int xPanelInt                                   = layoutOffsetInt + (0*widthInt) + (0*layoutOffsetInt);
-    int yPanelInt                                   = layoutOffsetInt;
     */
     int     widthPanelInt                           = 0;
     int     heightPanelInt                          = 0;
@@ -234,21 +230,37 @@ class   ObjectMuseum                                                            
     }
 
 
-    void SetPanelVariableVoid()                                                         {
-        
-        
+    void SetPanelVariableInsideVoid()                                                   {
+
+        if(typeString.equals("FLR")){
+
+            widthPanelInt   = ((width - layoutOffsetInt)/floorObjectList.size()) - layoutOffsetInt;
+            heightPanelInt  = (height - ((layoutOffsetInt*layoutTotalRowInt) + layoutOffsetInt))/layoutTotalRowInt;
+            xPanelInt       = layoutOffsetInt + (indexGlobalInt*widthPanelInt) + (indexGlobalInt*layoutOffsetInt);
+            yPanelInt       = layoutOffsetInt;
+
+        }
         
     }
     
-    Panel CreatePanel()                                                                 {
+    Panel PanelDrawVoid()                                                                 {
 
-        /*Make sure that this object is a floor object.*/
-        if(typeString == "FLR"){
-            
-            
-            
+        SetPanelVariableInsideVoid  ();
+        if(typeString.equals("FLR")){
+
+            panelObject             = new Panel();
+            panelObject             .DrawVoid(
+
+                floorPanelColor     ,
+                widthPanelInt       ,
+                heightPanelInt      ,
+                xPanelInt           ,
+                yPanelInt           ,
+                nameAltString
+
+            );
+
         }
-
         return panelObject;
 
     }

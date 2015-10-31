@@ -150,6 +150,7 @@ public void setup()                                    {
 
     }
     for(int i = 0; i < exhibitionObjectList.size()      ; i ++) { exhibitionObjectList.get(i)   .SetInitialParentObject(roomObjectList); }
+    /*Determine index for all museum object.*/
     for(int i = 0; i < floorObjectList.size()           ; i ++) { floorObjectList.get(i)        .SetIndexInsideVoid();  }
     for(int i = 0; i < roomObjectList.size()            ; i ++) { roomObjectList.get(i)         .SetIndexInsideVoid();  }
     for(int i = 0; i < exhibitionObjectList.size()      ; i ++) { exhibitionObjectList.get(i)   .SetIndexInsideVoid();  }
@@ -160,6 +161,11 @@ public void draw()                                         {
 
     /*Set the background color for this application.*/
     background              (34, 32, 52);
+
+    floorObjectList.get(0).PanelDrawVoid();
+    floorObjectList.get(1).PanelDrawVoid();
+    floorObjectList.get(2).PanelDrawVoid();
+    floorObjectList.get(3).PanelDrawVoid();
 
     /*PROTOTYPE: Example of panel.*/
     /*
@@ -244,7 +250,7 @@ public Tag[] AssignRandomTagList(List<Tag> _tagObjectList) {
 /*A class for museum object.
 The museum objects within this application are things that can interract with visitor.
 For example floor, room, and exhibition.*/
-class   ObjectMuseum                                {
+class   ObjectMuseum                                                                    {
 
     List<ObjectMuseum>  childObjectList             = new ArrayList<ObjectMuseum>();    /*This list contains all possible exhibition object.*/
     List<ObjectPlayer>  childPlayerObjectList       = new ArrayList<ObjectPlayer>(); 
@@ -274,10 +280,6 @@ class   ObjectMuseum                                {
     //color roomPanelColor                          = color();
     //color exhibitionPanelColor                    = color();
     /*
-    int widthInt                                    =  width  -  (layoutOffsetInt*2);
-    int heightInt                                   = (height - ((layoutOffsetInt*layoutTotalRowInt) + layoutOffsetInt))/layoutTotalRowInt;
-    int xPanelInt                                   = layoutOffsetInt + (0*widthInt) + (0*layoutOffsetInt);
-    int yPanelInt                                   = layoutOffsetInt;
     */
     int     widthPanelInt                           = 0;
     int     heightPanelInt                          = 0;
@@ -353,8 +355,7 @@ class   ObjectMuseum                                {
     /*This function is to set all index in all possible museum object within this application.*/
     public void SetIndexAllInsideVoid()                                                        {
 
-        /*Set the index of all object museum in the application.
-        PENDING: Please check because the floor parent always returned null object.*/
+        /*Set the index of all object museum in the application.*/
         for(int i = 0; i < floorObjectList.size()       ; i ++){ floorObjectList        .get(i).SetIndexInsideVoid(); }
         for(int i = 0; i < roomObjectList.size()        ; i ++){ roomObjectList         .get(i).SetIndexInsideVoid(); }
         for(int i = 0; i < exhibitionObjectList.size()  ; i ++){ exhibitionObjectList   .get(i).SetIndexInsideVoid(); }
@@ -462,7 +463,7 @@ class   ObjectMuseum                                {
     }
 
     /*A function to set this object parent.*/
-    public ObjectMuseum SetInitialParentObject(List<ObjectMuseum> _targetObjectList)   {
+    public ObjectMuseum SetInitialParentObject(List<ObjectMuseum> _targetObjectList)           {
 
         /*Iterate through all parent object list to find this object parent object.*/
         for(int i = 0; i < _targetObjectList.size(); i ++){
@@ -476,21 +477,38 @@ class   ObjectMuseum                                {
     }
 
 
-    public void SetPanelVariableVoid()                                                         {
-        
-        
+    public void SetPanelVariableInsideVoid()                                                   {
+
+        if(typeString.equals("FLR")){
+
+            widthPanelInt   = ((width  -  (layoutOffsetInt*2))/floorObjectList.size()) - layoutOffsetInt;
+            widthPanelInt   = ((width - layoutOffsetInt)/floorObjectList.size()) - layoutOffsetInt;
+            heightPanelInt  = (height - ((layoutOffsetInt*layoutTotalRowInt) + layoutOffsetInt))/layoutTotalRowInt;
+            xPanelInt       = layoutOffsetInt + (indexGlobalInt*widthPanelInt) + (indexGlobalInt*layoutOffsetInt);
+            yPanelInt       = layoutOffsetInt;
+
+        }
         
     }
     
-    public Panel CreatePanel()                                                                 {
+    public Panel PanelDrawVoid()                                                                 {
 
-        /*Make sure that this object is a floor object.*/
-        if(typeString == "FLR"){
-            
-            
-            
+        SetPanelVariableInsideVoid  ();
+        if(typeString.equals("FLR")){
+
+            panelObject             = new Panel();
+            panelObject             .DrawVoid(
+
+                floorPanelColor     ,
+                widthPanelInt       ,
+                heightPanelInt      ,
+                xPanelInt           ,
+                yPanelInt           ,
+                nameAltString
+
+            );
+
         }
-
         return panelObject;
 
     }
@@ -954,7 +972,7 @@ class Panel                                         {
 
     PFont   layoutPanelPFont;           /*Font variable to hold the font style.*/
     int   fillColor;                  /*The color of the panel.*/
-    int     layoutTextSizeInt   = 100;  /*The default font size for the panel.*/
+    int     layoutTextSizeInt   = 45;   /*The default font size for the panel.*/
 
     Panel(){}
 
@@ -982,6 +1000,7 @@ class Panel                                         {
         textFont                (layoutPanelPFont);
 
         /*Iterate font size so that it went a bit smaller than the panel.*/
+        /*
         while(
 
             (textWidth(_textString)	> (_widthPanelInt  - layoutOffsetInt))  ||
@@ -991,9 +1010,11 @@ class Panel                                         {
 
             layoutTextSizeInt   --;
             layoutPanelPFont    = createFont("Georgia", layoutTextSizeInt);
+            println(layoutPanelPFont);
             textFont            (layoutPanelPFont);
 
         }
+        */
 
         /*Set the text position.*/
         int xTextInt            = _xPanelInt + ( _widthPanelInt/2);

@@ -3,7 +3,7 @@ class Panel                                         {
 
     PFont   layoutPanelPFont;           /*Font variable to hold the font style.*/
     color   fillColor;                  /*The color of the panel.*/
-    int     layoutTextSizeInt   = 100;  /*The default font size for the panel.*/
+    int     layoutTextSizeInt   = 45;   /*The default font size for the panel.*/
 
     Panel(){}
 
@@ -31,6 +31,7 @@ class Panel                                         {
         textFont                (layoutPanelPFont);
 
         /*Iterate font size so that it went a bit smaller than the panel.*/
+        /*
         while(
 
             (textWidth(_textString)	> (_widthPanelInt  - layoutOffsetInt))  ||
@@ -40,9 +41,11 @@ class Panel                                         {
 
             layoutTextSizeInt   --;
             layoutPanelPFont    = createFont("Georgia", layoutTextSizeInt);
+            println(layoutPanelPFont);
             textFont            (layoutPanelPFont);
 
         }
+        */
 
         /*Set the text position.*/
         int xTextInt            = _xPanelInt + ( _widthPanelInt/2);

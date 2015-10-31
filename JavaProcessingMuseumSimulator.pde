@@ -143,6 +143,11 @@ void draw()                                         {
     /*Set the background color for this application.*/
     background              (34, 32, 52);
 
+    floorObjectList.get(0).PanelDrawVoid();
+    floorObjectList.get(1).PanelDrawVoid();
+    floorObjectList.get(2).PanelDrawVoid();
+    floorObjectList.get(3).PanelDrawVoid();
+
     /*PROTOTYPE: Example of panel.*/
     /*
     color   fillColor       = color(69 , 40, 60);
