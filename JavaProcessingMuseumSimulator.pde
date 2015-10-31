@@ -126,11 +126,15 @@ void setup()                                    {
     for(int i = 0; i < floorObjectList.size()           ; i ++) { floorObjectList.get(i).SetChildObjectList  (roomObjectList); }
     for(int i = 0; i < roomObjectList.size()            ; i ++) {
 
-        roomObjectList              .get(i).SetParentObject     (floorObjectList);
-        roomObjectList              .get(i).SetChildObjectList  (exhibitionObjectList);
+        roomObjectList              .get(i).SetInitialParentObject  (floorObjectList);
+        roomObjectList              .get(i).SetChildObjectList      (exhibitionObjectList);
 
     }
-    for(int i = 0; i < exhibitionObjectList.size()      ; i ++) { exhibitionObjectList.get(i).SetParentObject(roomObjectList); }
+    for(int i = 0; i < exhibitionObjectList.size()      ; i ++) { exhibitionObjectList.get(i)   .SetInitialParentObject(roomObjectList); }
+    /*Determine index for all museum object.*/
+    for(int i = 0; i < floorObjectList.size()           ; i ++) { floorObjectList.get(i)        .SetIndexInsideVoid();  }
+    for(int i = 0; i < roomObjectList.size()            ; i ++) { roomObjectList.get(i)         .SetIndexInsideVoid();  }
+    for(int i = 0; i < exhibitionObjectList.size()      ; i ++) { exhibitionObjectList.get(i)   .SetIndexInsideVoid();  }
 
 }
 
@@ -140,6 +144,7 @@ void draw()                                         {
     background              (34, 32, 52);
 
     /*PROTOTYPE: Example of panel.*/
+    /*
     color   fillColor       = color(69 , 40, 60);
     int     widthInt        =  width  -  (layoutOffsetInt*2);
     int     heightInt       = (height - ((layoutOffsetInt*layoutTotalRowInt) + layoutOffsetInt))/layoutTotalRowInt;
@@ -156,6 +161,7 @@ void draw()                                         {
                 "FLR_001"
 
             );
+    */
 
     playerObjectList        .get(playerLoopCounterInt).AIAutoVoid();
     playerLoopCounterInt    = (playerLoopCounterInt >= (playerObjectList.size() - 1)) ? 0 : (playerLoopCounterInt + 1);

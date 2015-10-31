@@ -3,7 +3,7 @@ import java.util.*;
 /*A class for museum object.
 The museum objects within this application are things that can interract with visitor.
 For example floor, room, and exhibition.*/
-class   ObjectMuseum                                {
+class   ObjectMuseum                                                                    {
 
     List<ObjectMuseum>  childObjectList             = new ArrayList<ObjectMuseum>();    /*This list contains all possible exhibition object.*/
     List<ObjectPlayer>  childPlayerObjectList       = new ArrayList<ObjectPlayer>(); 
@@ -27,6 +27,22 @@ class   ObjectMuseum                                {
     int                 fullThresholdInt            = -1;
     int                 visitorCurrentInt           = 0;                                /*This museum object current visitor.*/
     int                 visitorTotalInt             = 0;                                /*This museum objecy total visitor.*/
+
+    /*Variables of panel graphical user interfaces.*/
+    color floorPanelColor                           = color(69 , 40, 60);
+    //color roomPanelColor                          = color();
+    //color exhibitionPanelColor                    = color();
+    /*
+    int widthInt                                    =  width  -  (layoutOffsetInt*2);
+    int heightInt                                   = (height - ((layoutOffsetInt*layoutTotalRowInt) + layoutOffsetInt))/layoutTotalRowInt;
+    int xPanelInt                                   = layoutOffsetInt + (0*widthInt) + (0*layoutOffsetInt);
+    int yPanelInt                                   = layoutOffsetInt;
+    */
+    int     widthPanelInt                           = 0;
+    int     heightPanelInt                          = 0;
+    int     xPanelInt                               = 0;
+    int     yPanelInt                               = 0;
+    Panel   panelObject                             = null;
 
     /*These are some user interfaces related variables.*/
     boolean             activeBoolean               = false;
@@ -66,13 +82,11 @@ class   ObjectMuseum                                {
         for(int i = 0; i < tagMuseumObjectList.size(); i ++)
                                                     { tagMuseumNameAltStringList.add(tagMuseumObjectList.get(i).nameAltString); }
 
-        /*PENDING: SetIndexGlobalInt();*/
-        /*PENDING: SetIndexLocalInt();*/
-
     }
 
-    /*A set of functions to move this object into a new parent object.*/
-    void DetermineParentVoid(
+    /*A set of functions to move this object into a new parent object.
+    For initial use use SetParentObject() instead of this function!.*/
+    void SetParentVoid(
 
         List<ObjectMuseum>  _targetObjectList       , 
         String              _parentNameAltString
@@ -81,8 +95,79 @@ class   ObjectMuseum                                {
 
         RemoveChildObjectList       (_targetObjectList      );
         SetParentNameAltString      (_parentNameAltString   );
-        SetParentObject             (_targetObjectList      );
+        SetInitialParentObject      (_targetObjectList      );
         SetChildObjectList          (_targetObjectList      );
+        SetIndexAllInsideVoid       ();
+
+    }
+
+    /*This class function to set both local and global index.*/
+    void SetIndexInsideVoid()                                                           {
+
+        indexLocalInt           = SetIndexLocalInt();
+        indexGlobalInt          = SetIndexGlobalInsideInt();
+
+    }
+
+    /*This function is to set all index in all possible museum object within this application.*/
+    void SetIndexAllInsideVoid()                                                        {
+
+        /*Set the index of all object museum in the application.*/
+        for(int i = 0; i < floorObjectList.size()       ; i ++){ floorObjectList        .get(i).SetIndexInsideVoid(); }
+        for(int i = 0; i < roomObjectList.size()        ; i ++){ roomObjectList         .get(i).SetIndexInsideVoid(); }
+        for(int i = 0; i < exhibitionObjectList.size()  ; i ++){ exhibitionObjectList   .get(i).SetIndexInsideVoid(); }
+
+    }
+
+    /*A function to set the threshold to determine whether this museum object is full or not.*/
+    int SetFullThresholdInt(int _fullThresholdInt)                                      {
+
+        fullThresholdInt            = _fullThresholdInt;
+
+        if      (fullThresholdInt   <= visitorCurrentInt)  { fullBoolean = true;  }
+        else if (fullThresholdInt   >  visitorCurrentInt)  { fullBoolean = false; }
+
+        return                      fullThresholdInt;
+        
+    }
+
+    /*A function to find this object index in its array list (not parent nor child object list).*/
+    int SetIndexInt(List<ObjectMuseum> _targetObjectList)                              {
+
+        int indexInt            = -1;
+        for(int i = 0; i < _targetObjectList.size(); i ++){
+
+            if(_targetObjectList.get(i).nameAltString.equals(nameAltString)){ indexInt = i; break; }
+
+        }
+
+        return indexInt;
+
+    }
+
+    /*A bare function to set global index int of this object in the main global object list.*/
+    int SetIndexGlobalInt(List<ObjectMuseum> _targetObjectList)                         {
+
+        indexGlobalInt  = SetIndexInt(_targetObjectList);
+        return          indexGlobalInt;
+
+    }
+
+    /*A class specific function to set global index int.*/
+    int SetIndexGlobalInsideInt()                                                       {
+
+        if      (typeString.equals("FLR")){ indexGlobalInt = SetIndexGlobalInt(floorObjectList);        }
+        else if (typeString.equals("ROM")){ indexGlobalInt = SetIndexGlobalInt(roomObjectList);         }
+        else if (typeString.equals("EXH")){ indexGlobalInt = SetIndexGlobalInt(exhibitionObjectList);   }
+        return  indexGlobalInt;
+
+    }
+
+    /*A function to set local index int of this object in its parent index.*/
+    int SetIndexLocalInt()                                                              {
+
+        if(!typeString.equals("FLR")){ indexLocalInt = SetIndexInt(parentObject.childObjectList); }
+        return          indexLocalInt;
 
     }
 
@@ -114,6 +199,8 @@ class   ObjectMuseum                                {
 
     }
 
+
+
     /*A function to return object from any object list.*/
     ObjectMuseum FindObject(
 
@@ -133,7 +220,7 @@ class   ObjectMuseum                                {
     }
 
     /*A function to set this object parent.*/
-    ObjectMuseum SetParentObject(List<ObjectMuseum> _targetObjectList)                  {
+    ObjectMuseum SetInitialParentObject(List<ObjectMuseum> _targetObjectList)           {
 
         /*Iterate through all parent object list to find this object parent object.*/
         for(int i = 0; i < _targetObjectList.size(); i ++){
@@ -146,38 +233,32 @@ class   ObjectMuseum                                {
 
     }
 
+
+    void SetPanelVariableVoid()                                                         {
+        
+        
+        
+    }
+    
+    Panel CreatePanel()                                                                 {
+
+        /*Make sure that this object is a floor object.*/
+        if(typeString == "FLR"){
+            
+            
+            
+        }
+
+        return panelObject;
+
+    }
+
     /*Set the parent alternative name String.*/
     String SetParentNameAltString(String _parentNameAltString)                          {
 
         parentNameAltString     = _parentNameAltString;
         return                  parentNameAltString;
 
-    }
-
-    /*A function to find this object index in its array list (not parent nor child object list).*/
-    int FindIndexInt(List<ObjectMuseum> _targetObjectList)                              {
-
-        int indexInt            = -1;
-        for(int i = 0; i < _targetObjectList.size(); i ++){
-
-            if(_targetObjectList.get(i).nameAltString.equals(nameAltString)){ indexInt = i; break; }
-
-        }
-
-        return indexInt;
-
-    }
-
-    /*A function to set the threshold to determine whether this museum object is full or not.*/
-    int SetFullThresholdInt(int _fullThresholdInt)                                      {
-
-        fullThresholdInt            = _fullThresholdInt;
-
-        if      (fullThresholdInt   <= visitorCurrentInt)  { fullBoolean = true;  }
-        else if (fullThresholdInt   >  visitorCurrentInt)  { fullBoolean = false; }
-
-        return          fullThresholdInt;
-        
     }
     
 };
