@@ -6,7 +6,7 @@ List<ObjectMuseum>      roomObjectList          = new ArrayList<ObjectMuseum>();
 List<ObjectMuseum>      exhibitionObjectList    = new ArrayList<ObjectMuseum>();
 List<ObjectPlayer>      playerObjectList        = new ArrayList<ObjectPlayer>();
 
-int     layoutOffsetInt     = 10;
+int     layoutOffsetInt     = 5;
 int     layoutTotalRowInt   = 10;
 
 /*PROTOTYPE: Testing AIAutoVoid() for this application.
@@ -143,11 +143,9 @@ void draw()                                         {
     /*Set the background color for this application.*/
     background              (34, 32, 52);
 
-    floorObjectList .get(0).PanelDrawVoid();
-    floorObjectList .get(1).PanelDrawVoid();
-    floorObjectList .get(2).PanelDrawVoid();
-    floorObjectList .get(3).PanelDrawVoid();
-    roomObjectList  .get(0).PanelDrawVoid();
+    for(int i = 0; i < floorObjectList      .size(); i ++){ floorObjectList         .get(i).PanelDrawVoid(); }
+    for(int i = 0; i < roomObjectList       .size(); i ++){ roomObjectList          .get(i).PanelDrawVoid(); }
+    for(int i = 0; i < exhibitionObjectList .size(); i ++){ exhibitionObjectList    .get(i).PanelDrawVoid(); }
 
     /*PROTOTYPE: Example of panel.*/
     /*

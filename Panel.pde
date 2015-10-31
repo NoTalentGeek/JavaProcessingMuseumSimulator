@@ -40,7 +40,6 @@ class Panel                                         {
 
             layoutTextSizeInt   --;
             layoutPanelPFont    = createFont("Georgia", layoutTextSizeInt);
-            println(layoutPanelPFont);
             textFont            (layoutPanelPFont);
 
         }
