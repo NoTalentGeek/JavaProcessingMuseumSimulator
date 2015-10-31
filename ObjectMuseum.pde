@@ -232,7 +232,25 @@ class   ObjectMuseum                                                            
 
     void SetPanelVariableInsideVoid()                                                   {
 
-        if(typeString.equals("FLR")){
+        /*Panel layout calculations.*/
+        if          (typeString.equals("FLR")){
+
+            widthPanelInt   = (width - (layoutOffsetInt*2));
+            //widthPanelInt = ((width - layoutOffsetInt)/floorObjectList.size()) - layoutOffsetInt;
+            heightPanelInt  = (height - ((layoutOffsetInt*layoutTotalRowInt) + layoutOffsetInt))/layoutTotalRowInt;
+            xPanelInt       = layoutOffsetInt + (indexGlobalInt*widthPanelInt) + (indexGlobalInt*layoutOffsetInt);
+            yPanelInt       = layoutOffsetInt;
+
+        }
+        else if     (typeString.equals("ROM")){
+
+            widthPanelInt   = (parentObject.widthPanelInt/parentObject.childObjectList.size());
+            heightPanelInt  = parentObject.heightPanelInt;
+            xPanelInt       = layoutOffsetInt + (indexLocalInt*widthPanelInt) + (indexLocalInt*layoutOffsetInt);
+            yPanelInt       = (layoutOffsetInt*2) + parentObject.heightPanelInt;
+
+        }
+        else if     (typeString.equals("EXH")){
 
             widthPanelInt   = ((width - layoutOffsetInt)/floorObjectList.size()) - layoutOffsetInt;
             heightPanelInt  = (height - ((layoutOffsetInt*layoutTotalRowInt) + layoutOffsetInt))/layoutTotalRowInt;
@@ -246,7 +264,7 @@ class   ObjectMuseum                                                            
     Panel PanelDrawVoid()                                                                 {
 
         SetPanelVariableInsideVoid  ();
-        if(typeString.equals("FLR")){
+        if(typeString.equals("FLR") || typeString.equals("ROM")){
 
             panelObject             = new Panel();
             panelObject             .DrawVoid(

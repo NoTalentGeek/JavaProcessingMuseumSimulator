@@ -1,0 +1,1 @@
+processing-java --run --sketch="C:\Users\notalentgeek\Desktop\Temporary Project 2\JavaProcessingMuseumSimulator" --output="C:\Users\notalentgeek\Desktop\Temporary Project 2\JavaProcessingMuseumSimulator\output" --force
