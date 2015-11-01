@@ -132,10 +132,9 @@ void setup()                                    {
     }
     for(int i = 0; i < exhibitionObjectList.size()      ; i ++) { exhibitionObjectList.get(i)   .SetInitialParentObject(roomObjectList); }
     /*Determine index for all museum object.*/
-    for(int i = 0; i < floorObjectList.size()           ; i ++) { floorObjectList.get(i)        .SetIndexInsideVoid();  }
-    for(int i = 0; i < roomObjectList.size()            ; i ++) { roomObjectList.get(i)         .SetIndexInsideVoid();  }
-    for(int i = 0; i < exhibitionObjectList.size()      ; i ++) { exhibitionObjectList.get(i)   .SetIndexInsideVoid();  }
-
+    for(int i = 0; i < floorObjectList.size()           ; i ++) { floorObjectList.get(i)        .SetIndexInsideVoid(); }
+    for(int i = 0; i < roomObjectList.size()            ; i ++) { roomObjectList.get(i)         .SetIndexInsideVoid(); }
+    for(int i = 0; i < exhibitionObjectList.size()      ; i ++) { exhibitionObjectList.get(i)   .SetIndexInsideVoid(); }
 }
 
 void draw()                                         {
@@ -146,26 +145,6 @@ void draw()                                         {
     for(int i = 0; i < floorObjectList      .size(); i ++){ floorObjectList         .get(i).PanelDrawVoid(); }
     for(int i = 0; i < roomObjectList       .size(); i ++){ roomObjectList          .get(i).PanelDrawVoid(); }
     for(int i = 0; i < exhibitionObjectList .size(); i ++){ exhibitionObjectList    .get(i).PanelDrawVoid(); }
-
-    /*PROTOTYPE: Example of panel.*/
-    /*
-    color   fillColor       = color(69 , 40, 60);
-    int     widthInt        =  width  -  (layoutOffsetInt*2);
-    int     heightInt       = (height - ((layoutOffsetInt*layoutTotalRowInt) + layoutOffsetInt))/layoutTotalRowInt;
-    int     xPanelInt       = layoutOffsetInt + (0*widthInt) + (0*layoutOffsetInt);
-    int     yPanelInt       = layoutOffsetInt;
-    Panel   panelTest       = new Panel();
-            panelTest       .DrawVoid(
-
-                fillColor   ,
-                widthInt    ,
-                heightInt   ,
-                xPanelInt   ,
-                yPanelInt   ,
-                "FLR_001"
-
-            );
-    */
 
     playerObjectList        .get(playerLoopCounterInt).AIAutoVoid();
     playerLoopCounterInt    = (playerLoopCounterInt >= (playerObjectList.size() - 1)) ? 0 : (playerLoopCounterInt + 1);
