@@ -149,6 +149,8 @@ void draw()                                         {
     playerObjectList        .get(playerLoopCounterInt).AIAutoVoid();
     playerLoopCounterInt    = (playerLoopCounterInt >= (playerObjectList.size() - 1)) ? 0 : (playerLoopCounterInt + 1);
 
+    println(frameRate);
+
 }
 
 /*A function to return an array of object tag to be put in the museum object, randomly.*/

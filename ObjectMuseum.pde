@@ -78,6 +78,9 @@ class   ObjectMuseum                                                            
         for(int i = 0; i < tagMuseumObjectList.size(); i ++)
                                                     { tagMuseumNameAltStringList.add(tagMuseumObjectList.get(i).nameAltString); }
 
+        /*Create panel.*/
+        panelObject                                 = new Panel();
+
     }
 
     /*A set of functions to move this object into a new parent object.
@@ -257,7 +260,6 @@ class   ObjectMuseum                                                            
 
         SetPanelVariableInsideVoid  ();
 
-        panelObject             = new Panel();
         panelObject             .DrawVoid(
 
             floorPanelColor     ,
