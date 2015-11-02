@@ -18,12 +18,14 @@ import java.io.IOException;
 public class JavaProcessingMuseumSimulator extends PApplet {
 
 /*Determine global variables.*/
-int                     playerAmountInt         = 10;
+int                     playerAmountInt         = 100;
 List<Tag>               tagObjectList           = new ArrayList<Tag>();
 List<ObjectMuseum>      floorObjectList         = new ArrayList<ObjectMuseum>();
 List<ObjectMuseum>      roomObjectList          = new ArrayList<ObjectMuseum>();
 List<ObjectMuseum>      exhibitionObjectList    = new ArrayList<ObjectMuseum>();
 List<ObjectPlayer>      playerObjectList        = new ArrayList<ObjectPlayer>();
+
+int                     fullThresholdInt        = 0;
 
 int                     layoutOffsetInt         = 5;
 int                     layoutOffsetSideInt     = 50;
@@ -33,7 +35,7 @@ int                     layoutTotalRowInt       = 10;
 PROTOTYPE: Instead of using for loop to iterate through all the player
     we create a small variable that update one player for every tick.
 PROTOTYPE: In result, the application is not burdened out by the for loop.*/
-int                     playerLoopCounterInt    = 0;
+//int                   playerLoopCounterInt    = 0;
 
 class Name                                      {
 
@@ -164,15 +166,25 @@ public void draw()                                         {
     /*Set the background color for this application.*/
     background              (34, 32, 52);
 
+    fullThresholdInt        = 2 + (int)(Math.ceil(playerObjectList.size()/exhibitionObjectList.size()));
+    //println(fullThresholdInt);
     layoutTotalRowInt       = 3 + (int)(Math.ceil(playerObjectList.size()/exhibitionObjectList.size()) + 5);
 
-    for(int i = 0; i < floorObjectList      .size(); i ++){ floorObjectList         .get(i).PanelDrawVoid(); }
-    for(int i = 0; i < roomObjectList       .size(); i ++){ roomObjectList          .get(i).PanelDrawVoid(); }
-    for(int i = 0; i < exhibitionObjectList .size(); i ++){ exhibitionObjectList    .get(i).PanelDrawVoid(); }
-    for(int i = 0; i < playerObjectList     .size(); i ++){ playerObjectList        .get(i).PanelDrawVoid(); }
+    for(int i = 0; i < floorObjectList      .size(); i ++){ floorObjectList         .get(i).SetFullBoolean(); floorObjectList         .get(i).PanelDrawVoid(); }
+    for(int i = 0; i < roomObjectList       .size(); i ++){ roomObjectList          .get(i).SetFullBoolean(); roomObjectList          .get(i).PanelDrawVoid(); }
+    for(int i = 0; i < exhibitionObjectList .size(); i ++){ exhibitionObjectList    .get(i).SetFullBoolean(); exhibitionObjectList    .get(i).PanelDrawVoid(); }
+    for(int i = 0; i < playerObjectList     .size(); i ++){
 
+        playerObjectList.get(i).SetExhibitionTargetStringList();
+        playerObjectList.get(i).AIAutoVoid();
+        playerObjectList.get(i).PanelDrawVoid();
+
+    }
+
+    /*
     playerObjectList        .get(playerLoopCounterInt).AIAutoVoid();
     playerLoopCounterInt    = (playerLoopCounterInt >= (playerObjectList.size() - 1)) ? 0 : (playerLoopCounterInt + 1);
+    */
 
 }
 
@@ -255,7 +267,6 @@ class   ObjectMuseum                                                            
     List<String>        tagMuseumNameAltStringList  = new ArrayList<String>();          /*The tags for whit museum object.*/
 
     boolean             fullBoolean                 = false;                            /*Whether this museum object is full or not.*/
-    int                 fullThresholdInt            = -1;
     int                 visitorCurrentInt           = 0;                                /*This museum object current visitor.*/
     int                 visitorTotalInt             = 0;                                /*This museum objecy total visitor.*/
 
@@ -377,14 +388,12 @@ class   ObjectMuseum                                                            
     }
 
     /*A function to set the threshold to determine whether this museum object is full or not.*/
-    public int SetFullThresholdInt(int _fullThresholdInt)                                      {
-
-        fullThresholdInt            = _fullThresholdInt;
+    public boolean SetFullBoolean()                                                            {
 
         if      (fullThresholdInt   <= visitorCurrentInt)  { fullBoolean = true;  }
         else if (fullThresholdInt   >  visitorCurrentInt)  { fullBoolean = false; }
 
-        return                      fullThresholdInt;
+        return                      fullBoolean;
         
     }
 
@@ -737,7 +746,6 @@ class ObjectPlayer{
 
         /*Set the new index of this player object.*/
         playerSiblingIndexInt = SetPlayerSiblingIndexInt(playerSiblingObjectList);
-        if(playerIndexInt == 9)println(playerSiblingObjectList);
 
         return playerSiblingObjectList;
 
@@ -964,13 +972,11 @@ class ObjectPlayer{
         AddRemoveChildVoid              (true);
         
         SetSiblingObjectList            ();
-        SetExhibitionTargetStringList   ();
 
         /*For everytime a player move to another exhibition iterate through all player to re - add the siblings.*/
         for(int i = 0; i < playerObjectList.size(); i ++){
 
             playerObjectList.get(i).SetSiblingObjectList();
-            playerObjectList.get(i).SetExhibitionTargetStringList();
 
         }
 

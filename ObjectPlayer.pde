@@ -209,7 +209,6 @@ class ObjectPlayer{
 
         /*Set the new index of this player object.*/
         playerSiblingIndexInt = SetPlayerSiblingIndexInt(playerSiblingObjectList);
-        if(playerIndexInt == 9)println(playerSiblingObjectList);
 
         return playerSiblingObjectList;
 
@@ -436,13 +435,11 @@ class ObjectPlayer{
         AddRemoveChildVoid              (true);
         
         SetSiblingObjectList            ();
-        SetExhibitionTargetStringList   ();
 
         /*For everytime a player move to another exhibition iterate through all player to re - add the siblings.*/
         for(int i = 0; i < playerObjectList.size(); i ++){
 
             playerObjectList.get(i).SetSiblingObjectList();
-            playerObjectList.get(i).SetExhibitionTargetStringList();
 
         }
 

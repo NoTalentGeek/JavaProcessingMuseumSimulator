@@ -24,7 +24,6 @@ class   ObjectMuseum                                                            
     List<String>        tagMuseumNameAltStringList  = new ArrayList<String>();          /*The tags for whit museum object.*/
 
     boolean             fullBoolean                 = false;                            /*Whether this museum object is full or not.*/
-    int                 fullThresholdInt            = -1;
     int                 visitorCurrentInt           = 0;                                /*This museum object current visitor.*/
     int                 visitorTotalInt             = 0;                                /*This museum objecy total visitor.*/
 
@@ -146,14 +145,12 @@ class   ObjectMuseum                                                            
     }
 
     /*A function to set the threshold to determine whether this museum object is full or not.*/
-    int SetFullThresholdInt(int _fullThresholdInt)                                      {
-
-        fullThresholdInt            = _fullThresholdInt;
+    boolean SetFullBoolean()                                                            {
 
         if      (fullThresholdInt   <= visitorCurrentInt)  { fullBoolean = true;  }
         else if (fullThresholdInt   >  visitorCurrentInt)  { fullBoolean = false; }
 
-        return                      fullThresholdInt;
+        return                      fullBoolean;
         
     }
 
