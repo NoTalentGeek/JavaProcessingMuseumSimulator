@@ -10,7 +10,7 @@ class TagCounter{
 
     TagCounter(){}
     void    SetTagNameStringVoid    (String _tagNameString) { tagNameString = _tagNameString; }
-    void    SetTagCounterIntVoid    (int _tagCounterInt)    {
+    void    SetTagCounterIntVoid    (int    _tagCounterInt) {
 
         tagCounterInt       = _tagCounterInt;
         tagCounterIntList   = new ArrayList<Integer>();

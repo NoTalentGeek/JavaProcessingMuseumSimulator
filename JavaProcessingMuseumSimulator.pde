@@ -11,9 +11,16 @@ int                     xPanelCardInt           = -1;
 int                     yPanelCardInt           = -1;
 int                     widthPanelCardInt       = 200;
 int                     heightPanelCardInt      = 280;
+int                     rowInt                  = 0;
+int                     textSizePanelInt        = 48;
 ObjectMuseum            selectedMuseumObject    = null;
 ObjectPlayer            selectedPlayerObject    = null;
-PFont                   panelCardPFont;
+PFont                   panelCardPFont          ;
+String                  panelString             = "";
+
+String                  tempVisitorCurrentString;
+String                  tempVisitorTotalString  ;
+String                  tempFullString          ;
 
 int                     fullThresholdInt        = 0;
 
@@ -69,26 +76,26 @@ void setup()                                    {
     /*Create the tag list.*/
     tagObjectList           = Arrays.asList(
     
-        new Tag(new Name("Agreeable"    , "TAG_AGR")),
-        new Tag(new Name("Brave"        , "TAG_BRA")),
-        new Tag(new Name("Calm"         , "TAG_CAL")),
-        new Tag(new Name("Delightful"   , "TAG_DEL")),
-        new Tag(new Name("Eager"        , "TAG_EAG")),
-        new Tag(new Name("Faithful"     , "TAG_FAI")),
-        new Tag(new Name("Gentle"       , "TAG_GEN")),
-        new Tag(new Name("Happy"        , "TAG_HAP")),
-        new Tag(new Name("Jolly"        , "TAG_JOL")),
-        new Tag(new Name("Kind"         , "TAG_KIN")),
-        new Tag(new Name("Lively"       , "TAG_LIV")),
-        new Tag(new Name("Nice"         , "TAG_NIC")),
-        new Tag(new Name("Obedient"     , "TAG_OBE")),
-        new Tag(new Name("Proud"        , "TAG_PRO")),
-        new Tag(new Name("Relieved"     , "TAG_REL")),
-        new Tag(new Name("Silly"        , "TAG_SIL")),
-        new Tag(new Name("Thankful"     , "TAG_THA")),
-        new Tag(new Name("Victorious"   , "TAG_VIC")),
-        new Tag(new Name("Witty"        , "TAG_WIT")),
-        new Tag(new Name("Zealous"      , "TAG_ZEA"))
+        new Tag(new Name("TAG_AGR", "Agreeable"     )),
+        new Tag(new Name("TAG_BRA", "Brave"         )),
+        new Tag(new Name("TAG_CAL", "Calm"          )),
+        new Tag(new Name("TAG_DEL", "Delightful"    )),
+        new Tag(new Name("TAG_EAG", "Eager"         )),
+        new Tag(new Name("TAG_FAI", "Faithful"      )),
+        new Tag(new Name("TAG_GEN", "Gentle"        )),
+        new Tag(new Name("TAG_HAP", "Happy"         )),
+        new Tag(new Name("TAG_JOL", "Jolly"         )),
+        new Tag(new Name("TAG_KIN", "Kind"          )),
+        new Tag(new Name("TAG_LIV", "Lively"        )),
+        new Tag(new Name("TAG_NIC", "Nice"          )),
+        new Tag(new Name("TAG_OBE", "Obedient"      )),
+        new Tag(new Name("TAG_PRO", "Proud"         )),
+        new Tag(new Name("TAG_REL", "Relieved"      )),
+        new Tag(new Name("TAG_SIL", "Silly"         )),
+        new Tag(new Name("TAG_THA", "Thankful"      )),
+        new Tag(new Name("TAG_VIC", "Victorious"    )),
+        new Tag(new Name("TAG_WIT", "Witty"         )),
+        new Tag(new Name("TAG_ZEA", "Zealous"       ))
     
     );
 
@@ -159,13 +166,43 @@ void draw()                                         {
     background              (34, 32, 52);
 
     fullThresholdInt        = 2 + (int)(Math.ceil(playerObjectList.size()/exhibitionObjectList.size()));
-    //println(fullThresholdInt);
     layoutTotalRowInt       = 3 + (int)(Math.ceil(playerObjectList.size()/exhibitionObjectList.size()) + 5);
 
-    xPanelCardInt           = -1;
-    yPanelCardInt           = -1;
-    selectedMuseumObject    = null;
-    selectedPlayerObject    = null;
+    if      (selectedMuseumObject != null){
+
+        if(
+
+            (mouseX > xPanelCardInt + (selectedMuseumObject.panelObject.widthPanelInt /2)) ||
+            (mouseX < xPanelCardInt - (selectedMuseumObject.panelObject.widthPanelInt /2)) ||
+            (mouseY > yPanelCardInt + (selectedMuseumObject.panelObject.heightPanelInt/2)) ||
+            (mouseY < yPanelCardInt - (selectedMuseumObject.panelObject.heightPanelInt/2))
+
+        ){ panelCardChangeBoolean = true; }
+
+    }
+    else if (selectedPlayerObject != null){
+
+        println((mouseX > xPanelCardInt + (selectedPlayerObject.panelObject.widthPanelInt /2)));
+        if(
+
+            (mouseX > xPanelCardInt + (selectedPlayerObject.panelObject.widthPanelInt /2)) ||
+            (mouseX < xPanelCardInt - (selectedPlayerObject.panelObject.widthPanelInt /2)) ||
+            (mouseY > yPanelCardInt + (selectedPlayerObject.panelObject.heightPanelInt/2)) ||
+            (mouseY < yPanelCardInt - (selectedPlayerObject.panelObject.heightPanelInt/2))
+
+        ){ panelCardChangeBoolean = true; }
+
+    }
+
+    if(panelCardChangeBoolean   == true){
+
+        xPanelCardInt           = -1;
+        yPanelCardInt           = -1;
+        rowInt                  = 0;
+        selectedMuseumObject    = null;
+        selectedPlayerObject    = null;
+
+    }
 
     for(int i = 0; i < floorObjectList      .size(); i ++){
 
@@ -173,11 +210,13 @@ void draw()                                         {
         floorObjectList         .get(i).SetHoverBoolean();
         floorObjectList         .get(i).PanelDrawVoid();
 
-        if(floorObjectList.get(i).SetHoverBoolean() == true){
+        if(floorObjectList.get(i).SetHoverBoolean() == true && panelCardChangeBoolean == true){
 
             xPanelCardInt           = floorObjectList.get(i).panelObject.xPanelInt + (floorObjectList.get(i).panelObject.widthPanelInt/2 );
             yPanelCardInt           = floorObjectList.get(i).panelObject.yPanelInt + (floorObjectList.get(i).panelObject.heightPanelInt/2);
             selectedMuseumObject    = floorObjectList.get(i);
+
+            panelCardChangeBoolean  = false;
 
         }
 
@@ -188,11 +227,13 @@ void draw()                                         {
         roomObjectList          .get(i).SetHoverBoolean();
         roomObjectList          .get(i).PanelDrawVoid();
 
-        if(roomObjectList.get(i).SetHoverBoolean() == true){
+        if(roomObjectList.get(i).SetHoverBoolean() == true && panelCardChangeBoolean == true){
 
             xPanelCardInt           = roomObjectList.get(i).panelObject.xPanelInt + (roomObjectList.get(i).panelObject.widthPanelInt/2 );
             yPanelCardInt           = roomObjectList.get(i).panelObject.yPanelInt + (roomObjectList.get(i).panelObject.heightPanelInt/2);
             selectedMuseumObject    = roomObjectList.get(i);
+
+            panelCardChangeBoolean  = false;
 
         }
 
@@ -203,11 +244,13 @@ void draw()                                         {
         exhibitionObjectList    .get(i).SetHoverBoolean();
         exhibitionObjectList    .get(i).PanelDrawVoid();
 
-        if(exhibitionObjectList.get(i).SetHoverBoolean() == true){
+        if(exhibitionObjectList.get(i).SetHoverBoolean() == true && panelCardChangeBoolean == true){
 
             xPanelCardInt           = exhibitionObjectList.get(i).panelObject.xPanelInt + (exhibitionObjectList.get(i).panelObject.widthPanelInt/2 );
             yPanelCardInt           = exhibitionObjectList.get(i).panelObject.yPanelInt + (exhibitionObjectList.get(i).panelObject.heightPanelInt/2);
             selectedMuseumObject    = exhibitionObjectList.get(i);
+
+            panelCardChangeBoolean  = false;
 
         }
 
@@ -219,37 +262,113 @@ void draw()                                         {
         playerObjectList        .get(i).SetHoverBoolean();
         playerObjectList        .get(i).PanelDrawVoid();
 
-        if(playerObjectList.get(i).SetHoverBoolean() == true){
+        if(playerObjectList.get(i).SetHoverBoolean() == true && panelCardChangeBoolean == true){
 
             xPanelCardInt           = playerObjectList.get(i).panelObject.xPanelInt + (playerObjectList.get(i).panelObject.widthPanelInt/2 );
             yPanelCardInt           = playerObjectList.get(i).panelObject.yPanelInt + (playerObjectList.get(i).panelObject.heightPanelInt/2);
             selectedPlayerObject    = playerObjectList.get(i);
 
+            panelCardChangeBoolean  = false;
+
         }
 
     }
 
-    /*PROTOTYPE: Card.*/
-    if(xPanelCardInt != -1 && yPanelCardInt != -1){
-
-        fill(255);
-        rect(xPanelCardInt, yPanelCardInt, widthPanelCardInt, heightPanelCardInt, 10);
-        noFill();
-        fill(0);
-        textAlign(CENTER);
-        panelCardPFont = createFont("Georgia", 12);
-        textFont(panelCardPFont);
-        text("HELLO\nWORLD\nHELLO\nWORLD\nHELLO\nWORLD\nHELLO\nWORLD\n", xPanelCardInt + (widthPanelCardInt/2), yPanelCardInt + 12);
-        textAlign(LEFT);
-        noFill();
-
-    }
-    
+    CreatePanelCardVoid();
 
     /*
     playerObjectList        .get(playerLoopCounterInt).AIAutoVoid();
     playerLoopCounterInt    = (playerLoopCounterInt >= (playerObjectList.size() - 1)) ? 0 : (playerLoopCounterInt + 1);
     */
+
+}
+
+/*A function to create panel card.*/
+void CreatePanelCardVoid()                          {
+
+    if(panelCardChangeBoolean == false){
+
+        fill                (255);
+        rect                (xPanelCardInt, yPanelCardInt, widthPanelCardInt, heightPanelCardInt, 10);
+        noFill              ();
+
+        fill                (0);
+        textAlign           (CENTER);
+        panelCardPFont      = createFont("Georgia", textSizePanelInt);
+        textFont            (panelCardPFont);
+
+        /*String display for the player object.*/
+        if          (selectedMuseumObject == null){
+
+            rowInt      = 9;
+
+            ObjectMuseum exhibitionCurrentObject    = selectedPlayerObject.FindObject(exhibitionObjectList  , selectedPlayerObject.exhibitionCurrentString          );
+            ObjectMuseum roomCurrentObject          = selectedPlayerObject.FindObject(roomObjectList        , exhibitionCurrentObject   .parentObject.nameAltString );
+            ObjectMuseum floorCurrentObject         = selectedPlayerObject.FindObject(floorObjectList       , roomCurrentObject         .parentObject.nameAltString );
+
+            panelString  =
+
+                "FLR_CUR = " + exhibitionCurrentObject.nameAltString                                        + "\n" +
+                "ROM_CUR = " + roomCurrentObject.nameAltString                                              + "\n" +
+                "EXH_CUR = " + exhibitionCurrentObject.nameAltString                                        + "\n" +
+                "EXH_TAR = " + selectedPlayerObject.exhibitionTargetStringList .get(0)                      + "\n" +
+                "EXH_TAR = " + selectedPlayerObject.exhibitionTargetStringList .get(1)                      + "\n" +
+                "EXH_TAR = " + selectedPlayerObject.exhibitionTargetStringList .get(2)                      + "\n" +
+                "EXH_TAG = " + selectedPlayerObject.exhibitionTagCounterList   .get(0).GetTagNameString()   + "\n" +
+                "EXH_TAG = " + selectedPlayerObject.exhibitionTagCounterList   .get(1).GetTagNameString()   + "\n" +
+                "EXH_TAG = " + selectedPlayerObject.exhibitionTagCounterList   .get(2).GetTagNameString()
+
+            ;
+
+        }
+        /*String display for the museum object.*/
+        else if     (selectedPlayerObject == null){
+
+            rowInt      = 4;
+
+            if      (selectedMuseumObject.visitorCurrentInt < 10   ){ tempVisitorCurrentString = "____"     + selectedMuseumObject.visitorCurrentInt; }
+            else if (selectedMuseumObject.visitorCurrentInt < 100  ){ tempVisitorCurrentString = "____"     + selectedMuseumObject.visitorCurrentInt; }
+            else if (selectedMuseumObject.visitorCurrentInt < 1000 ){ tempVisitorCurrentString = "___"      + selectedMuseumObject.visitorCurrentInt; }
+            else if (selectedMuseumObject.visitorCurrentInt < 10000){ tempVisitorCurrentString = "__"       + selectedMuseumObject.visitorCurrentInt; }
+
+            if      (selectedMuseumObject.visitorTotalInt   < 10   ){ tempVisitorTotalString = "____"     + selectedMuseumObject.visitorTotalInt; }
+            else if (selectedMuseumObject.visitorTotalInt   < 100  ){ tempVisitorTotalString = "____"     + selectedMuseumObject.visitorTotalInt; }
+            else if (selectedMuseumObject.visitorTotalInt   < 1000 ){ tempVisitorTotalString = "___"      + selectedMuseumObject.visitorTotalInt; }
+            else if (selectedMuseumObject.visitorTotalInt   < 10000){ tempVisitorTotalString = "__"       + selectedMuseumObject.visitorTotalInt; }
+
+            if      (selectedMuseumObject.fullBoolean == true ){ tempFullString = "____TRU"; }
+            else if (selectedMuseumObject.fullBoolean == false){ tempFullString = "____FAL"; }
+
+            panelString = 
+
+                "NAM_ALT = " + selectedMuseumObject.nameAltString   + "\n" + 
+                "VIS_CUR = " + tempVisitorCurrentString             + "\n" + 
+                "VIS_TOT = " + tempVisitorTotalString               + "\n" + 
+                "_IS_FUL = " + tempFullString
+
+            ;
+
+        }
+
+        /*Iterate font size so that it went a bit smaller than the panel.*/
+        while(
+
+            (textWidth(panelString)     > (widthPanelCardInt  - layoutOffsetInt))  ||
+            (textSizePanelInt*rowInt    > (heightPanelCardInt - layoutOffsetInt))
+
+        ){
+
+            textSizePanelInt            --;
+            if(textSizePanelInt <= 1)   { textSizePanelInt = 1; }
+            panelCardPFont              = createFont("Georgia", textSizePanelInt);
+            textFont                    (panelCardPFont);
+
+        }
+        text                (panelString, xPanelCardInt + (widthPanelCardInt/2), yPanelCardInt + (textSizePanelInt*2));
+        textAlign           (LEFT);
+        noFill              ();
+
+    }
 
 }
 
