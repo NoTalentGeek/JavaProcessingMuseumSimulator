@@ -18,7 +18,7 @@ import java.io.IOException;
 public class JavaProcessingMuseumSimulator extends PApplet {
 
 /*Determine global variables.*/
-int                     playerAmountInt         = 100;
+int                     playerAmountInt         = 300;
 List<Tag>               tagObjectList           = new ArrayList<Tag>();
 List<ObjectMuseum>      floorObjectList         = new ArrayList<ObjectMuseum>();
 List<ObjectMuseum>      roomObjectList          = new ArrayList<ObjectMuseum>();
@@ -26,6 +26,7 @@ List<ObjectMuseum>      exhibitionObjectList    = new ArrayList<ObjectMuseum>();
 List<ObjectPlayer>      playerObjectList        = new ArrayList<ObjectPlayer>();
 
 boolean                 panelCardChangeBoolean  = true;
+int                   panelCardColor          = color(63, 63, 116);
 int                     xPanelCardInt           = -1;
 int                     yPanelCardInt           = -1;
 int                     widthPanelCardInt       = 200;
@@ -173,7 +174,7 @@ public void setup()                                    {
     /*Initiate all players.*/
     for(int i = 0; i < playerAmountInt; i ++)                   {
 
-        ObjectPlayer objectPlayer   = new ObjectPlayer(i, exhibitionObjectList.get((int)(Math.floor((Math.random()*exhibitionObjectList.size()) + 0))).nameAltString);
+        ObjectPlayer objectPlayer   = new ObjectPlayer((i + 1), exhibitionObjectList.get((int)(Math.floor((Math.random()*exhibitionObjectList.size()) + 0))).nameAltString);
 
     }
 
@@ -186,6 +187,31 @@ public void draw()                                         {
 
     fullThresholdInt        = 2 + (int)(Math.ceil(playerObjectList.size()/exhibitionObjectList.size()));
     layoutTotalRowInt       = 3 + (int)(Math.ceil(playerObjectList.size()/exhibitionObjectList.size()) + 5);
+
+    if      (selectedMuseumObject != null){
+
+        if(
+
+            (mouseX > xPanelCardInt + (selectedMuseumObject.panelObject.widthPanelInt /2)) ||
+            (mouseX < xPanelCardInt - (selectedMuseumObject.panelObject.widthPanelInt /2)) ||
+            (mouseY > yPanelCardInt + (selectedMuseumObject.panelObject.heightPanelInt/2)) ||
+            (mouseY < yPanelCardInt - (selectedMuseumObject.panelObject.heightPanelInt/2))
+
+        ){ panelCardChangeBoolean = true; }
+
+    }
+    else if (selectedPlayerObject != null){
+
+        if(
+
+            (mouseX > xPanelCardInt + (selectedPlayerObject.panelObject.widthPanelInt /2)) ||
+            (mouseX < xPanelCardInt - (selectedPlayerObject.panelObject.widthPanelInt /2)) ||
+            (mouseY > yPanelCardInt + (selectedPlayerObject.panelObject.heightPanelInt/2)) ||
+            (mouseY < yPanelCardInt - (selectedPlayerObject.panelObject.heightPanelInt/2))
+
+        ){ panelCardChangeBoolean = true; }
+
+    }
 
     if(panelCardChangeBoolean   == true){
 
@@ -250,7 +276,6 @@ public void draw()                                         {
     }
     for(int i = 0; i < playerObjectList     .size(); i ++){
 
-        playerObjectList        .get(i).SetExhibitionTargetStringList();
         playerObjectList        .get(i).AIAutoVoid();
         playerObjectList        .get(i).SetHoverBoolean();
         playerObjectList        .get(i).PanelDrawVoid();
@@ -264,32 +289,6 @@ public void draw()                                         {
             panelCardChangeBoolean  = false;
 
         }
-
-    }
-
-    if      (selectedMuseumObject != null){
-
-        if(
-
-            (mouseX > xPanelCardInt + (selectedMuseumObject.panelObject.widthPanelInt /2)) ||
-            (mouseX < xPanelCardInt - (selectedMuseumObject.panelObject.widthPanelInt /2)) ||
-            (mouseY > yPanelCardInt + (selectedMuseumObject.panelObject.heightPanelInt/2)) ||
-            (mouseY < yPanelCardInt - (selectedMuseumObject.panelObject.heightPanelInt/2))
-
-        ){ panelCardChangeBoolean = true; }
-
-    }
-    else if (selectedPlayerObject != null){
-
-        println((mouseX > xPanelCardInt + (selectedPlayerObject.panelObject.widthPanelInt /2)));
-        if(
-
-            (mouseX > xPanelCardInt + (selectedPlayerObject.panelObject.widthPanelInt /2)) ||
-            (mouseX < xPanelCardInt - (selectedPlayerObject.panelObject.widthPanelInt /2)) ||
-            (mouseY > yPanelCardInt + (selectedPlayerObject.panelObject.heightPanelInt/2)) ||
-            (mouseY < yPanelCardInt - (selectedPlayerObject.panelObject.heightPanelInt/2))
-
-        ){ panelCardChangeBoolean = true; }
 
     }
 
@@ -307,11 +306,17 @@ public void CreatePanelCardVoid()                          {
 
     if(panelCardChangeBoolean == false){
 
-        fill                (255);
-        rect                (xPanelCardInt, yPanelCardInt, widthPanelCardInt, heightPanelCardInt, 10);
+        fill                (panelCardColor);
+
+        int tempXPanelInt = xPanelCardInt;
+        int tempYPanelInt = yPanelCardInt;
+        if((xPanelCardInt + widthPanelCardInt)  > width ){ tempXPanelInt = xPanelCardInt - widthPanelCardInt;  }
+        if((yPanelCardInt + heightPanelCardInt) > height){ tempYPanelInt = yPanelCardInt - heightPanelCardInt; }
+
+        rect                (tempXPanelInt, tempYPanelInt, widthPanelCardInt, heightPanelCardInt, 10);
         noFill              ();
 
-        fill                (0);
+        fill                (255);
         textAlign           (CENTER);
         panelCardPFont      = createFont("Georgia", textSizePanelInt);
         textFont            (panelCardPFont);
@@ -383,7 +388,7 @@ public void CreatePanelCardVoid()                          {
             textFont                    (panelCardPFont);
 
         }
-        text                (panelString, xPanelCardInt + (widthPanelCardInt/2), yPanelCardInt + (textSizePanelInt*2));
+        text                (panelString, tempXPanelInt + (widthPanelCardInt/2), tempYPanelInt + (textSizePanelInt*2));
         textAlign           (LEFT);
         noFill              ();
 
@@ -1211,12 +1216,14 @@ class ObjectPlayer{
         AddTagCounterVoid               (exhibitionCurrentObject);
         AddRemoveChildVoid              (true);
         
+        SetExhibitionTargetStringList   ();
         SetSiblingObjectList            ();
 
         /*For everytime a player move to another exhibition iterate through all player to re - add the siblings.*/
         for(int i = 0; i < playerObjectList.size(); i ++){
 
-            playerObjectList.get(i).SetSiblingObjectList();
+            playerObjectList.get(i).SetExhibitionTargetStringList   ();
+            playerObjectList.get(i).SetSiblingObjectList            ();
 
         }
 

@@ -1,5 +1,5 @@
 /*Determine global variables.*/
-int                     playerAmountInt         = 100;
+int                     playerAmountInt         = 300;
 List<Tag>               tagObjectList           = new ArrayList<Tag>();
 List<ObjectMuseum>      floorObjectList         = new ArrayList<ObjectMuseum>();
 List<ObjectMuseum>      roomObjectList          = new ArrayList<ObjectMuseum>();
@@ -7,6 +7,7 @@ List<ObjectMuseum>      exhibitionObjectList    = new ArrayList<ObjectMuseum>();
 List<ObjectPlayer>      playerObjectList        = new ArrayList<ObjectPlayer>();
 
 boolean                 panelCardChangeBoolean  = true;
+color                   panelCardColor          = color(63, 63, 116);
 int                     xPanelCardInt           = -1;
 int                     yPanelCardInt           = -1;
 int                     widthPanelCardInt       = 200;
@@ -154,7 +155,7 @@ void setup()                                    {
     /*Initiate all players.*/
     for(int i = 0; i < playerAmountInt; i ++)                   {
 
-        ObjectPlayer objectPlayer   = new ObjectPlayer(i, exhibitionObjectList.get((int)(Math.floor((Math.random()*exhibitionObjectList.size()) + 0))).nameAltString);
+        ObjectPlayer objectPlayer   = new ObjectPlayer((i + 1), exhibitionObjectList.get((int)(Math.floor((Math.random()*exhibitionObjectList.size()) + 0))).nameAltString);
 
     }
 
@@ -182,7 +183,6 @@ void draw()                                         {
     }
     else if (selectedPlayerObject != null){
 
-        println((mouseX > xPanelCardInt + (selectedPlayerObject.panelObject.widthPanelInt /2)));
         if(
 
             (mouseX > xPanelCardInt + (selectedPlayerObject.panelObject.widthPanelInt /2)) ||
@@ -257,7 +257,6 @@ void draw()                                         {
     }
     for(int i = 0; i < playerObjectList     .size(); i ++){
 
-        playerObjectList        .get(i).SetExhibitionTargetStringList();
         playerObjectList        .get(i).AIAutoVoid();
         playerObjectList        .get(i).SetHoverBoolean();
         playerObjectList        .get(i).PanelDrawVoid();
@@ -288,11 +287,17 @@ void CreatePanelCardVoid()                          {
 
     if(panelCardChangeBoolean == false){
 
-        fill                (255);
-        rect                (xPanelCardInt, yPanelCardInt, widthPanelCardInt, heightPanelCardInt, 10);
+        fill                (panelCardColor);
+
+        int tempXPanelInt = xPanelCardInt;
+        int tempYPanelInt = yPanelCardInt;
+        if((xPanelCardInt + widthPanelCardInt)  > width ){ tempXPanelInt = xPanelCardInt - widthPanelCardInt;  }
+        if((yPanelCardInt + heightPanelCardInt) > height){ tempYPanelInt = yPanelCardInt - heightPanelCardInt; }
+
+        rect                (tempXPanelInt, tempYPanelInt, widthPanelCardInt, heightPanelCardInt, 10);
         noFill              ();
 
-        fill                (0);
+        fill                (255);
         textAlign           (CENTER);
         panelCardPFont      = createFont("Georgia", textSizePanelInt);
         textFont            (panelCardPFont);
@@ -364,7 +369,7 @@ void CreatePanelCardVoid()                          {
             textFont                    (panelCardPFont);
 
         }
-        text                (panelString, xPanelCardInt + (widthPanelCardInt/2), yPanelCardInt + (textSizePanelInt*2));
+        text                (panelString, tempXPanelInt + (widthPanelCardInt/2), tempYPanelInt + (textSizePanelInt*2));
         textAlign           (LEFT);
         noFill              ();
 

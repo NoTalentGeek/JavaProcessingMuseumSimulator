@@ -453,12 +453,14 @@ class ObjectPlayer{
         AddTagCounterVoid               (exhibitionCurrentObject);
         AddRemoveChildVoid              (true);
         
+        SetExhibitionTargetStringList   ();
         SetSiblingObjectList            ();
 
         /*For everytime a player move to another exhibition iterate through all player to re - add the siblings.*/
         for(int i = 0; i < playerObjectList.size(); i ++){
 
-            playerObjectList.get(i).SetSiblingObjectList();
+            playerObjectList.get(i).SetExhibitionTargetStringList   ();
+            playerObjectList.get(i).SetSiblingObjectList            ();
 
         }
 
