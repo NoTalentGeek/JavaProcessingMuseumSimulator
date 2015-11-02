@@ -574,7 +574,8 @@ class ObjectPlayer{
     float               timeCurrentExhibitionFloat  = 0f;
 
     /*Panel variable.*/
-    int   panelColor                              = color(217, 160, 102);
+    int   panelUnfinishedColor                    = color(217, 160, 102);
+    int   panelFinishedColor                      = color(223, 113, 38 );
     int     widthPanelInt                           = 0;
     int     heightPanelInt                          = 0;
     int     xPanelInt                               = 0;
@@ -1012,9 +1013,13 @@ class ObjectPlayer{
 
         SetPanelVariableInsideVoid  ();
 
+        int   usedColor;
+        if      (exhibitionVisitedStringList.size() == exhibitionObjectList.size()) { usedColor = panelFinishedColor;   }
+        else                                                                        { usedColor = panelUnfinishedColor; }
+
         panelObject                 .DrawVoid(
 
-            panelColor              ,
+            usedColor               ,
             widthPanelInt           ,
             heightPanelInt          ,
             xPanelInt               ,
