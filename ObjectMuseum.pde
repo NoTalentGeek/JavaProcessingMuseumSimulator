@@ -28,14 +28,15 @@ class   ObjectMuseum                                                            
     int                 visitorTotalInt             = 0;                                /*This museum objecy total visitor.*/
 
     /*Variables of panel graphical user interfaces.*/
-    color floorPanelColor                           = color(69 , 40, 60);
-    color roomPanelColor                            = color(102, 57, 49);
-    color exhibitionPanelColor                      = color(143, 86, 59);
-    int     widthPanelInt                           = 0;
-    int     heightPanelInt                          = 0;
-    int     xPanelInt                               = 0;
-    int     yPanelInt                               = 0;
-    Panel   panelObject                             = null;
+    boolean             hoverBoolean                = false;
+    color               floorPanelColor             = color(69 , 40, 60);
+    color               roomPanelColor              = color(102, 57, 49);
+    color               exhibitionPanelColor        = color(143, 86, 59);
+    int                 widthPanelInt               = 0;
+    int                 heightPanelInt              = 0;
+    int                 xPanelInt                   = 0;
+    int                 yPanelInt                   = 0;
+    Panel               panelObject                 = null;
 
     /*These are some user interfaces related variables.*/
     boolean             activeBoolean               = false;
@@ -152,6 +153,23 @@ class   ObjectMuseum                                                            
 
         return                      fullBoolean;
         
+    }
+
+    /*A function to determine whether this object is hovered by mouse or not.*/
+    boolean SetHoverBoolean()                                                           {
+
+        if(
+
+            (mouseX < panelObject.xPanelInt + panelObject.widthPanelInt )   &&
+            (mouseX > panelObject.xPanelInt                             )   &&
+            (mouseY < panelObject.yPanelInt + panelObject.heightPanelInt)   &&
+            (mouseY > panelObject.yPanelInt                             )
+
+        )   { hoverBoolean = true ; }
+        else{ hoverBoolean = false; }
+
+        return hoverBoolean;
+
     }
 
     /*A function to find this object index in its array list (not parent nor child object list).*/

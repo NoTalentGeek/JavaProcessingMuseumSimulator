@@ -37,6 +37,7 @@ class ObjectPlayer{
     float               timeCurrentExhibitionFloat  = 0f;
 
     /*Panel variable.*/
+    boolean hoverBoolean                            = false;
     color   panelUnfinishedColor                    = color(217, 160, 102);
     color   panelFinishedColor                      = color(223, 113, 38 );
     int     widthPanelInt                           = 0;
@@ -178,6 +179,23 @@ class ObjectPlayer{
         if      (widthPanelInt <= 10 ){ widthPanelInt = 10;  }
         else if (heightPanelInt <= 10){ heightPanelInt = 10; }
         
+    }
+
+    /*A function to determine whether this object is hovered by mouse or not.*/
+    boolean SetHoverBoolean()                                                           {
+
+        if(
+
+            (mouseX < panelObject.xPanelInt + panelObject.widthPanelInt )   &&
+            (mouseX > panelObject.xPanelInt                             )   &&
+            (mouseY < panelObject.yPanelInt + panelObject.heightPanelInt)   &&
+            (mouseY > panelObject.yPanelInt                             )
+
+        )   { hoverBoolean = true ; }
+        else{ hoverBoolean = false; }
+
+        return hoverBoolean;
+
     }
 
     /*A function to return the position of this player in the player sibling list*/

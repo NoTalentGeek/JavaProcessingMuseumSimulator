@@ -6,6 +6,15 @@ List<ObjectMuseum>      roomObjectList          = new ArrayList<ObjectMuseum>();
 List<ObjectMuseum>      exhibitionObjectList    = new ArrayList<ObjectMuseum>();
 List<ObjectPlayer>      playerObjectList        = new ArrayList<ObjectPlayer>();
 
+boolean                 panelCardChangeBoolean  = true;
+int                     xPanelCardInt           = -1;
+int                     yPanelCardInt           = -1;
+int                     widthPanelCardInt       = 200;
+int                     heightPanelCardInt      = 280;
+ObjectMuseum            selectedMuseumObject    = null;
+ObjectPlayer            selectedPlayerObject    = null;
+PFont                   panelCardPFont;
+
 int                     fullThresholdInt        = 0;
 
 int                     layoutOffsetInt         = 5;
@@ -23,8 +32,10 @@ class Name                                      {
     String          nameAltString   = "";
     String          nameFullString  = "";
     Name(
+
         String _nameAltString   , 
         String _nameFullString
+
     ){
 
         nameAltString               = _nameAltString;
@@ -151,16 +162,89 @@ void draw()                                         {
     //println(fullThresholdInt);
     layoutTotalRowInt       = 3 + (int)(Math.ceil(playerObjectList.size()/exhibitionObjectList.size()) + 5);
 
-    for(int i = 0; i < floorObjectList      .size(); i ++){ floorObjectList         .get(i).SetFullBoolean(); floorObjectList         .get(i).PanelDrawVoid(); }
-    for(int i = 0; i < roomObjectList       .size(); i ++){ roomObjectList          .get(i).SetFullBoolean(); roomObjectList          .get(i).PanelDrawVoid(); }
-    for(int i = 0; i < exhibitionObjectList .size(); i ++){ exhibitionObjectList    .get(i).SetFullBoolean(); exhibitionObjectList    .get(i).PanelDrawVoid(); }
-    for(int i = 0; i < playerObjectList     .size(); i ++){
+    xPanelCardInt           = -1;
+    yPanelCardInt           = -1;
+    selectedMuseumObject    = null;
+    selectedPlayerObject    = null;
 
-        playerObjectList.get(i).SetExhibitionTargetStringList();
-        playerObjectList.get(i).AIAutoVoid();
-        playerObjectList.get(i).PanelDrawVoid();
+    for(int i = 0; i < floorObjectList      .size(); i ++){
+
+        floorObjectList         .get(i).SetFullBoolean();
+        floorObjectList         .get(i).SetHoverBoolean();
+        floorObjectList         .get(i).PanelDrawVoid();
+
+        if(floorObjectList.get(i).SetHoverBoolean() == true){
+
+            xPanelCardInt           = floorObjectList.get(i).panelObject.xPanelInt + (floorObjectList.get(i).panelObject.widthPanelInt/2 );
+            yPanelCardInt           = floorObjectList.get(i).panelObject.yPanelInt + (floorObjectList.get(i).panelObject.heightPanelInt/2);
+            selectedMuseumObject    = floorObjectList.get(i);
+
+        }
 
     }
+    for(int i = 0; i < roomObjectList       .size(); i ++){
+
+        roomObjectList          .get(i).SetFullBoolean();
+        roomObjectList          .get(i).SetHoverBoolean();
+        roomObjectList          .get(i).PanelDrawVoid();
+
+        if(roomObjectList.get(i).SetHoverBoolean() == true){
+
+            xPanelCardInt           = roomObjectList.get(i).panelObject.xPanelInt + (roomObjectList.get(i).panelObject.widthPanelInt/2 );
+            yPanelCardInt           = roomObjectList.get(i).panelObject.yPanelInt + (roomObjectList.get(i).panelObject.heightPanelInt/2);
+            selectedMuseumObject    = roomObjectList.get(i);
+
+        }
+
+    }
+    for(int i = 0; i < exhibitionObjectList .size(); i ++){
+
+        exhibitionObjectList    .get(i).SetFullBoolean();
+        exhibitionObjectList    .get(i).SetHoverBoolean();
+        exhibitionObjectList    .get(i).PanelDrawVoid();
+
+        if(exhibitionObjectList.get(i).SetHoverBoolean() == true){
+
+            xPanelCardInt           = exhibitionObjectList.get(i).panelObject.xPanelInt + (exhibitionObjectList.get(i).panelObject.widthPanelInt/2 );
+            yPanelCardInt           = exhibitionObjectList.get(i).panelObject.yPanelInt + (exhibitionObjectList.get(i).panelObject.heightPanelInt/2);
+            selectedMuseumObject    = exhibitionObjectList.get(i);
+
+        }
+
+    }
+    for(int i = 0; i < playerObjectList     .size(); i ++){
+
+        playerObjectList        .get(i).SetExhibitionTargetStringList();
+        playerObjectList        .get(i).AIAutoVoid();
+        playerObjectList        .get(i).SetHoverBoolean();
+        playerObjectList        .get(i).PanelDrawVoid();
+
+        if(playerObjectList.get(i).SetHoverBoolean() == true){
+
+            xPanelCardInt           = playerObjectList.get(i).panelObject.xPanelInt + (playerObjectList.get(i).panelObject.widthPanelInt/2 );
+            yPanelCardInt           = playerObjectList.get(i).panelObject.yPanelInt + (playerObjectList.get(i).panelObject.heightPanelInt/2);
+            selectedPlayerObject    = playerObjectList.get(i);
+
+        }
+
+    }
+
+    /*PROTOTYPE: Card.*/
+    if(xPanelCardInt != -1 && yPanelCardInt != -1){
+
+        fill(255);
+        rect(xPanelCardInt, yPanelCardInt, widthPanelCardInt, heightPanelCardInt, 10);
+        noFill();
+        fill(0);
+        textAlign(CENTER);
+        panelCardPFont = createFont("Georgia", 12);
+        textFont(panelCardPFont);
+        text("HELLO\nWORLD\nHELLO\nWORLD\nHELLO\nWORLD\nHELLO\nWORLD\n", xPanelCardInt + (widthPanelCardInt/2), yPanelCardInt + 12);
+        textAlign(LEFT);
+        noFill();
+
+    }
+    
 
     /*
     playerObjectList        .get(playerLoopCounterInt).AIAutoVoid();

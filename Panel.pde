@@ -1,8 +1,12 @@
 /*Creating a Panel class for each object museum.*/
 class Panel                                         {
 
-    PFont   layoutPanelPFont;           /*Font variable to hold the font style.*/
-    color   fillColor;                  /*The color of the panel.*/
+    PFont   layoutPanelPFont        ;   /*Font variable to hold the font style.*/
+    color   fillColor               ;   /*The color of the panel.*/
+    int     widthPanelInt           ;
+    int     heightPanelInt          ;
+    int     xPanelInt               ;
+    int     yPanelInt               ;
     int     layoutTextSizeInt   = 72;   /*The default font size for the panel.*/
 
     Panel(){}
@@ -18,9 +22,14 @@ class Panel                                         {
 
     ){
 
+        widthPanelInt           = _widthPanelInt    ;
+        heightPanelInt          = _heightPanelInt   ;
+        xPanelInt               = _xPanelInt        ;
+        yPanelInt               = _yPanelInt        ;
+
     	/*Fill color for the panel.*/
         fill                    (_fillColor);
-        rect                    (_xPanelInt, _yPanelInt, _widthPanelInt, _heightPanelInt, 10);
+        rect                    (xPanelInt, yPanelInt, widthPanelInt, heightPanelInt, 10);
         noFill                  ();
 
         /*Fill white color for the text.*/
@@ -33,8 +42,8 @@ class Panel                                         {
         /*Iterate font size so that it went a bit smaller than the panel.*/
         while(
 
-            (textWidth(_textString)	> (_widthPanelInt  - layoutOffsetInt))  ||
-            (layoutTextSizeInt		> (_heightPanelInt - layoutOffsetInt))
+            (textWidth(_textString)	> (widthPanelInt  - layoutOffsetInt))  ||
+            (layoutTextSizeInt		> (heightPanelInt - layoutOffsetInt))
 
         ){
 
@@ -46,10 +55,11 @@ class Panel                                         {
         }
 
         /*Set the text position.*/
-        int xTextInt            = _xPanelInt + ( _widthPanelInt/2);
-        int yTextInt            = _yPanelInt + (_heightPanelInt/2) + ((layoutTextSizeInt*11)/45);
+        int xTextInt            = xPanelInt + ( widthPanelInt/2);
+        int yTextInt            = yPanelInt + (heightPanelInt/2) + ((layoutTextSizeInt*11)/45);
         /*Display the text.*/
         text                    (textTextString, xTextInt, yTextInt);
+        textAlign               (LEFT);
         noFill                  ();
 
     }

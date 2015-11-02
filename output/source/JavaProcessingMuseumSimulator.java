@@ -25,6 +25,15 @@ List<ObjectMuseum>      roomObjectList          = new ArrayList<ObjectMuseum>();
 List<ObjectMuseum>      exhibitionObjectList    = new ArrayList<ObjectMuseum>();
 List<ObjectPlayer>      playerObjectList        = new ArrayList<ObjectPlayer>();
 
+boolean                 panelCardChangeBoolean  = true;
+int                     xPanelCardInt           = -1;
+int                     yPanelCardInt           = -1;
+int                     widthPanelCardInt       = 200;
+int                     heightPanelCardInt      = 280;
+ObjectMuseum            selectedMuseumObject    = null;
+ObjectPlayer            selectedPlayerObject    = null;
+PFont                   panelCardPFont;
+
 int                     fullThresholdInt        = 0;
 
 int                     layoutOffsetInt         = 5;
@@ -42,8 +51,10 @@ class Name                                      {
     String          nameAltString   = "";
     String          nameFullString  = "";
     Name(
+
         String _nameAltString   , 
         String _nameFullString
+
     ){
 
         nameAltString               = _nameAltString;
@@ -170,16 +181,89 @@ public void draw()                                         {
     //println(fullThresholdInt);
     layoutTotalRowInt       = 3 + (int)(Math.ceil(playerObjectList.size()/exhibitionObjectList.size()) + 5);
 
-    for(int i = 0; i < floorObjectList      .size(); i ++){ floorObjectList         .get(i).SetFullBoolean(); floorObjectList         .get(i).PanelDrawVoid(); }
-    for(int i = 0; i < roomObjectList       .size(); i ++){ roomObjectList          .get(i).SetFullBoolean(); roomObjectList          .get(i).PanelDrawVoid(); }
-    for(int i = 0; i < exhibitionObjectList .size(); i ++){ exhibitionObjectList    .get(i).SetFullBoolean(); exhibitionObjectList    .get(i).PanelDrawVoid(); }
-    for(int i = 0; i < playerObjectList     .size(); i ++){
+    xPanelCardInt           = -1;
+    yPanelCardInt           = -1;
+    selectedMuseumObject    = null;
+    selectedPlayerObject    = null;
 
-        playerObjectList.get(i).SetExhibitionTargetStringList();
-        playerObjectList.get(i).AIAutoVoid();
-        playerObjectList.get(i).PanelDrawVoid();
+    for(int i = 0; i < floorObjectList      .size(); i ++){
+
+        floorObjectList         .get(i).SetFullBoolean();
+        floorObjectList         .get(i).SetHoverBoolean();
+        floorObjectList         .get(i).PanelDrawVoid();
+
+        if(floorObjectList.get(i).SetHoverBoolean() == true){
+
+            xPanelCardInt           = floorObjectList.get(i).panelObject.xPanelInt + (floorObjectList.get(i).panelObject.widthPanelInt/2 );
+            yPanelCardInt           = floorObjectList.get(i).panelObject.yPanelInt + (floorObjectList.get(i).panelObject.heightPanelInt/2);
+            selectedMuseumObject    = floorObjectList.get(i);
+
+        }
 
     }
+    for(int i = 0; i < roomObjectList       .size(); i ++){
+
+        roomObjectList          .get(i).SetFullBoolean();
+        roomObjectList          .get(i).SetHoverBoolean();
+        roomObjectList          .get(i).PanelDrawVoid();
+
+        if(roomObjectList.get(i).SetHoverBoolean() == true){
+
+            xPanelCardInt           = roomObjectList.get(i).panelObject.xPanelInt + (roomObjectList.get(i).panelObject.widthPanelInt/2 );
+            yPanelCardInt           = roomObjectList.get(i).panelObject.yPanelInt + (roomObjectList.get(i).panelObject.heightPanelInt/2);
+            selectedMuseumObject    = roomObjectList.get(i);
+
+        }
+
+    }
+    for(int i = 0; i < exhibitionObjectList .size(); i ++){
+
+        exhibitionObjectList    .get(i).SetFullBoolean();
+        exhibitionObjectList    .get(i).SetHoverBoolean();
+        exhibitionObjectList    .get(i).PanelDrawVoid();
+
+        if(exhibitionObjectList.get(i).SetHoverBoolean() == true){
+
+            xPanelCardInt           = exhibitionObjectList.get(i).panelObject.xPanelInt + (exhibitionObjectList.get(i).panelObject.widthPanelInt/2 );
+            yPanelCardInt           = exhibitionObjectList.get(i).panelObject.yPanelInt + (exhibitionObjectList.get(i).panelObject.heightPanelInt/2);
+            selectedMuseumObject    = exhibitionObjectList.get(i);
+
+        }
+
+    }
+    for(int i = 0; i < playerObjectList     .size(); i ++){
+
+        playerObjectList        .get(i).SetExhibitionTargetStringList();
+        playerObjectList        .get(i).AIAutoVoid();
+        playerObjectList        .get(i).SetHoverBoolean();
+        playerObjectList        .get(i).PanelDrawVoid();
+
+        if(playerObjectList.get(i).SetHoverBoolean() == true){
+
+            xPanelCardInt           = playerObjectList.get(i).panelObject.xPanelInt + (playerObjectList.get(i).panelObject.widthPanelInt/2 );
+            yPanelCardInt           = playerObjectList.get(i).panelObject.yPanelInt + (playerObjectList.get(i).panelObject.heightPanelInt/2);
+            selectedPlayerObject    = playerObjectList.get(i);
+
+        }
+
+    }
+
+    /*PROTOTYPE: Card.*/
+    if(xPanelCardInt != -1 && yPanelCardInt != -1){
+
+        fill(255);
+        rect(xPanelCardInt, yPanelCardInt, widthPanelCardInt, heightPanelCardInt, 10);
+        noFill();
+        fill(0);
+        textAlign(CENTER);
+        panelCardPFont = createFont("Georgia", 12);
+        textFont(panelCardPFont);
+        text("HELLO\nWORLD\nHELLO\nWORLD\nHELLO\nWORLD\nHELLO\nWORLD\n", xPanelCardInt + (widthPanelCardInt/2), yPanelCardInt + 12);
+        textAlign(LEFT);
+        noFill();
+
+    }
+    
 
     /*
     playerObjectList        .get(playerLoopCounterInt).AIAutoVoid();
@@ -271,14 +355,15 @@ class   ObjectMuseum                                                            
     int                 visitorTotalInt             = 0;                                /*This museum objecy total visitor.*/
 
     /*Variables of panel graphical user interfaces.*/
-    int floorPanelColor                           = color(69 , 40, 60);
-    int roomPanelColor                            = color(102, 57, 49);
-    int exhibitionPanelColor                      = color(143, 86, 59);
-    int     widthPanelInt                           = 0;
-    int     heightPanelInt                          = 0;
-    int     xPanelInt                               = 0;
-    int     yPanelInt                               = 0;
-    Panel   panelObject                             = null;
+    boolean             hoverBoolean                = false;
+    int               floorPanelColor             = color(69 , 40, 60);
+    int               roomPanelColor              = color(102, 57, 49);
+    int               exhibitionPanelColor        = color(143, 86, 59);
+    int                 widthPanelInt               = 0;
+    int                 heightPanelInt              = 0;
+    int                 xPanelInt                   = 0;
+    int                 yPanelInt                   = 0;
+    Panel               panelObject                 = null;
 
     /*These are some user interfaces related variables.*/
     boolean             activeBoolean               = false;
@@ -395,6 +480,23 @@ class   ObjectMuseum                                                            
 
         return                      fullBoolean;
         
+    }
+
+    /*A function to determine whether this object is hovered by mouse or not.*/
+    public boolean SetHoverBoolean()                                                           {
+
+        if(
+
+            (mouseX < panelObject.xPanelInt + panelObject.widthPanelInt )   &&
+            (mouseX > panelObject.xPanelInt                             )   &&
+            (mouseY < panelObject.yPanelInt + panelObject.heightPanelInt)   &&
+            (mouseY > panelObject.yPanelInt                             )
+
+        )   { hoverBoolean = true ; }
+        else{ hoverBoolean = false; }
+
+        return hoverBoolean;
+
     }
 
     /*A function to find this object index in its array list (not parent nor child object list).*/
@@ -574,6 +676,7 @@ class ObjectPlayer{
     float               timeCurrentExhibitionFloat  = 0f;
 
     /*Panel variable.*/
+    boolean hoverBoolean                            = false;
     int   panelUnfinishedColor                    = color(217, 160, 102);
     int   panelFinishedColor                      = color(223, 113, 38 );
     int     widthPanelInt                           = 0;
@@ -715,6 +818,23 @@ class ObjectPlayer{
         if      (widthPanelInt <= 10 ){ widthPanelInt = 10;  }
         else if (heightPanelInt <= 10){ heightPanelInt = 10; }
         
+    }
+
+    /*A function to determine whether this object is hovered by mouse or not.*/
+    public boolean SetHoverBoolean()                                                           {
+
+        if(
+
+            (mouseX < panelObject.xPanelInt + panelObject.widthPanelInt )   &&
+            (mouseX > panelObject.xPanelInt                             )   &&
+            (mouseY < panelObject.yPanelInt + panelObject.heightPanelInt)   &&
+            (mouseY > panelObject.yPanelInt                             )
+
+        )   { hoverBoolean = true ; }
+        else{ hoverBoolean = false; }
+
+        return hoverBoolean;
+
     }
 
     /*A function to return the position of this player in the player sibling list*/
@@ -1036,8 +1156,12 @@ class ObjectPlayer{
 /*Creating a Panel class for each object museum.*/
 class Panel                                         {
 
-    PFont   layoutPanelPFont;           /*Font variable to hold the font style.*/
-    int   fillColor;                  /*The color of the panel.*/
+    PFont   layoutPanelPFont        ;   /*Font variable to hold the font style.*/
+    int   fillColor               ;   /*The color of the panel.*/
+    int     widthPanelInt           ;
+    int     heightPanelInt          ;
+    int     xPanelInt               ;
+    int     yPanelInt               ;
     int     layoutTextSizeInt   = 72;   /*The default font size for the panel.*/
 
     Panel(){}
@@ -1053,9 +1177,14 @@ class Panel                                         {
 
     ){
 
+        widthPanelInt           = _widthPanelInt    ;
+        heightPanelInt          = _heightPanelInt   ;
+        xPanelInt               = _xPanelInt        ;
+        yPanelInt               = _yPanelInt        ;
+
     	/*Fill color for the panel.*/
         fill                    (_fillColor);
-        rect                    (_xPanelInt, _yPanelInt, _widthPanelInt, _heightPanelInt, 10);
+        rect                    (xPanelInt, yPanelInt, widthPanelInt, heightPanelInt, 10);
         noFill                  ();
 
         /*Fill white color for the text.*/
@@ -1068,8 +1197,8 @@ class Panel                                         {
         /*Iterate font size so that it went a bit smaller than the panel.*/
         while(
 
-            (textWidth(_textString)	> (_widthPanelInt  - layoutOffsetInt))  ||
-            (layoutTextSizeInt		> (_heightPanelInt - layoutOffsetInt))
+            (textWidth(_textString)	> (widthPanelInt  - layoutOffsetInt))  ||
+            (layoutTextSizeInt		> (heightPanelInt - layoutOffsetInt))
 
         ){
 
@@ -1081,10 +1210,11 @@ class Panel                                         {
         }
 
         /*Set the text position.*/
-        int xTextInt            = _xPanelInt + ( _widthPanelInt/2);
-        int yTextInt            = _yPanelInt + (_heightPanelInt/2) + ((layoutTextSizeInt*11)/45);
+        int xTextInt            = xPanelInt + ( widthPanelInt/2);
+        int yTextInt            = yPanelInt + (heightPanelInt/2) + ((layoutTextSizeInt*11)/45);
         /*Display the text.*/
         text                    (textTextString, xTextInt, yTextInt);
+        textAlign               (LEFT);
         noFill                  ();
 
     }
