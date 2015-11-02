@@ -30,10 +30,8 @@ class   ObjectMuseum                                                            
 
     /*Variables of panel graphical user interfaces.*/
     color floorPanelColor                           = color(69 , 40, 60);
-    //color roomPanelColor                          = color();
-    //color exhibitionPanelColor                    = color();
-    /*
-    */
+    color roomPanelColor                            = color(102, 57, 49);
+    color exhibitionPanelColor                      = color(143, 86, 59);
     int     widthPanelInt                           = 0;
     int     heightPanelInt                          = 0;
     int     xPanelInt                               = 0;
@@ -116,6 +114,35 @@ class   ObjectMuseum                                                            
         for(int i = 0; i < roomObjectList.size()        ; i ++){ roomObjectList         .get(i).SetIndexInsideVoid(); }
         for(int i = 0; i < exhibitionObjectList.size()  ; i ++){ exhibitionObjectList   .get(i).SetIndexInsideVoid(); }
 
+    }
+
+    void SetPanelVariableInsideVoid()                                                   {
+
+        /*Panel layout calculations.*/
+        if          (typeString.equals("FLR")){
+
+            widthPanelInt   = (width - (layoutOffsetSideInt*2));
+            //widthPanelInt = ((width - layoutOffsetInt)/floorObjectList.size()) - layoutOffsetInt;
+            heightPanelInt  = (height - ((layoutOffsetInt*layoutTotalRowInt) + layoutOffsetInt))/layoutTotalRowInt;
+            xPanelInt       = layoutOffsetSideInt + (indexGlobalInt*widthPanelInt) + (indexGlobalInt*layoutOffsetSideInt);
+            yPanelInt       = layoutOffsetInt;
+
+            if      (widthPanelInt <= 10 ){ widthPanelInt = 10;  }
+            else if (heightPanelInt <= 10){ heightPanelInt = 10; }
+
+        }
+        else if     (typeString.equals("ROM") || typeString.equals("EXH")){
+
+            widthPanelInt   = ((parentObject.widthPanelInt - ((parentObject.childObjectList.size() - 1)*layoutOffsetInt))/parentObject.childObjectList.size());
+            heightPanelInt  = parentObject.heightPanelInt;
+            xPanelInt       = parentObject.xPanelInt + (indexLocalInt*widthPanelInt) + (indexLocalInt*layoutOffsetInt);
+            yPanelInt       = parentObject.yPanelInt + parentObject.heightPanelInt + layoutOffsetInt;
+
+            if      (widthPanelInt <= 10 ){ widthPanelInt = 10;  }
+            else if (heightPanelInt <= 10){ heightPanelInt = 10; }
+
+        }
+        
     }
 
     /*A function to set the threshold to determine whether this museum object is full or not.*/
@@ -231,38 +258,22 @@ class   ObjectMuseum                                                            
         return parentObject;
 
     }
-
-
-    void SetPanelVariableInsideVoid()                                                   {
-
-        /*Panel layout calculations.*/
-        if          (typeString.equals("FLR")){
-
-            widthPanelInt   = (width - (layoutOffsetInt*2));
-            //widthPanelInt = ((width - layoutOffsetInt)/floorObjectList.size()) - layoutOffsetInt;
-            heightPanelInt  = (height - ((layoutOffsetInt*layoutTotalRowInt) + layoutOffsetInt))/layoutTotalRowInt;
-            xPanelInt       = layoutOffsetInt + (indexGlobalInt*widthPanelInt) + (indexGlobalInt*layoutOffsetInt);
-            yPanelInt       = layoutOffsetInt;
-
-        }
-        else if     (typeString.equals("ROM") || typeString.equals("EXH")){
-
-            widthPanelInt   = ((parentObject.widthPanelInt - ((parentObject.childObjectList.size() - 1)*layoutOffsetInt))/parentObject.childObjectList.size());
-            heightPanelInt  = parentObject.heightPanelInt;
-            xPanelInt       = parentObject.xPanelInt + (indexLocalInt*widthPanelInt) + (indexLocalInt*layoutOffsetInt);
-            yPanelInt       = parentObject.yPanelInt + parentObject.heightPanelInt + layoutOffsetInt;
-
-        }
-        
-    }
     
+    /*A function to draw panel.*/
     Panel PanelDrawVoid()                                                                 {
 
         SetPanelVariableInsideVoid  ();
 
+        /*Adjust the color pbased on what panel is this object used for.*/
+        color   usedColor;
+        if      (typeString.equals("FLR"))  { usedColor = floorPanelColor;          }
+        else if (typeString.equals("ROM"))  { usedColor = roomPanelColor;           }
+        else if (typeString.equals("EXH"))  { usedColor = exhibitionPanelColor;     }
+        else                                { usedColor = color(0);                 }
+
         panelObject             .DrawVoid(
 
-            floorPanelColor     ,
+            usedColor           ,
             widthPanelInt       ,
             heightPanelInt      ,
             xPanelInt           ,

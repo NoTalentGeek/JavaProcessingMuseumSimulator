@@ -36,13 +36,28 @@ class ObjectPlayer{
 
     float               timeCurrentExhibitionFloat  = 0f;
 
+    /*Panel variable.*/
+    color   panelColor                              = color(217, 160, 102);
+    int     widthPanelInt                           = 0;
+    int     heightPanelInt                          = 0;
+    int     xPanelInt                               = 0;
+    int     yPanelInt                               = 0;
+    Panel   panelObject                             = null;
+
     /*Constructor.*/
     ObjectPlayer(
 
         int     _playerIndexInt            ,
         String  _exhibitionStartString
 
-    ){ playerIndexInt = _playerIndexInt; ExhibitionMoveObject(_exhibitionStartString); }
+    ){
+
+        playerIndexInt      = _playerIndexInt;
+        playerObjectList    .add(this);
+        panelObject         = new Panel();
+        ExhibitionMoveObject(_exhibitionStartString);
+
+    }
 
     /*A function to either add the tag or increase the tag value in this player.*/
     void AddTagCounterVoid(
@@ -150,6 +165,20 @@ class ObjectPlayer{
 
     }
 
+    void SetPanelVariableInsideVoid()                                                   {
+
+        /*Panel layout calculations.*/
+        ObjectMuseum    exhibitionCurrentObject = FindObject(exhibitionObjectList, exhibitionCurrentString);
+                        widthPanelInt           = exhibitionCurrentObject.widthPanelInt;
+                        heightPanelInt          = exhibitionCurrentObject.heightPanelInt;
+                        xPanelInt               = exhibitionCurrentObject.xPanelInt;
+                        yPanelInt               = exhibitionCurrentObject.yPanelInt + ((playerSiblingIndexInt + 1)*heightPanelInt) + ((playerSiblingIndexInt + 1)*layoutOffsetInt);
+
+        if      (widthPanelInt <= 10 ){ widthPanelInt = 10;  }
+        else if (heightPanelInt <= 10){ heightPanelInt = 10; }
+        
+    }
+
     /*A function to return the position of this player in the player sibling list*/
     int SetPlayerSiblingIndexInt(
 
@@ -180,6 +209,7 @@ class ObjectPlayer{
 
         /*Set the new index of this player object.*/
         playerSiblingIndexInt = SetPlayerSiblingIndexInt(playerSiblingObjectList);
+        if(playerIndexInt == 9)println(playerSiblingObjectList);
 
         return playerSiblingObjectList;
 
@@ -405,6 +435,7 @@ class ObjectPlayer{
         AddTagCounterVoid               (exhibitionCurrentObject);
         AddRemoveChildVoid              (true);
         
+        SetSiblingObjectList            ();
         SetExhibitionTargetStringList   ();
 
         /*For everytime a player move to another exhibition iterate through all player to re - add the siblings.*/
@@ -439,6 +470,26 @@ class ObjectPlayer{
         }
 
         return objectMuseum;
+
+    }
+    
+    /*A function to draw panel.*/
+    Panel PanelDrawVoid()                                                                 {
+
+        SetPanelVariableInsideVoid  ();
+
+        panelObject                 .DrawVoid(
+
+            panelColor              ,
+            widthPanelInt           ,
+            heightPanelInt          ,
+            xPanelInt               ,
+            yPanelInt               ,
+            ("" + playerIndexInt)
+
+        );
+
+        return panelObject;
 
     }
 

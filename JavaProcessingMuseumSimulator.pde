@@ -1,13 +1,14 @@
 /*Determine global variables.*/
-int                     playerAmountInt         = 30;
+int                     playerAmountInt         = 10;
 List<Tag>               tagObjectList           = new ArrayList<Tag>();
 List<ObjectMuseum>      floorObjectList         = new ArrayList<ObjectMuseum>();
 List<ObjectMuseum>      roomObjectList          = new ArrayList<ObjectMuseum>();
 List<ObjectMuseum>      exhibitionObjectList    = new ArrayList<ObjectMuseum>();
 List<ObjectPlayer>      playerObjectList        = new ArrayList<ObjectPlayer>();
 
-int     layoutOffsetInt     = 5;
-int     layoutTotalRowInt   = 10;
+int                     layoutOffsetInt         = 5;
+int                     layoutOffsetSideInt     = 50;
+int                     layoutTotalRowInt       = 10;
 
 /*PROTOTYPE: Testing AIAutoVoid() for this application.
 PROTOTYPE: Instead of using for loop to iterate through all the player
@@ -115,14 +116,7 @@ void setup()                                    {
 
     );
 
-    /*Initiate all players.*/
-    for(int i = 0; i < playerAmountInt; i ++)                   {
-
-        ObjectPlayer objectPlayer   = new ObjectPlayer(i, exhibitionObjectList.get((int)(Math.floor((Math.random()*exhibitionObjectList.size()) + 0))).nameAltString);
-        playerObjectList            .add(objectPlayer);
-
-    }
-
+    /*Initiate object parents and children for all object museum.*/
     for(int i = 0; i < floorObjectList.size()           ; i ++) { floorObjectList.get(i).SetChildObjectList  (roomObjectList); }
     for(int i = 0; i < roomObjectList.size()            ; i ++) {
 
@@ -131,10 +125,19 @@ void setup()                                    {
 
     }
     for(int i = 0; i < exhibitionObjectList.size()      ; i ++) { exhibitionObjectList.get(i)   .SetInitialParentObject(roomObjectList); }
+
     /*Determine index for all museum object.*/
     for(int i = 0; i < floorObjectList.size()           ; i ++) { floorObjectList.get(i)        .SetIndexInsideVoid(); }
     for(int i = 0; i < roomObjectList.size()            ; i ++) { roomObjectList.get(i)         .SetIndexInsideVoid(); }
     for(int i = 0; i < exhibitionObjectList.size()      ; i ++) { exhibitionObjectList.get(i)   .SetIndexInsideVoid(); }
+
+    /*Initiate all players.*/
+    for(int i = 0; i < playerAmountInt; i ++)                   {
+
+        ObjectPlayer objectPlayer   = new ObjectPlayer(i, exhibitionObjectList.get((int)(Math.floor((Math.random()*exhibitionObjectList.size()) + 0))).nameAltString);
+
+    }
+
 }
 
 void draw()                                         {
@@ -142,14 +145,15 @@ void draw()                                         {
     /*Set the background color for this application.*/
     background              (34, 32, 52);
 
+    layoutTotalRowInt       = 3 + (int)(Math.ceil(playerObjectList.size()/exhibitionObjectList.size()) + 5);
+
     for(int i = 0; i < floorObjectList      .size(); i ++){ floorObjectList         .get(i).PanelDrawVoid(); }
     for(int i = 0; i < roomObjectList       .size(); i ++){ roomObjectList          .get(i).PanelDrawVoid(); }
     for(int i = 0; i < exhibitionObjectList .size(); i ++){ exhibitionObjectList    .get(i).PanelDrawVoid(); }
+    for(int i = 0; i < playerObjectList     .size(); i ++){ playerObjectList        .get(i).PanelDrawVoid(); }
 
     playerObjectList        .get(playerLoopCounterInt).AIAutoVoid();
     playerLoopCounterInt    = (playerLoopCounterInt >= (playerObjectList.size() - 1)) ? 0 : (playerLoopCounterInt + 1);
-
-    println(frameRate);
 
 }
 

@@ -18,15 +18,16 @@ import java.io.IOException;
 public class JavaProcessingMuseumSimulator extends PApplet {
 
 /*Determine global variables.*/
-int                     playerAmountInt         = 30;
+int                     playerAmountInt         = 10;
 List<Tag>               tagObjectList           = new ArrayList<Tag>();
 List<ObjectMuseum>      floorObjectList         = new ArrayList<ObjectMuseum>();
 List<ObjectMuseum>      roomObjectList          = new ArrayList<ObjectMuseum>();
 List<ObjectMuseum>      exhibitionObjectList    = new ArrayList<ObjectMuseum>();
 List<ObjectPlayer>      playerObjectList        = new ArrayList<ObjectPlayer>();
 
-int     layoutOffsetInt     = 5;
-int     layoutTotalRowInt   = 10;
+int                     layoutOffsetInt         = 5;
+int                     layoutOffsetSideInt     = 50;
+int                     layoutTotalRowInt       = 10;
 
 /*PROTOTYPE: Testing AIAutoVoid() for this application.
 PROTOTYPE: Instead of using for loop to iterate through all the player
@@ -134,14 +135,7 @@ public void setup()                                    {
 
     );
 
-    /*Initiate all players.*/
-    for(int i = 0; i < playerAmountInt; i ++)                   {
-
-        ObjectPlayer objectPlayer   = new ObjectPlayer(i, exhibitionObjectList.get((int)(Math.floor((Math.random()*exhibitionObjectList.size()) + 0))).nameAltString);
-        playerObjectList            .add(objectPlayer);
-
-    }
-
+    /*Initiate object parents and children for all object museum.*/
     for(int i = 0; i < floorObjectList.size()           ; i ++) { floorObjectList.get(i).SetChildObjectList  (roomObjectList); }
     for(int i = 0; i < roomObjectList.size()            ; i ++) {
 
@@ -150,10 +144,19 @@ public void setup()                                    {
 
     }
     for(int i = 0; i < exhibitionObjectList.size()      ; i ++) { exhibitionObjectList.get(i)   .SetInitialParentObject(roomObjectList); }
+
     /*Determine index for all museum object.*/
     for(int i = 0; i < floorObjectList.size()           ; i ++) { floorObjectList.get(i)        .SetIndexInsideVoid(); }
     for(int i = 0; i < roomObjectList.size()            ; i ++) { roomObjectList.get(i)         .SetIndexInsideVoid(); }
     for(int i = 0; i < exhibitionObjectList.size()      ; i ++) { exhibitionObjectList.get(i)   .SetIndexInsideVoid(); }
+
+    /*Initiate all players.*/
+    for(int i = 0; i < playerAmountInt; i ++)                   {
+
+        ObjectPlayer objectPlayer   = new ObjectPlayer(i, exhibitionObjectList.get((int)(Math.floor((Math.random()*exhibitionObjectList.size()) + 0))).nameAltString);
+
+    }
+
 }
 
 public void draw()                                         {
@@ -161,14 +164,15 @@ public void draw()                                         {
     /*Set the background color for this application.*/
     background              (34, 32, 52);
 
+    layoutTotalRowInt       = 3 + (int)(Math.ceil(playerObjectList.size()/exhibitionObjectList.size()) + 5);
+
     for(int i = 0; i < floorObjectList      .size(); i ++){ floorObjectList         .get(i).PanelDrawVoid(); }
     for(int i = 0; i < roomObjectList       .size(); i ++){ roomObjectList          .get(i).PanelDrawVoid(); }
     for(int i = 0; i < exhibitionObjectList .size(); i ++){ exhibitionObjectList    .get(i).PanelDrawVoid(); }
+    for(int i = 0; i < playerObjectList     .size(); i ++){ playerObjectList        .get(i).PanelDrawVoid(); }
 
     playerObjectList        .get(playerLoopCounterInt).AIAutoVoid();
     playerLoopCounterInt    = (playerLoopCounterInt >= (playerObjectList.size() - 1)) ? 0 : (playerLoopCounterInt + 1);
-
-    println(frameRate);
 
 }
 
@@ -257,10 +261,8 @@ class   ObjectMuseum                                                            
 
     /*Variables of panel graphical user interfaces.*/
     int floorPanelColor                           = color(69 , 40, 60);
-    //color roomPanelColor                          = color();
-    //color exhibitionPanelColor                    = color();
-    /*
-    */
+    int roomPanelColor                            = color(102, 57, 49);
+    int exhibitionPanelColor                      = color(143, 86, 59);
     int     widthPanelInt                           = 0;
     int     heightPanelInt                          = 0;
     int     xPanelInt                               = 0;
@@ -343,6 +345,35 @@ class   ObjectMuseum                                                            
         for(int i = 0; i < roomObjectList.size()        ; i ++){ roomObjectList         .get(i).SetIndexInsideVoid(); }
         for(int i = 0; i < exhibitionObjectList.size()  ; i ++){ exhibitionObjectList   .get(i).SetIndexInsideVoid(); }
 
+    }
+
+    public void SetPanelVariableInsideVoid()                                                   {
+
+        /*Panel layout calculations.*/
+        if          (typeString.equals("FLR")){
+
+            widthPanelInt   = (width - (layoutOffsetSideInt*2));
+            //widthPanelInt = ((width - layoutOffsetInt)/floorObjectList.size()) - layoutOffsetInt;
+            heightPanelInt  = (height - ((layoutOffsetInt*layoutTotalRowInt) + layoutOffsetInt))/layoutTotalRowInt;
+            xPanelInt       = layoutOffsetSideInt + (indexGlobalInt*widthPanelInt) + (indexGlobalInt*layoutOffsetSideInt);
+            yPanelInt       = layoutOffsetInt;
+
+            if      (widthPanelInt <= 10 ){ widthPanelInt = 10;  }
+            else if (heightPanelInt <= 10){ heightPanelInt = 10; }
+
+        }
+        else if     (typeString.equals("ROM") || typeString.equals("EXH")){
+
+            widthPanelInt   = ((parentObject.widthPanelInt - ((parentObject.childObjectList.size() - 1)*layoutOffsetInt))/parentObject.childObjectList.size());
+            heightPanelInt  = parentObject.heightPanelInt;
+            xPanelInt       = parentObject.xPanelInt + (indexLocalInt*widthPanelInt) + (indexLocalInt*layoutOffsetInt);
+            yPanelInt       = parentObject.yPanelInt + parentObject.heightPanelInt + layoutOffsetInt;
+
+            if      (widthPanelInt <= 10 ){ widthPanelInt = 10;  }
+            else if (heightPanelInt <= 10){ heightPanelInt = 10; }
+
+        }
+        
     }
 
     /*A function to set the threshold to determine whether this museum object is full or not.*/
@@ -458,38 +489,22 @@ class   ObjectMuseum                                                            
         return parentObject;
 
     }
-
-
-    public void SetPanelVariableInsideVoid()                                                   {
-
-        /*Panel layout calculations.*/
-        if          (typeString.equals("FLR")){
-
-            widthPanelInt   = (width - (layoutOffsetInt*2));
-            //widthPanelInt = ((width - layoutOffsetInt)/floorObjectList.size()) - layoutOffsetInt;
-            heightPanelInt  = (height - ((layoutOffsetInt*layoutTotalRowInt) + layoutOffsetInt))/layoutTotalRowInt;
-            xPanelInt       = layoutOffsetInt + (indexGlobalInt*widthPanelInt) + (indexGlobalInt*layoutOffsetInt);
-            yPanelInt       = layoutOffsetInt;
-
-        }
-        else if     (typeString.equals("ROM") || typeString.equals("EXH")){
-
-            widthPanelInt   = ((parentObject.widthPanelInt - ((parentObject.childObjectList.size() - 1)*layoutOffsetInt))/parentObject.childObjectList.size());
-            heightPanelInt  = parentObject.heightPanelInt;
-            xPanelInt       = parentObject.xPanelInt + (indexLocalInt*widthPanelInt) + (indexLocalInt*layoutOffsetInt);
-            yPanelInt       = parentObject.yPanelInt + parentObject.heightPanelInt + layoutOffsetInt;
-
-        }
-        
-    }
     
+    /*A function to draw panel.*/
     public Panel PanelDrawVoid()                                                                 {
 
         SetPanelVariableInsideVoid  ();
 
+        /*Adjust the color pbased on what panel is this object used for.*/
+        int   usedColor;
+        if      (typeString.equals("FLR"))  { usedColor = floorPanelColor;          }
+        else if (typeString.equals("ROM"))  { usedColor = roomPanelColor;           }
+        else if (typeString.equals("EXH"))  { usedColor = exhibitionPanelColor;     }
+        else                                { usedColor = color(0);                 }
+
         panelObject             .DrawVoid(
 
-            floorPanelColor     ,
+            usedColor           ,
             widthPanelInt       ,
             heightPanelInt      ,
             xPanelInt           ,
@@ -549,13 +564,28 @@ class ObjectPlayer{
 
     float               timeCurrentExhibitionFloat  = 0f;
 
+    /*Panel variable.*/
+    int   panelColor                              = color(217, 160, 102);
+    int     widthPanelInt                           = 0;
+    int     heightPanelInt                          = 0;
+    int     xPanelInt                               = 0;
+    int     yPanelInt                               = 0;
+    Panel   panelObject                             = null;
+
     /*Constructor.*/
     ObjectPlayer(
 
         int     _playerIndexInt            ,
         String  _exhibitionStartString
 
-    ){ playerIndexInt = _playerIndexInt; ExhibitionMoveObject(_exhibitionStartString); }
+    ){
+
+        playerIndexInt      = _playerIndexInt;
+        playerObjectList    .add(this);
+        panelObject         = new Panel();
+        ExhibitionMoveObject(_exhibitionStartString);
+
+    }
 
     /*A function to either add the tag or increase the tag value in this player.*/
     public void AddTagCounterVoid(
@@ -663,6 +693,20 @@ class ObjectPlayer{
 
     }
 
+    public void SetPanelVariableInsideVoid()                                                   {
+
+        /*Panel layout calculations.*/
+        ObjectMuseum    exhibitionCurrentObject = FindObject(exhibitionObjectList, exhibitionCurrentString);
+                        widthPanelInt           = exhibitionCurrentObject.widthPanelInt;
+                        heightPanelInt          = exhibitionCurrentObject.heightPanelInt;
+                        xPanelInt               = exhibitionCurrentObject.xPanelInt;
+                        yPanelInt               = exhibitionCurrentObject.yPanelInt + ((playerSiblingIndexInt + 1)*heightPanelInt) + ((playerSiblingIndexInt + 1)*layoutOffsetInt);
+
+        if      (widthPanelInt <= 10 ){ widthPanelInt = 10;  }
+        else if (heightPanelInt <= 10){ heightPanelInt = 10; }
+        
+    }
+
     /*A function to return the position of this player in the player sibling list*/
     public int SetPlayerSiblingIndexInt(
 
@@ -693,6 +737,7 @@ class ObjectPlayer{
 
         /*Set the new index of this player object.*/
         playerSiblingIndexInt = SetPlayerSiblingIndexInt(playerSiblingObjectList);
+        if(playerIndexInt == 9)println(playerSiblingObjectList);
 
         return playerSiblingObjectList;
 
@@ -918,6 +963,7 @@ class ObjectPlayer{
         AddTagCounterVoid               (exhibitionCurrentObject);
         AddRemoveChildVoid              (true);
         
+        SetSiblingObjectList            ();
         SetExhibitionTargetStringList   ();
 
         /*For everytime a player move to another exhibition iterate through all player to re - add the siblings.*/
@@ -954,6 +1000,26 @@ class ObjectPlayer{
         return objectMuseum;
 
     }
+    
+    /*A function to draw panel.*/
+    public Panel PanelDrawVoid()                                                                 {
+
+        SetPanelVariableInsideVoid  ();
+
+        panelObject                 .DrawVoid(
+
+            panelColor              ,
+            widthPanelInt           ,
+            heightPanelInt          ,
+            xPanelInt               ,
+            yPanelInt               ,
+            ("" + playerIndexInt)
+
+        );
+
+        return panelObject;
+
+    }
 
 }
 /*Creating a Panel class for each object museum.*/
@@ -961,7 +1027,7 @@ class Panel                                         {
 
     PFont   layoutPanelPFont;           /*Font variable to hold the font style.*/
     int   fillColor;                  /*The color of the panel.*/
-    int     layoutTextSizeInt   = 100;  /*The default font size for the panel.*/
+    int     layoutTextSizeInt   = 72;   /*The default font size for the panel.*/
 
     Panel(){}
 
@@ -996,9 +1062,10 @@ class Panel                                         {
 
         ){
 
-            layoutTextSizeInt   --;
-            layoutPanelPFont    = createFont("Georgia", layoutTextSizeInt);
-            textFont            (layoutPanelPFont);
+            layoutTextSizeInt           --;
+            if(layoutTextSizeInt  <= 1) { layoutTextSizeInt = 1; }
+            layoutPanelPFont            = createFont("Georgia", layoutTextSizeInt);
+            textFont                    (layoutPanelPFont);
 
         }
 
