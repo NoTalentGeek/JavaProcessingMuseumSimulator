@@ -38,9 +38,6 @@ class   ObjectMuseum                                                            
     int                 yPanelInt                   = 0;
     Panel               panelObject                 = null;
 
-    /*These are some user interfaces related variables.*/
-    boolean             activeBoolean               = false;
-
     ObjectMuseum                                    (
 
         Name                                        _nameObject             ,
@@ -78,6 +75,15 @@ class   ObjectMuseum                                                            
 
         /*Create panel.*/
         panelObject                                 = new Panel();
+
+    }
+
+    /*A function to update this object museum variables over time.*/
+    void DrawVoid()                                                                     {
+
+        SetFullBoolean  ();
+        SetHoverBoolean ();
+        PanelDrawVoid   ();
 
     }
 
@@ -279,7 +285,7 @@ class   ObjectMuseum                                                            
 
         SetPanelVariableInsideVoid  ();
 
-        /*Adjust the color pbased on what panel is this object used for.*/
+        /*Adjust the color based on what panel is this object used for.*/
         color   usedColor;
         if      (typeString.equals("FLR"))  { usedColor = floorPanelColor;          }
         else if (typeString.equals("ROM"))  { usedColor = roomPanelColor;           }

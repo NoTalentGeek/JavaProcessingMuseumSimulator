@@ -119,6 +119,7 @@ public void setup()                                    {
     
     );
 
+    /*Set up the museum objects.*/
     floorObjectList         = Arrays.asList(
 
         new ObjectMuseum(new Name("FLR_001", "First Floor"                        ), "XXX_XXX", "FLR", AssignRandomTagList(tagObjectList)),
@@ -185,9 +186,11 @@ public void draw()                                         {
     /*Set the background color for this application.*/
     background              (34, 32, 52);
 
+    /*Always update the full threshold and layout total row int.*/
     fullThresholdInt        = 2 + (int)(Math.ceil(playerObjectList.size()/exhibitionObjectList.size()));
     layoutTotalRowInt       = 3 + (int)(Math.ceil(playerObjectList.size()/exhibitionObjectList.size()) + 5);
 
+    /*This one is to check wether we need to replace the current showed card with a new one.*/
     if      (selectedMuseumObject != null){
 
         if(
@@ -213,6 +216,7 @@ public void draw()                                         {
 
     }
 
+    /*IN case we need a new card then we reset all card properties.*/
     if(panelCardChangeBoolean   == true){
 
         xPanelCardInt           = -1;
@@ -223,81 +227,69 @@ public void draw()                                         {
 
     }
 
+    /*Update function for all museum objects and player objects.*/
     for(int i = 0; i < floorObjectList      .size(); i ++){
 
-        floorObjectList         .get(i).SetFullBoolean();
-        floorObjectList         .get(i).SetHoverBoolean();
-        floorObjectList         .get(i).PanelDrawVoid();
-
-        if(floorObjectList.get(i).SetHoverBoolean() == true && panelCardChangeBoolean == true){
-
-            xPanelCardInt           = floorObjectList.get(i).panelObject.xPanelInt + (floorObjectList.get(i).panelObject.widthPanelInt/2 );
-            yPanelCardInt           = floorObjectList.get(i).panelObject.yPanelInt + (floorObjectList.get(i).panelObject.heightPanelInt/2);
-            selectedMuseumObject    = floorObjectList.get(i);
-
-            panelCardChangeBoolean  = false;
-
-        }
+        floorObjectList                     .get(i).DrawVoid();
+        CheckMuseumObjectHoverVoid          (i, floorObjectList);    
 
     }
     for(int i = 0; i < roomObjectList       .size(); i ++){
 
-        roomObjectList          .get(i).SetFullBoolean();
-        roomObjectList          .get(i).SetHoverBoolean();
-        roomObjectList          .get(i).PanelDrawVoid();
-
-        if(roomObjectList.get(i).SetHoverBoolean() == true && panelCardChangeBoolean == true){
-
-            xPanelCardInt           = roomObjectList.get(i).panelObject.xPanelInt + (roomObjectList.get(i).panelObject.widthPanelInt/2 );
-            yPanelCardInt           = roomObjectList.get(i).panelObject.yPanelInt + (roomObjectList.get(i).panelObject.heightPanelInt/2);
-            selectedMuseumObject    = roomObjectList.get(i);
-
-            panelCardChangeBoolean  = false;
-
-        }
+        roomObjectList                      .get(i).DrawVoid();
+        CheckMuseumObjectHoverVoid          (i, roomObjectList); 
 
     }
     for(int i = 0; i < exhibitionObjectList .size(); i ++){
 
-        exhibitionObjectList    .get(i).SetFullBoolean();
-        exhibitionObjectList    .get(i).SetHoverBoolean();
-        exhibitionObjectList    .get(i).PanelDrawVoid();
-
-        if(exhibitionObjectList.get(i).SetHoverBoolean() == true && panelCardChangeBoolean == true){
-
-            xPanelCardInt           = exhibitionObjectList.get(i).panelObject.xPanelInt + (exhibitionObjectList.get(i).panelObject.widthPanelInt/2 );
-            yPanelCardInt           = exhibitionObjectList.get(i).panelObject.yPanelInt + (exhibitionObjectList.get(i).panelObject.heightPanelInt/2);
-            selectedMuseumObject    = exhibitionObjectList.get(i);
-
-            panelCardChangeBoolean  = false;
-
-        }
+        exhibitionObjectList                .get(i).DrawVoid();
+        CheckMuseumObjectHoverVoid          (i, exhibitionObjectList); 
 
     }
     for(int i = 0; i < playerObjectList     .size(); i ++){
 
-        playerObjectList        .get(i).AIAutoVoid();
-        playerObjectList        .get(i).SetHoverBoolean();
-        playerObjectList        .get(i).PanelDrawVoid();
-
-        if(playerObjectList.get(i).SetHoverBoolean() == true && panelCardChangeBoolean == true){
-
-            xPanelCardInt           = playerObjectList.get(i).panelObject.xPanelInt + (playerObjectList.get(i).panelObject.widthPanelInt/2 );
-            yPanelCardInt           = playerObjectList.get(i).panelObject.yPanelInt + (playerObjectList.get(i).panelObject.heightPanelInt/2);
-            selectedPlayerObject    = playerObjectList.get(i);
-
-            panelCardChangeBoolean  = false;
-
-        }
+        playerObjectList                    .get(i).DrawVoid();
+        CheckPlayerObjectHoverVoid          (i);
 
     }
 
+    /*Create the card.*/
     CreatePanelCardVoid();
 
     /*
     playerObjectList        .get(playerLoopCounterInt).AIAutoVoid();
     playerLoopCounterInt    = (playerLoopCounterInt >= (playerObjectList.size() - 1)) ? 0 : (playerLoopCounterInt + 1);
     */
+
+}
+/*A function to check whether an object of museum is hovered by mouse pointer.*/
+public void CheckMuseumObjectHoverVoid(int _indexInt, List<ObjectMuseum> _targetObjectList){
+
+    /*This is to check which museum/player object is hovered, then create panel based on that object position.*/
+    if(_targetObjectList.get(_indexInt).SetHoverBoolean() == true && panelCardChangeBoolean == true){
+
+        xPanelCardInt           = _targetObjectList.get(_indexInt).panelObject.xPanelInt + (_targetObjectList.get(_indexInt).panelObject.widthPanelInt/2 );
+        yPanelCardInt           = _targetObjectList.get(_indexInt).panelObject.yPanelInt + (_targetObjectList.get(_indexInt).panelObject.heightPanelInt/2);
+        selectedMuseumObject    = _targetObjectList.get(_indexInt);
+
+        panelCardChangeBoolean  = false;
+
+    }
+
+}
+/*A function to check whether an object of player is hovered by mouse pointer.*/
+public void CheckPlayerObjectHoverVoid(int _indexInt){
+
+    /*This is to check which museum/player object is hovered, then create panel based on that object position.*/
+    if(playerObjectList.get(_indexInt).SetHoverBoolean() == true && panelCardChangeBoolean == true){
+
+        xPanelCardInt           = playerObjectList.get(_indexInt).panelObject.xPanelInt + (playerObjectList.get(_indexInt).panelObject.widthPanelInt/2 );
+        yPanelCardInt           = playerObjectList.get(_indexInt).panelObject.yPanelInt + (playerObjectList.get(_indexInt).panelObject.heightPanelInt/2);
+        selectedPlayerObject    = playerObjectList.get(_indexInt);
+
+        panelCardChangeBoolean  = false;
+
+    }
 
 }
 
@@ -489,9 +481,6 @@ class   ObjectMuseum                                                            
     int                 yPanelInt                   = 0;
     Panel               panelObject                 = null;
 
-    /*These are some user interfaces related variables.*/
-    boolean             activeBoolean               = false;
-
     ObjectMuseum                                    (
 
         Name                                        _nameObject             ,
@@ -529,6 +518,15 @@ class   ObjectMuseum                                                            
 
         /*Create panel.*/
         panelObject                                 = new Panel();
+
+    }
+
+    /*A function to update this object museum variables over time.*/
+    public void DrawVoid()                                                                     {
+
+        SetFullBoolean  ();
+        SetHoverBoolean ();
+        PanelDrawVoid   ();
 
     }
 
@@ -730,7 +728,7 @@ class   ObjectMuseum                                                            
 
         SetPanelVariableInsideVoid  ();
 
-        /*Adjust the color pbased on what panel is this object used for.*/
+        /*Adjust the color based on what panel is this object used for.*/
         int   usedColor;
         if      (typeString.equals("FLR"))  { usedColor = floorPanelColor;          }
         else if (typeString.equals("ROM"))  { usedColor = roomPanelColor;           }
@@ -764,17 +762,25 @@ class   ObjectMuseum                                                            
 
 
 /*Create an internal class to be put in the list for easiness.
-This is because List in Java must be homogenous.*/
+This is because List in Java must be homogenous.
+This class is intended to make calculation on how many 
+    exhibition with same tag has been visited.*/
 class TagCounter{
 
+    /*I create an array becuse comparator will not working on primitive data type.
+    Hence, I put the value in one element List.*/
     List<Integer>   tagCounterIntList   = new ArrayList<Integer>();
     String          tagNameString       = "";
     int             tagCounterInt       = -1;
 
     TagCounter(){}
+
+    /*Getter and setter function for counting tha tags.*/
     public void    SetTagNameStringVoid    (String _tagNameString) { tagNameString = _tagNameString; }
     public void    SetTagCounterIntVoid    (int    _tagCounterInt) {
 
+        /*I create an array becuse comparator will not working on primitive data type.
+        Hence, I put the value in one element List.*/
         tagCounterInt       = _tagCounterInt;
         tagCounterIntList   = new ArrayList<Integer>();
         tagCounterIntList   .add(tagCounterInt);
@@ -785,19 +791,22 @@ class TagCounter{
 
 }
 
+/*A class of player object.
+The player object will be the class that can be either played by the user (somekind like simulation)
+    or being automated.*/
 class ObjectPlayer{
 
-    String              exhibitionCurrentString     = "";
-    List<String>        exhibitionTargetStringList  = new ArrayList<String>();
-    List<String>        exhibitionVisitedStringList = new ArrayList<String>();
-    List<TagCounter>    exhibitionTagCounterList    = new ArrayList<TagCounter>();
+    String              exhibitionCurrentString     = "";                               /*Current exhibition in String.*/
+    List<String>        exhibitionTargetStringList  = new ArrayList<String>();          /*Target exhibition that will be given to the player*/
+    List<String>        exhibitionVisitedStringList = new ArrayList<String>();          /*Amount of exhibition that have just visited by the player.*/
+    List<TagCounter>    exhibitionTagCounterList    = new ArrayList<TagCounter>();      /*The amount of tag that have been collected by this player.*/
 
-    int                 playerIndexInt              = 0;
+    int                 playerIndexInt              = 0;                                /*Unique identifier for each player object, can be changed later to name.*/
 
-    List<ObjectPlayer>  playerSiblingObjectList     = new ArrayList<ObjectPlayer>();
-    int                 playerSiblingIndexInt       = -1;
+    List<ObjectPlayer>  playerSiblingObjectList     = new ArrayList<ObjectPlayer>();    /*How many player object are in the same exhibition.*/
+    int                 playerSiblingIndexInt       = -1;                               /*The index of this object within the List of object player sibling.*/
 
-    float               timeCurrentExhibitionFloat  = 0f;
+    float               timeCurrentExhibitionFloat  = 0f;                               /*How many frame/tick this player already stay in an exhibition.*/
 
     /*Panel variable.*/
     boolean hoverBoolean                            = false;
@@ -872,7 +881,7 @@ class ObjectPlayer{
             /*If the tag received is alredy filled in before then increase the tag counter.*/
             else if (newBool == false){
 
-                exhibitionTagCounterList.get(indexInt).SetTagCounterIntVoid(tagCounter.GetTagCounterInt() + 1);
+                exhibitionTagCounterList.get(indexInt).SetTagCounterIntVoid(exhibitionTagCounterList.get(indexInt).GetTagCounterInt() + 1);
 
             }
 
@@ -883,7 +892,7 @@ class ObjectPlayer{
 
                 public int compare(TagCounter _tagCounter1Object, TagCounter _tagCounter2Object) {
                 
-                    return _tagCounter1Object.tagCounterIntList.get(0).compareTo(_tagCounter2Object.tagCounterIntList.get(0));
+                    return _tagCounter2Object.tagCounterIntList.get(0).compareTo(_tagCounter1Object.tagCounterIntList.get(0));
                 
                 }
 
@@ -930,6 +939,17 @@ class ObjectPlayer{
 
     }
 
+    /*A function to update this player variables over time.*/
+    public void DrawVoid()                                                                     {
+
+        AIAutoVoid      ();
+        SetHoverBoolean ();
+        PanelDrawVoid   ();
+
+    }
+
+    /*A function to manage this player graphical user interface.
+    In this function the width, height, x position, and y position are set.*/
     public void SetPanelVariableInsideVoid()                                                   {
 
         /*Panel layout calculations.*/
@@ -1259,6 +1279,7 @@ class ObjectPlayer{
 
         SetPanelVariableInsideVoid  ();
 
+        /*Here we determine the color based whether this player/visitor has visited total amount exhibition or not.*/
         int   usedColor;
         if      (exhibitionVisitedStringList.size() == exhibitionObjectList.size()) { usedColor = panelFinishedColor;   }
         else                                                                        { usedColor = panelUnfinishedColor; }

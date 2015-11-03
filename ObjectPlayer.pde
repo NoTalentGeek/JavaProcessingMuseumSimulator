@@ -1,17 +1,25 @@
 import java.util.*;
 
 /*Create an internal class to be put in the list for easiness.
-This is because List in Java must be homogenous.*/
+This is because List in Java must be homogenous.
+This class is intended to make calculation on how many 
+    exhibition with same tag has been visited.*/
 class TagCounter{
 
+    /*I create an array becuse comparator will not working on primitive data type.
+    Hence, I put the value in one element List.*/
     List<Integer>   tagCounterIntList   = new ArrayList<Integer>();
     String          tagNameString       = "";
     int             tagCounterInt       = -1;
 
     TagCounter(){}
+
+    /*Getter and setter function for counting tha tags.*/
     void    SetTagNameStringVoid    (String _tagNameString) { tagNameString = _tagNameString; }
     void    SetTagCounterIntVoid    (int    _tagCounterInt) {
 
+        /*I create an array becuse comparator will not working on primitive data type.
+        Hence, I put the value in one element List.*/
         tagCounterInt       = _tagCounterInt;
         tagCounterIntList   = new ArrayList<Integer>();
         tagCounterIntList   .add(tagCounterInt);
@@ -22,19 +30,22 @@ class TagCounter{
 
 }
 
+/*A class of player object.
+The player object will be the class that can be either played by the user (somekind like simulation)
+    or being automated.*/
 class ObjectPlayer{
 
-    String              exhibitionCurrentString     = "";
-    List<String>        exhibitionTargetStringList  = new ArrayList<String>();
-    List<String>        exhibitionVisitedStringList = new ArrayList<String>();
-    List<TagCounter>    exhibitionTagCounterList    = new ArrayList<TagCounter>();
+    String              exhibitionCurrentString     = "";                               /*Current exhibition in String.*/
+    List<String>        exhibitionTargetStringList  = new ArrayList<String>();          /*Target exhibition that will be given to the player*/
+    List<String>        exhibitionVisitedStringList = new ArrayList<String>();          /*Amount of exhibition that have just visited by the player.*/
+    List<TagCounter>    exhibitionTagCounterList    = new ArrayList<TagCounter>();      /*The amount of tag that have been collected by this player.*/
 
-    int                 playerIndexInt              = 0;
+    int                 playerIndexInt              = 0;                                /*Unique identifier for each player object, can be changed later to name.*/
 
-    List<ObjectPlayer>  playerSiblingObjectList     = new ArrayList<ObjectPlayer>();
-    int                 playerSiblingIndexInt       = -1;
+    List<ObjectPlayer>  playerSiblingObjectList     = new ArrayList<ObjectPlayer>();    /*How many player object are in the same exhibition.*/
+    int                 playerSiblingIndexInt       = -1;                               /*The index of this object within the List of object player sibling.*/
 
-    float               timeCurrentExhibitionFloat  = 0f;
+    float               timeCurrentExhibitionFloat  = 0f;                               /*How many frame/tick this player already stay in an exhibition.*/
 
     /*Panel variable.*/
     boolean hoverBoolean                            = false;
@@ -109,7 +120,7 @@ class ObjectPlayer{
             /*If the tag received is alredy filled in before then increase the tag counter.*/
             else if (newBool == false){
 
-                exhibitionTagCounterList.get(indexInt).SetTagCounterIntVoid(tagCounter.GetTagCounterInt() + 1);
+                exhibitionTagCounterList.get(indexInt).SetTagCounterIntVoid(exhibitionTagCounterList.get(indexInt).GetTagCounterInt() + 1);
 
             }
 
@@ -120,7 +131,7 @@ class ObjectPlayer{
 
                 public int compare(TagCounter _tagCounter1Object, TagCounter _tagCounter2Object) {
                 
-                    return _tagCounter1Object.tagCounterIntList.get(0).compareTo(_tagCounter2Object.tagCounterIntList.get(0));
+                    return _tagCounter2Object.tagCounterIntList.get(0).compareTo(_tagCounter1Object.tagCounterIntList.get(0));
                 
                 }
 
@@ -167,6 +178,17 @@ class ObjectPlayer{
 
     }
 
+    /*A function to update this player variables over time.*/
+    void DrawVoid()                                                                     {
+
+        AIAutoVoid      ();
+        SetHoverBoolean ();
+        PanelDrawVoid   ();
+
+    }
+
+    /*A function to manage this player graphical user interface.
+    In this function the width, height, x position, and y position are set.*/
     void SetPanelVariableInsideVoid()                                                   {
 
         /*Panel layout calculations.*/
@@ -496,6 +518,7 @@ class ObjectPlayer{
 
         SetPanelVariableInsideVoid  ();
 
+        /*Here we determine the color based whether this player/visitor has visited total amount exhibition or not.*/
         color   usedColor;
         if      (exhibitionVisitedStringList.size() == exhibitionObjectList.size()) { usedColor = panelFinishedColor;   }
         else                                                                        { usedColor = panelUnfinishedColor; }

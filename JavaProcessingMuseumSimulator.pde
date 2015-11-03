@@ -100,6 +100,7 @@ void setup()                                    {
     
     );
 
+    /*Set up the museum objects.*/
     floorObjectList         = Arrays.asList(
 
         new ObjectMuseum(new Name("FLR_001", "First Floor"                        ), "XXX_XXX", "FLR", AssignRandomTagList(tagObjectList)),
@@ -166,9 +167,11 @@ void draw()                                         {
     /*Set the background color for this application.*/
     background              (34, 32, 52);
 
+    /*Always update the full threshold and layout total row int.*/
     fullThresholdInt        = 2 + (int)(Math.ceil(playerObjectList.size()/exhibitionObjectList.size()));
     layoutTotalRowInt       = 3 + (int)(Math.ceil(playerObjectList.size()/exhibitionObjectList.size()) + 5);
 
+    /*This one is to check wether we need to replace the current showed card with a new one.*/
     if      (selectedMuseumObject != null){
 
         if(
@@ -194,6 +197,7 @@ void draw()                                         {
 
     }
 
+    /*IN case we need a new card then we reset all card properties.*/
     if(panelCardChangeBoolean   == true){
 
         xPanelCardInt           = -1;
@@ -204,81 +208,70 @@ void draw()                                         {
 
     }
 
+    /*Update function for all museum objects and player objects.
+    Also within these four for loops we need to get which object is hovered.*/
     for(int i = 0; i < floorObjectList      .size(); i ++){
 
-        floorObjectList         .get(i).SetFullBoolean();
-        floorObjectList         .get(i).SetHoverBoolean();
-        floorObjectList         .get(i).PanelDrawVoid();
-
-        if(floorObjectList.get(i).SetHoverBoolean() == true && panelCardChangeBoolean == true){
-
-            xPanelCardInt           = floorObjectList.get(i).panelObject.xPanelInt + (floorObjectList.get(i).panelObject.widthPanelInt/2 );
-            yPanelCardInt           = floorObjectList.get(i).panelObject.yPanelInt + (floorObjectList.get(i).panelObject.heightPanelInt/2);
-            selectedMuseumObject    = floorObjectList.get(i);
-
-            panelCardChangeBoolean  = false;
-
-        }
+        floorObjectList                     .get(i).DrawVoid();
+        CheckMuseumObjectHoverVoid          (i, floorObjectList);    
 
     }
     for(int i = 0; i < roomObjectList       .size(); i ++){
 
-        roomObjectList          .get(i).SetFullBoolean();
-        roomObjectList          .get(i).SetHoverBoolean();
-        roomObjectList          .get(i).PanelDrawVoid();
-
-        if(roomObjectList.get(i).SetHoverBoolean() == true && panelCardChangeBoolean == true){
-
-            xPanelCardInt           = roomObjectList.get(i).panelObject.xPanelInt + (roomObjectList.get(i).panelObject.widthPanelInt/2 );
-            yPanelCardInt           = roomObjectList.get(i).panelObject.yPanelInt + (roomObjectList.get(i).panelObject.heightPanelInt/2);
-            selectedMuseumObject    = roomObjectList.get(i);
-
-            panelCardChangeBoolean  = false;
-
-        }
+        roomObjectList                      .get(i).DrawVoid();
+        CheckMuseumObjectHoverVoid          (i, roomObjectList); 
 
     }
     for(int i = 0; i < exhibitionObjectList .size(); i ++){
 
-        exhibitionObjectList    .get(i).SetFullBoolean();
-        exhibitionObjectList    .get(i).SetHoverBoolean();
-        exhibitionObjectList    .get(i).PanelDrawVoid();
-
-        if(exhibitionObjectList.get(i).SetHoverBoolean() == true && panelCardChangeBoolean == true){
-
-            xPanelCardInt           = exhibitionObjectList.get(i).panelObject.xPanelInt + (exhibitionObjectList.get(i).panelObject.widthPanelInt/2 );
-            yPanelCardInt           = exhibitionObjectList.get(i).panelObject.yPanelInt + (exhibitionObjectList.get(i).panelObject.heightPanelInt/2);
-            selectedMuseumObject    = exhibitionObjectList.get(i);
-
-            panelCardChangeBoolean  = false;
-
-        }
+        exhibitionObjectList                .get(i).DrawVoid();
+        CheckMuseumObjectHoverVoid          (i, exhibitionObjectList); 
 
     }
     for(int i = 0; i < playerObjectList     .size(); i ++){
 
-        playerObjectList        .get(i).AIAutoVoid();
-        playerObjectList        .get(i).SetHoverBoolean();
-        playerObjectList        .get(i).PanelDrawVoid();
-
-        if(playerObjectList.get(i).SetHoverBoolean() == true && panelCardChangeBoolean == true){
-
-            xPanelCardInt           = playerObjectList.get(i).panelObject.xPanelInt + (playerObjectList.get(i).panelObject.widthPanelInt/2 );
-            yPanelCardInt           = playerObjectList.get(i).panelObject.yPanelInt + (playerObjectList.get(i).panelObject.heightPanelInt/2);
-            selectedPlayerObject    = playerObjectList.get(i);
-
-            panelCardChangeBoolean  = false;
-
-        }
+        playerObjectList                    .get(i).DrawVoid();
+        CheckPlayerObjectHoverVoid          (i);
 
     }
 
+    /*Create the card.*/
     CreatePanelCardVoid();
 
     /*
     playerObjectList        .get(playerLoopCounterInt).AIAutoVoid();
     playerLoopCounterInt    = (playerLoopCounterInt >= (playerObjectList.size() - 1)) ? 0 : (playerLoopCounterInt + 1);
     */
+
+}
+/*A function to check whether an object of museum is hovered by mouse pointer.*/
+void CheckMuseumObjectHoverVoid(int _indexInt, List<ObjectMuseum> _targetObjectList){
+
+    /*This is to check which museum/player object is hovered, then create panel based on that object position.*/
+    if(_targetObjectList.get(_indexInt).SetHoverBoolean() == true && panelCardChangeBoolean == true){
+
+        xPanelCardInt           = _targetObjectList.get(_indexInt).panelObject.xPanelInt + (_targetObjectList.get(_indexInt).panelObject.widthPanelInt/2 );
+        yPanelCardInt           = _targetObjectList.get(_indexInt).panelObject.yPanelInt + (_targetObjectList.get(_indexInt).panelObject.heightPanelInt/2);
+        selectedMuseumObject    = _targetObjectList.get(_indexInt);
+
+        panelCardChangeBoolean  = false;
+
+    }
+
+}
+/*A function to check whether an object of player is hovered by mouse pointer.*/
+void CheckPlayerObjectHoverVoid(int _indexInt){
+
+    /*This is to check which museum/player object is hovered, then create panel based on that object position.*/
+    if(playerObjectList.get(_indexInt).SetHoverBoolean() == true && panelCardChangeBoolean == true){
+
+        xPanelCardInt           = playerObjectList.get(_indexInt).panelObject.xPanelInt + (playerObjectList.get(_indexInt).panelObject.widthPanelInt/2 );
+        yPanelCardInt           = playerObjectList.get(_indexInt).panelObject.yPanelInt + (playerObjectList.get(_indexInt).panelObject.heightPanelInt/2);
+        selectedPlayerObject    = playerObjectList.get(_indexInt);
+
+        panelCardChangeBoolean  = false;
+
+    }
 
 }
 
