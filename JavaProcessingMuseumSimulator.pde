@@ -1,40 +1,41 @@
 /*Determine global variables.*/
-int                     playerAmountInt         = 300;
-List<Tag>               tagObjectList           = new ArrayList<Tag>();
-List<ObjectMuseum>      floorObjectList         = new ArrayList<ObjectMuseum>();
-List<ObjectMuseum>      roomObjectList          = new ArrayList<ObjectMuseum>();
-List<ObjectMuseum>      exhibitionObjectList    = new ArrayList<ObjectMuseum>();
-List<ObjectPlayer>      playerObjectList        = new ArrayList<ObjectPlayer>();
+int                     playerAmountInt         = 300;                              /*The number of players in this simulation.*/
+List<Tag>               tagObjectList           = new ArrayList<Tag>();             /*Array List of tag.*/
+List<ObjectMuseum>      floorObjectList         = new ArrayList<ObjectMuseum>();    /*Array List of museom object floor.*/
+List<ObjectMuseum>      roomObjectList          = new ArrayList<ObjectMuseum>();    /*Array List of museum object room*/
+List<ObjectMuseum>      exhibitionObjectList    = new ArrayList<ObjectMuseum>();    /*Array List of museum object exhibition*/
+List<ObjectPlayer>      playerObjectList        = new ArrayList<ObjectPlayer>();    /*Array List of player object.*/
 
-boolean                 panelCardChangeBoolean  = true;
-color                   panelCardColor          = color(63, 63, 116);
-int                     xPanelCardInt           = -1;
-int                     yPanelCardInt           = -1;
-int                     widthPanelCardInt       = 200;
-int                     heightPanelCardInt      = 280;
-int                     rowInt                  = 0;
-int                     textSizePanelInt        = 48;
-ObjectMuseum            selectedMuseumObject    = null;
-ObjectPlayer            selectedPlayerObject    = null;
-PFont                   panelCardPFont          ;
-String                  panelString             = "";
+/*Variable to display information card when mouse pointer is hovered over either museum or player object.*/
+boolean                 panelCardChangeBoolean  = true;                 /*Whether panel need to be re - created or not.*/
+color                   panelCardColor          = color(63, 63, 116);   /*Color of the panel card.*/
+int                     xPanelCardInt           = -1;                   /*X position of the panel card.*/
+int                     yPanelCardInt           = -1;                   /*Y position of the panel card.*/
+int                     widthPanelCardInt       = 200;                  /*Width position of the panel card.*/
+int                     heightPanelCardInt      = 280;                  /*Height position of the panel card.*/
+int                     rowInt                  = 0;                    /*How many maximum row is necessary for each panel (updated every tick).*/
+int                     textSizePanelInt        = 48;                   /*Text size of the panel.*/
+ObjectMuseum            selectedMuseumObject    = null;                 /*Which museum object is hovered.*/
+ObjectPlayer            selectedPlayerObject    = null;                 /*Which player object is hovered.*/
+PFont                   panelCardPFont          ;                       /*Font setting for panel object.*/
+String                  panelString             = "";                   /*String in the panel object.*/
 
+/*Variable for String fixing.
+In order for the text to be in alignment this application need to have one line of 10 characters.
+These Strings is to make sure every line has always be 10 characters long.*/
 String                  tempVisitorCurrentString;
 String                  tempVisitorTotalString  ;
 String                  tempFullString          ;
 
+/*Simple calculation from the amount of player and exhibition to determine whethe the exhibition is full of people or not.*/
 int                     fullThresholdInt        = 0;
 
+/*General layout variable.*/
 int                     layoutOffsetInt         = 5;
 int                     layoutOffsetSideInt     = 50;
 int                     layoutTotalRowInt       = 10;
 
-/*PROTOTYPE: Testing AIAutoVoid() for this application.
-PROTOTYPE: Instead of using for loop to iterate through all the player
-    we create a small variable that update one player for every tick.
-PROTOTYPE: In result, the application is not burdened out by the for loop.*/
-//int                   playerLoopCounterInt    = 0;
-
+/*Name class to manage an object name.*/
 class Name                                      {
 
     String          nameAltString   = "";
@@ -53,6 +54,9 @@ class Name                                      {
 
 };
 
+/*A tag class to manage tag object.
+This is not quite necessary because you can use the Name class instead.
+I guess I will put it here for the time being :).*/
 class Tag                                       {
 
     Name            tagName         = null;
