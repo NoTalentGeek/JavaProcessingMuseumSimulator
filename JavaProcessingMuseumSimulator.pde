@@ -13,11 +13,13 @@ int                     xPanelCardInt           = -1;                   /*X posi
 int                     yPanelCardInt           = -1;                   /*Y position of the panel card.*/
 int                     widthPanelCardInt       = 200;                  /*Width position of the panel card.*/
 int                     heightPanelCardInt      = 280;                  /*Height position of the panel card.*/
+int                     panelLineSpacingInt     = 5;                    /*Number of additional pixel within line break.*/
 int                     rowInt                  = 0;                    /*How many maximum row is necessary for each panel (updated every tick).*/
 int                     textSizePanelInt        = 48;                   /*Text size of the panel.*/
 ObjectMuseum            selectedMuseumObject    = null;                 /*Which museum object is hovered.*/
 ObjectPlayer            selectedPlayerObject    = null;                 /*Which player object is hovered.*/
 PFont                   panelCardPFont          ;                       /*Font setting for panel object.*/
+String                  panelFontString         = "Monospaced.plain";   /*String name of font we used in this application.*/
 String                  panelString             = "";                   /*String in the panel object.*/
 
 /*Variable for String fixing.
@@ -296,7 +298,7 @@ void CreatePanelCardVoid()                          {
 
         fill                (255);
         textAlign           (CENTER);
-        panelCardPFont      = createFont("Georgia", textSizePanelInt);
+        panelCardPFont      = createFont(panelFontString, textSizePanelInt);
         textFont            (panelCardPFont);
 
         /*String display for the player object.*/
@@ -328,15 +330,15 @@ void CreatePanelCardVoid()                          {
 
             rowInt      = 4;
 
-            if      (selectedMuseumObject.visitorCurrentInt < 10   ){ tempVisitorCurrentString = "____"     + selectedMuseumObject.visitorCurrentInt; }
-            else if (selectedMuseumObject.visitorCurrentInt < 100  ){ tempVisitorCurrentString = "____"     + selectedMuseumObject.visitorCurrentInt; }
-            else if (selectedMuseumObject.visitorCurrentInt < 1000 ){ tempVisitorCurrentString = "___"      + selectedMuseumObject.visitorCurrentInt; }
-            else if (selectedMuseumObject.visitorCurrentInt < 10000){ tempVisitorCurrentString = "__"       + selectedMuseumObject.visitorCurrentInt; }
+            if      (selectedMuseumObject.visitorCurrentInt < 10   ){ tempVisitorCurrentString = "______"     + selectedMuseumObject.visitorCurrentInt; }
+            else if (selectedMuseumObject.visitorCurrentInt < 100  ){ tempVisitorCurrentString = "_____"     + selectedMuseumObject.visitorCurrentInt; }
+            else if (selectedMuseumObject.visitorCurrentInt < 1000 ){ tempVisitorCurrentString = "____"      + selectedMuseumObject.visitorCurrentInt; }
+            else if (selectedMuseumObject.visitorCurrentInt < 10000){ tempVisitorCurrentString = "___"       + selectedMuseumObject.visitorCurrentInt; }
 
-            if      (selectedMuseumObject.visitorTotalInt   < 10   ){ tempVisitorTotalString = "____"     + selectedMuseumObject.visitorTotalInt; }
-            else if (selectedMuseumObject.visitorTotalInt   < 100  ){ tempVisitorTotalString = "____"     + selectedMuseumObject.visitorTotalInt; }
-            else if (selectedMuseumObject.visitorTotalInt   < 1000 ){ tempVisitorTotalString = "___"      + selectedMuseumObject.visitorTotalInt; }
-            else if (selectedMuseumObject.visitorTotalInt   < 10000){ tempVisitorTotalString = "__"       + selectedMuseumObject.visitorTotalInt; }
+            if      (selectedMuseumObject.visitorTotalInt   < 10   ){ tempVisitorTotalString = "______"     + selectedMuseumObject.visitorTotalInt; }
+            else if (selectedMuseumObject.visitorTotalInt   < 100  ){ tempVisitorTotalString = "_____"     + selectedMuseumObject.visitorTotalInt; }
+            else if (selectedMuseumObject.visitorTotalInt   < 1000 ){ tempVisitorTotalString = "____"      + selectedMuseumObject.visitorTotalInt; }
+            else if (selectedMuseumObject.visitorTotalInt   < 10000){ tempVisitorTotalString = "___"       + selectedMuseumObject.visitorTotalInt; }
 
             if      (selectedMuseumObject.fullBoolean == true ){ tempFullString = "____TRU"; }
             else if (selectedMuseumObject.fullBoolean == false){ tempFullString = "____FAL"; }
@@ -355,22 +357,52 @@ void CreatePanelCardVoid()                          {
         /*Iterate font size so that it went a bit smaller than the panel.*/
         while(
 
-            (textWidth(panelString)     > (widthPanelCardInt  - layoutOffsetInt))  ||
-            (textSizePanelInt*rowInt    > (heightPanelCardInt - layoutOffsetInt))
+            (textWidth(panelString)                                                 > (widthPanelCardInt  - layoutOffsetInt))  ||
+            (CalculateTextHeightInt(panelString, (int)(textWidth(panelString)), 5)  > (heightPanelCardInt - layoutOffsetInt))
 
         ){
 
             textSizePanelInt            --;
             if(textSizePanelInt <= 1)   { textSizePanelInt = 1; }
-            panelCardPFont              = createFont("Georgia", textSizePanelInt);
+            panelCardPFont              = createFont(panelFontString, textSizePanelInt);
             textFont                    (panelCardPFont);
 
         }
-        text                (panelString, tempXPanelInt + (widthPanelCardInt/2), tempYPanelInt + (textSizePanelInt*2));
+        text                (panelString, tempXPanelInt + (widthPanelCardInt/2), tempYPanelInt + (textSizePanelInt));
         textAlign           (LEFT);
         noFill              ();
 
     }
+
+}
+
+/*Neat function to calculate text height.*/
+int CalculateTextHeightInt(
+
+    String  _contentString      ,
+    int     _specificWidthInt   ,
+    int     _lineSpacingInt
+
+){
+
+    float       textHeightFloat         ;
+    int         numLineInt          = 0 ;
+    String[]    wordStringArray         ;
+    String      tempString          = ""; 
+
+    wordStringArray                 = split(_contentString, " ");
+
+    for(int i = 0; i < wordStringArray.length; i ++){
+
+        if  (textWidth(tempString + wordStringArray[i]) < _specificWidthInt)    { tempString += wordStringArray    + " "; }
+        else                                                                    { tempString  = wordStringArray[i] + " "; numLineInt ++;}
+
+    }
+
+    numLineInt        ++;
+   
+    textHeightFloat   = numLineInt * (textDescent() + textAscent() + _lineSpacingInt);
+    return            (round(textHeightFloat));
 
 }
 

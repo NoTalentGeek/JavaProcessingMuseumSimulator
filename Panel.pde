@@ -36,7 +36,7 @@ class Panel                                         {
         fill                    (255);
         textAlign               (CENTER);
         String textTextString   = _textString;
-        layoutPanelPFont        = createFont("Georgia", layoutTextSizeInt);
+        layoutPanelPFont        = createFont(panelFontString, layoutTextSizeInt);
         textFont                (layoutPanelPFont);
 
         /*Iterate font size so that it went a bit smaller than the panel.*/
@@ -49,7 +49,7 @@ class Panel                                         {
 
             layoutTextSizeInt           --;
             if(layoutTextSizeInt  <= 1) { layoutTextSizeInt = 1; }
-            layoutPanelPFont            = createFont("Georgia", layoutTextSizeInt);
+            layoutPanelPFont            = createFont(panelFontString, layoutTextSizeInt);
             textFont                    (layoutPanelPFont);
 
         }

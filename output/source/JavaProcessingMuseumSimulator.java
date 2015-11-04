@@ -18,42 +18,45 @@ import java.io.IOException;
 public class JavaProcessingMuseumSimulator extends PApplet {
 
 /*Determine global variables.*/
-int                     playerAmountInt         = 300;
-List<Tag>               tagObjectList           = new ArrayList<Tag>();
-List<ObjectMuseum>      floorObjectList         = new ArrayList<ObjectMuseum>();
-List<ObjectMuseum>      roomObjectList          = new ArrayList<ObjectMuseum>();
-List<ObjectMuseum>      exhibitionObjectList    = new ArrayList<ObjectMuseum>();
-List<ObjectPlayer>      playerObjectList        = new ArrayList<ObjectPlayer>();
+int                     playerAmountInt         = 300;                              /*The number of players in this simulation.*/
+List<Tag>               tagObjectList           = new ArrayList<Tag>();             /*Array List of tag.*/
+List<ObjectMuseum>      floorObjectList         = new ArrayList<ObjectMuseum>();    /*Array List of museom object floor.*/
+List<ObjectMuseum>      roomObjectList          = new ArrayList<ObjectMuseum>();    /*Array List of museum object room*/
+List<ObjectMuseum>      exhibitionObjectList    = new ArrayList<ObjectMuseum>();    /*Array List of museum object exhibition*/
+List<ObjectPlayer>      playerObjectList        = new ArrayList<ObjectPlayer>();    /*Array List of player object.*/
 
-boolean                 panelCardChangeBoolean  = true;
-int                   panelCardColor          = color(63, 63, 116);
-int                     xPanelCardInt           = -1;
-int                     yPanelCardInt           = -1;
-int                     widthPanelCardInt       = 200;
-int                     heightPanelCardInt      = 280;
-int                     rowInt                  = 0;
-int                     textSizePanelInt        = 48;
-ObjectMuseum            selectedMuseumObject    = null;
-ObjectPlayer            selectedPlayerObject    = null;
-PFont                   panelCardPFont          ;
-String                  panelString             = "";
+/*Variable to display information card when mouse pointer is hovered over either museum or player object.*/
+boolean                 panelCardChangeBoolean  = true;                 /*Whether panel need to be re - created or not.*/
+int                   panelCardColor          = color(63, 63, 116);   /*Color of the panel card.*/
+int                     xPanelCardInt           = -1;                   /*X position of the panel card.*/
+int                     yPanelCardInt           = -1;                   /*Y position of the panel card.*/
+int                     widthPanelCardInt       = 200;                  /*Width position of the panel card.*/
+int                     heightPanelCardInt      = 280;                  /*Height position of the panel card.*/
+int                     panelLineSpacingInt     = 5;                    /*Number of additional pixel within line break.*/
+int                     rowInt                  = 0;                    /*How many maximum row is necessary for each panel (updated every tick).*/
+int                     textSizePanelInt        = 48;                   /*Text size of the panel.*/
+ObjectMuseum            selectedMuseumObject    = null;                 /*Which museum object is hovered.*/
+ObjectPlayer            selectedPlayerObject    = null;                 /*Which player object is hovered.*/
+PFont                   panelCardPFont          ;                       /*Font setting for panel object.*/
+String                  panelFontString         = "Monospaced.plain";   /*String name of font we used in this application.*/
+String                  panelString             = "";                   /*String in the panel object.*/
 
+/*Variable for String fixing.
+In order for the text to be in alignment this application need to have one line of 10 characters.
+These Strings is to make sure every line has always be 10 characters long.*/
 String                  tempVisitorCurrentString;
 String                  tempVisitorTotalString  ;
 String                  tempFullString          ;
 
+/*Simple calculation from the amount of player and exhibition to determine whethe the exhibition is full of people or not.*/
 int                     fullThresholdInt        = 0;
 
+/*General layout variable.*/
 int                     layoutOffsetInt         = 5;
 int                     layoutOffsetSideInt     = 50;
 int                     layoutTotalRowInt       = 10;
 
-/*PROTOTYPE: Testing AIAutoVoid() for this application.
-PROTOTYPE: Instead of using for loop to iterate through all the player
-    we create a small variable that update one player for every tick.
-PROTOTYPE: In result, the application is not burdened out by the for loop.*/
-//int                   playerLoopCounterInt    = 0;
-
+/*Name class to manage an object name.*/
 class Name                                      {
 
     String          nameAltString   = "";
@@ -72,6 +75,9 @@ class Name                                      {
 
 };
 
+/*A tag class to manage tag object.
+This is not quite necessary because you can use the Name class instead.
+I guess I will put it here for the time being :).*/
 class Tag                                       {
 
     Name            tagName         = null;
@@ -227,7 +233,8 @@ public void draw()                                         {
 
     }
 
-    /*Update function for all museum objects and player objects.*/
+    /*Update function for all museum objects and player objects.
+    Also within these four for loops we need to get which object is hovered.*/
     for(int i = 0; i < floorObjectList      .size(); i ++){
 
         floorObjectList                     .get(i).DrawVoid();
@@ -310,7 +317,7 @@ public void CreatePanelCardVoid()                          {
 
         fill                (255);
         textAlign           (CENTER);
-        panelCardPFont      = createFont("Georgia", textSizePanelInt);
+        panelCardPFont      = createFont(panelFontString, textSizePanelInt);
         textFont            (panelCardPFont);
 
         /*String display for the player object.*/
@@ -342,15 +349,15 @@ public void CreatePanelCardVoid()                          {
 
             rowInt      = 4;
 
-            if      (selectedMuseumObject.visitorCurrentInt < 10   ){ tempVisitorCurrentString = "____"     + selectedMuseumObject.visitorCurrentInt; }
-            else if (selectedMuseumObject.visitorCurrentInt < 100  ){ tempVisitorCurrentString = "____"     + selectedMuseumObject.visitorCurrentInt; }
-            else if (selectedMuseumObject.visitorCurrentInt < 1000 ){ tempVisitorCurrentString = "___"      + selectedMuseumObject.visitorCurrentInt; }
-            else if (selectedMuseumObject.visitorCurrentInt < 10000){ tempVisitorCurrentString = "__"       + selectedMuseumObject.visitorCurrentInt; }
+            if      (selectedMuseumObject.visitorCurrentInt < 10   ){ tempVisitorCurrentString = "______"     + selectedMuseumObject.visitorCurrentInt; }
+            else if (selectedMuseumObject.visitorCurrentInt < 100  ){ tempVisitorCurrentString = "_____"     + selectedMuseumObject.visitorCurrentInt; }
+            else if (selectedMuseumObject.visitorCurrentInt < 1000 ){ tempVisitorCurrentString = "____"      + selectedMuseumObject.visitorCurrentInt; }
+            else if (selectedMuseumObject.visitorCurrentInt < 10000){ tempVisitorCurrentString = "___"       + selectedMuseumObject.visitorCurrentInt; }
 
-            if      (selectedMuseumObject.visitorTotalInt   < 10   ){ tempVisitorTotalString = "____"     + selectedMuseumObject.visitorTotalInt; }
-            else if (selectedMuseumObject.visitorTotalInt   < 100  ){ tempVisitorTotalString = "____"     + selectedMuseumObject.visitorTotalInt; }
-            else if (selectedMuseumObject.visitorTotalInt   < 1000 ){ tempVisitorTotalString = "___"      + selectedMuseumObject.visitorTotalInt; }
-            else if (selectedMuseumObject.visitorTotalInt   < 10000){ tempVisitorTotalString = "__"       + selectedMuseumObject.visitorTotalInt; }
+            if      (selectedMuseumObject.visitorTotalInt   < 10   ){ tempVisitorTotalString = "______"     + selectedMuseumObject.visitorTotalInt; }
+            else if (selectedMuseumObject.visitorTotalInt   < 100  ){ tempVisitorTotalString = "_____"     + selectedMuseumObject.visitorTotalInt; }
+            else if (selectedMuseumObject.visitorTotalInt   < 1000 ){ tempVisitorTotalString = "____"      + selectedMuseumObject.visitorTotalInt; }
+            else if (selectedMuseumObject.visitorTotalInt   < 10000){ tempVisitorTotalString = "___"       + selectedMuseumObject.visitorTotalInt; }
 
             if      (selectedMuseumObject.fullBoolean == true ){ tempFullString = "____TRU"; }
             else if (selectedMuseumObject.fullBoolean == false){ tempFullString = "____FAL"; }
@@ -369,22 +376,52 @@ public void CreatePanelCardVoid()                          {
         /*Iterate font size so that it went a bit smaller than the panel.*/
         while(
 
-            (textWidth(panelString)     > (widthPanelCardInt  - layoutOffsetInt))  ||
-            (textSizePanelInt*rowInt    > (heightPanelCardInt - layoutOffsetInt))
+            (textWidth(panelString)                                                 > (widthPanelCardInt  - layoutOffsetInt))  ||
+            (CalculateTextHeightInt(panelString, (int)(textWidth(panelString)), 5)  > (heightPanelCardInt - layoutOffsetInt))
 
         ){
 
             textSizePanelInt            --;
             if(textSizePanelInt <= 1)   { textSizePanelInt = 1; }
-            panelCardPFont              = createFont("Georgia", textSizePanelInt);
+            panelCardPFont              = createFont(panelFontString, textSizePanelInt);
             textFont                    (panelCardPFont);
 
         }
-        text                (panelString, tempXPanelInt + (widthPanelCardInt/2), tempYPanelInt + (textSizePanelInt*2));
+        text                (panelString, tempXPanelInt + (widthPanelCardInt/2), tempYPanelInt + (textSizePanelInt));
         textAlign           (LEFT);
         noFill              ();
 
     }
+
+}
+
+/*Neat function to calculate text height.*/
+public int CalculateTextHeightInt(
+
+    String  _contentString      ,
+    int     _specificWidthInt   ,
+    int     _lineSpacingInt
+
+){
+
+    float       textHeightFloat         ;
+    int         numLineInt          = 0 ;
+    String[]    wordStringArray         ;
+    String      tempString          = ""; 
+
+    wordStringArray                 = split(_contentString, " ");
+
+    for(int i = 0; i < wordStringArray.length; i ++){
+
+        if  (textWidth(tempString + wordStringArray[i]) < _specificWidthInt)    { tempString += wordStringArray    + " "; }
+        else                                                                    { tempString  = wordStringArray[i] + " "; numLineInt ++;}
+
+    }
+
+    numLineInt        ++;
+   
+    textHeightFloat   = numLineInt * (textDescent() + textAscent() + _lineSpacingInt);
+    return            (round(textHeightFloat));
 
 }
 
@@ -469,6 +506,8 @@ class   ObjectMuseum                                                            
     boolean             fullBoolean                 = false;                            /*Whether this museum object is full or not.*/
     int                 visitorCurrentInt           = 0;                                /*This museum object current visitor.*/
     int                 visitorTotalInt             = 0;                                /*This museum objecy total visitor.*/
+
+    boolean             activeBoolean               = false;                            /*Variable to control ControlP5 GUI element.*/
 
     /*Variables of panel graphical user interfaces.*/
     boolean             hoverBoolean                = false;
@@ -1338,7 +1377,7 @@ class Panel                                         {
         fill                    (255);
         textAlign               (CENTER);
         String textTextString   = _textString;
-        layoutPanelPFont        = createFont("Georgia", layoutTextSizeInt);
+        layoutPanelPFont        = createFont(panelFontString, layoutTextSizeInt);
         textFont                (layoutPanelPFont);
 
         /*Iterate font size so that it went a bit smaller than the panel.*/
@@ -1351,7 +1390,7 @@ class Panel                                         {
 
             layoutTextSizeInt           --;
             if(layoutTextSizeInt  <= 1) { layoutTextSizeInt = 1; }
-            layoutPanelPFont            = createFont("Georgia", layoutTextSizeInt);
+            layoutPanelPFont            = createFont(panelFontString, layoutTextSizeInt);
             textFont                    (layoutPanelPFont);
 
         }
