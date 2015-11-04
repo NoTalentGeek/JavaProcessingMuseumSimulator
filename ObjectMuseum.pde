@@ -27,6 +27,8 @@ class   ObjectMuseum                                                            
     int                 visitorCurrentInt           = 0;                                /*This museum object current visitor.*/
     int                 visitorTotalInt             = 0;                                /*This museum objecy total visitor.*/
 
+    boolean             activeBoolean               = false;                            /*Variable to control ControlP5 GUI element.*/
+
     /*Variables of panel graphical user interfaces.*/
     boolean             hoverBoolean                = false;
     color               floorPanelColor             = color(69 , 40, 60);
